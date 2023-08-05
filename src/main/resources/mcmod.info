@@ -1,13 +1,13 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "gregicalitystarbound",
+  "name": "Gregicality Starbound",
+  "description": "Adding UHV+ to GTCEu, with a touch in space",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["CleanroomMC"],
+  "authorList": ["StarL0stGaming"],
   "credits": "Authors of this project",
   "logoFile": "",
   "screenshots": [],
