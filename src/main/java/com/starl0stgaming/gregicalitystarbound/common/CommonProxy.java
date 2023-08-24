@@ -20,21 +20,9 @@ public class CommonProxy {
     public void preLoad() {
 
 
-        GregicalityStarbound.PLANET_SYSTEM_MANAGER.init();
+        GregicalityStarbound.SPACE_CONTROLLER.initializeSpace();
     }
 
-
-    @SubscribeEvent
-    public static void onEvent(InputEvent.KeyInputEvent event) {
-        if(GregicalityStarbound.keyBinding.isPressed()) {
-            for(int i = 0; i < GregicalityStarbound.PLANET_SYSTEM_MANAGER.getPlanetList().size(); i++) {
-                Planet planet = GregicalityStarbound.PLANET_SYSTEM_MANAGER.getPlanetList().get(i);
-
-                System.out.println(planet.getPlanetName());
-                System.out.println(planet.getId());
-            }
-        }
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void registerMaterials(GregTechAPI.MaterialEvent event) {
