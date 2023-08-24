@@ -9,18 +9,18 @@ import java.util.List;
 public class PlanetSystemManager {
 
 
+    private boolean isLoaded;
+
     public List<Planet> planetList = new ArrayList<>();
 
 
     public void init() {
         if(!this.initializePlanets()) return;
-
-        System.out.println("[GCSB] Planets loaded successfully! ");
-
+        this.setLoaded(true);
     }
 
     private boolean initializePlanets() {
-        //TODO: Get config file and load a planet from there.
+        //TODO: make actual use of the boolean return lol
         this.planetList = GregicalityStarbound.CONFIG_HANDLER.getPlanetListFromConfig();
 
 
@@ -31,5 +31,14 @@ public class PlanetSystemManager {
 
     public List<Planet> getPlanetList() {
         return planetList;
+    }
+
+
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        isLoaded = loaded;
     }
 }
