@@ -5,13 +5,10 @@ import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.space.planets.PlanetSystemManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.lwjgl.input.Keyboard;
-
-import java.io.File;
 
 @Mod(name = GregicalityStarbound.NAME, modid = GregicalityStarbound.MODID, dependencies = "required-after:gcym")
 public class GregicalityStarbound {
