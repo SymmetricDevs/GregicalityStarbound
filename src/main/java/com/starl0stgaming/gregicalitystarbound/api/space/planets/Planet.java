@@ -3,12 +3,15 @@ package com.starl0stgaming.gregicalitystarbound.api.space.planets;
 public class Planet {
 
     //Defining variables
+    private String planetName;
     private int id;
     private int dimID;
+
+
     private boolean isLoaded;
 
 
-    private String planetName;
+
 
 
     //Atmosphere
@@ -22,16 +25,12 @@ public class Planet {
         this.planetName = planetName;
     }
 
-    //Leaving this here for future reference, may use it, may not use it.
-    //Return true if planet wasn't loaded, returns false if it already is
-    public boolean load() {
-        if(!this.isLoaded) {
-            this.isLoaded = true;
-            return true;
-        } else {
-            return false;
-        }
+    public Planet(int id, int dimID, String planetName) {
+        this.id = id;
+        this.dimID = dimID;
+        this.planetName = planetName;
     }
+
 
     public int getId() {
         return id;
@@ -55,5 +54,11 @@ public class Planet {
 
     public void setPlanetName(String planetName) {
         this.planetName = planetName;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Planet Name: " + this.getPlanetName() + " Planet Id: " + this.getId() + " Planet DIM ID: " + this.getDimID();
     }
 }

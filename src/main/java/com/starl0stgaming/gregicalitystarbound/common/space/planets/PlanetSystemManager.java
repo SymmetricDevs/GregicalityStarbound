@@ -1,5 +1,6 @@
 package com.starl0stgaming.gregicalitystarbound.common.space.planets;
 
+import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
 
 import java.util.ArrayList;
@@ -20,22 +21,11 @@ public class PlanetSystemManager {
 
     private boolean initializePlanets() {
         //TODO: Get config file and load a planet from there.
-        Planet planet = new Planet(1, "earthtest");
-        Planet planet2 = new Planet(2, "marstest");
+        this.planetList = GregicalityStarbound.CONFIG_HANDLER.getPlanetListFromConfig();
 
-        if(planet.load()) {
-            planetList.add(planet);
-        } else {
-            return false;
-        }
 
-        if(planet2.load()) {
-            planetList.add(planet2);
-        } else {
-            return false;
-        }
 
-        return false;
+        return true;
     }
 
 
