@@ -11,13 +11,16 @@ import java.util.Random;
 
 public class DummyBiome extends Biome {
 
-    private int waterColor;
     private int skyColor;
-    public DummyBiome(BiomeProperties properties, IBlockState filler, int waterColor, int skyColor) {
+
+    private String name;
+
+    public DummyBiome(BiomeProperties properties, IBlockState filler, IBlockState top, int skyColor) {
         super(properties);
-        this.waterColor = waterColor;
         this.skyColor = skyColor;
         fillerBlock = filler;
+        topBlock = top;
+
     }
 
     @Override
