@@ -21,7 +21,7 @@ public class PlanetSystemManager {
 
     private boolean initializePlanets() {
         //TODO: make actual use of the boolean return lol
-        this.planetList = GregicalityStarbound.CONFIG_HANDLER.getPlanetListFromConfig();
+        this.planetList = GregicalityStarbound.CONFIG_HANDLER.getPlanetListFromFolder();
 
 
 

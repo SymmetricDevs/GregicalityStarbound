@@ -10,15 +10,24 @@ import sun.misc.GC;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GCSBConfigHandler {
 
 
 
+    private boolean loadDefaultPlanets = true;
+
+
     private File GCSBConfigFolder = new File(Loader.instance().getConfigDir(), "gregicalitystarbound");
+
+    private File planetConfigFolder = new File(GCSBConfigFolder, "planets");
 
     private File planetConfigFile = new File(GCSBConfigFolder, "planets.json");
     private File solarSystemConfigFile = new File(GCSBConfigFolder, "solarsystems.json");
@@ -32,6 +41,8 @@ public class GCSBConfigHandler {
         try {
             GCSBConfigFolder.mkdirs();
 
+            planetConfigFolder.mkdirs();
+
             this.initializeConfigFiles();
         } catch (IOException e) {
             System.out.println(e);
@@ -40,6 +51,7 @@ public class GCSBConfigHandler {
 
     private void initializeConfigFiles() throws IOException {
         try {
+
             planetConfigFile.createNewFile();
             solarSystemConfigFile.createNewFile();
         } catch (IOException e) {
@@ -48,20 +60,27 @@ public class GCSBConfigHandler {
     }
 
 
-    public List<Planet> getPlanetListFromConfig() {
+    public List<Planet> getPlanetListFromFolder() {
+        List<Planet> planetList = new ArrayList<>();
 
-        try {
-            Reader reader = Files.newBufferedReader(planetConfigFile.toPath());
+        try  {
+            Stream<Path> stream = Files.walk(planetConfigFolder.toPath());
 
-            List<Planet> planetList = GSON.fromJson(reader, new TypeToken<List<Planet>>() {}.getType());
+            stream.filter(Files::isRegularFile).forEach((planetPath) -> {
+                try {
+                    Reader reader = Files.newBufferedReader(planetPath);
 
+                    Planet planet = GSON.fromJson(reader, Planet.class);
+                    planetList.add(planet);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             planetList.forEach(System.out::println);
-
-            reader.close();
-
             return planetList;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 }
