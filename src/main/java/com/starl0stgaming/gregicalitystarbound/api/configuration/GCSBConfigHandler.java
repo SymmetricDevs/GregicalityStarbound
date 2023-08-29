@@ -51,8 +51,6 @@ public class GCSBConfigHandler {
 
     private void initializeConfigFiles() throws IOException {
         try {
-
-            planetConfigFile.createNewFile();
             solarSystemConfigFile.createNewFile();
         } catch (IOException e) {
             throw e;
