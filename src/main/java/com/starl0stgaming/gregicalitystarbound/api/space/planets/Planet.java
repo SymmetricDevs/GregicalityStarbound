@@ -14,11 +14,8 @@ public class Planet {
 
 
 
+
     //Atmosphere
-
-
-    //Terrain Gen
-
 
     public Planet(int id, String planetName) {
         this.id = id;
