@@ -16,20 +16,14 @@ public class PlanetSystemManager {
 
     public void init() {
         if(!this.initializePlanets()) return;
-
-        if (this.planetList != null) {
-
-        }
         this.setLoaded(true);
-    }
-
-    public void initSpecificPlanet(Planet planet) {
-
     }
 
     private boolean initializePlanets() {
         //TODO: make actual use of the boolean return lol
         this.planetList = GregicalityStarbound.CONFIG_HANDLER.getPlanetListFromFolder();
+
+
 
         return true;
     }
