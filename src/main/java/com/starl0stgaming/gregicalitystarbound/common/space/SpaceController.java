@@ -1,13 +1,21 @@
 package com.starl0stgaming.gregicalitystarbound.common.space;
 
+import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
-import com.starl0stgaming.gregicalitystarbound.common.space.planets.PlanetSystemManager;
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
+import com.starl0stgaming.gregicalitystarbound.api.space.solarsystem.SolarSystem;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class SpaceController {
 
-    private static final PlanetSystemManager PLANET_MANAGER = new PlanetSystemManager();
-
-
+    public static final CelestialBodyManager CELESTIAL_BODY_MANAGER = new CelestialBodyManager();
 
     public SpaceController() {
 
@@ -21,10 +29,8 @@ public class SpaceController {
         First planets and suns are loaded, then solar systems and galaxies
          */
 
-        PLANET_MANAGER.init();
-        if(!PLANET_MANAGER.isLoaded()) {
-            return;
-        }
+        CELESTIAL_BODY_MANAGER.init();
+
         GCSBLog.LOGGER.info("Planets successfully loaded!");
 
         // Load Suns
@@ -34,6 +40,13 @@ public class SpaceController {
 
 
         // Galaxies
+
+    }
+
+
+
+
+    public void loadSolarSystems() {
 
     }
 }

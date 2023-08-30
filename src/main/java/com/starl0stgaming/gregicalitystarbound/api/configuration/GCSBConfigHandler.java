@@ -27,58 +27,32 @@ public class GCSBConfigHandler {
 
     private File GCSBConfigFolder = new File(Loader.instance().getConfigDir(), "gregicalitystarbound");
 
-    private File planetConfigFolder = new File(GCSBConfigFolder, "planets");
+    private File solarSystemConfigFolder = new File(GCSBConfigFolder, "solarsystems");
 
-    private File planetConfigFile = new File(GCSBConfigFolder, "planets.json");
-    private File solarSystemConfigFile = new File(GCSBConfigFolder, "solarsystems.json");
 
-    private static final Gson GSON = new GsonBuilder()
+
+
+    public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();
 
 
     public void init() {
-        try {
-            GCSBConfigFolder.mkdirs();
+        GCSBConfigFolder.mkdirs();
 
-            planetConfigFolder.mkdirs();
 
-            this.initializeConfigFiles();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-    }
+        solarSystemConfigFolder.mkdirs();
 
-    private void initializeConfigFiles() throws IOException {
-        try {
-            solarSystemConfigFile.createNewFile();
-        } catch (IOException e) {
-            throw e;
-        }
+
     }
 
 
-    public List<Planet> getPlanetListFromFolder() {
-        List<Planet> planetList = new ArrayList<>();
+    public File getGCSBConfigFolder() {
+        return GCSBConfigFolder;
+    }
 
-        try  {
-            Stream<Path> stream = Files.walk(planetConfigFolder.toPath());
-
-            stream.filter(Files::isRegularFile).forEach((planetPath) -> {
-                try {
-                    Reader reader = Files.newBufferedReader(planetPath);
-
-                    Planet planet = GSON.fromJson(reader, Planet.class);
-                    planetList.add(planet);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            planetList.forEach(System.out::println);
-            return planetList;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public File getSolarSystemConfigFolder() {
+        return solarSystemConfigFolder;
     }
 
 }
