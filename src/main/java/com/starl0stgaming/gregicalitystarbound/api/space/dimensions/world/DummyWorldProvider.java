@@ -1,12 +1,9 @@
-package com.starl0stgaming.gregicalitystarbound.api.world.dimension;
+package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world;
 
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeProvider;
-import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.gen.IChunkGenerator;
 
 import java.util.List;

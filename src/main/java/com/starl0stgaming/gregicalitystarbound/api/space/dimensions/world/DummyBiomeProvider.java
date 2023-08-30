@@ -1,4 +1,4 @@
-package com.starl0stgaming.gregicalitystarbound.api.world.dimension;
+package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;

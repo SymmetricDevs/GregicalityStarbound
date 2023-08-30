@@ -1,7 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.planets;
 
 import com.google.gson.JsonObject;
-import com.starl0stgaming.gregicalitystarbound.api.world.dimension.DummyBiome;
+import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyBiome;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;

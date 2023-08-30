@@ -1,4 +1,4 @@
-package com.starl0stgaming.gregicalitystarbound.api.world.dimension;
+package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.MathHelper;

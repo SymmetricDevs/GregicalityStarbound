@@ -1,10 +1,10 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.planets;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
-import com.starl0stgaming.gregicalitystarbound.api.world.dimension.DummyBiome;
-import com.starl0stgaming.gregicalitystarbound.api.world.dimension.DummyWorldProvider;
+import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyBiome;
+import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyWorldProvider;
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.types.PlanetType;
 import net.minecraft.world.DimensionType;
-import net.minecraft.world.biome.Biome;
 
 import java.util.List;
 
@@ -15,7 +15,8 @@ public class Planet {
     private int id;
     private int dimID;
 
-    private List<DummyBiome> biomes;
+    private PlanetType planetType;
+
     private boolean isLoaded;
 
     private DimensionType PlanetDimension;
@@ -43,6 +44,7 @@ public class Planet {
     public void load() {
         if(!isLoaded) {
             isLoaded = true;
+            //TODO: add check if dim already exists, if it does load it/or idk
             if (this.dimID != 0) {
                 PlanetDimension = DimensionType.register(this.planetName, "_gcsb", this.dimID, DummyWorldProvider.class, false);
             }
@@ -79,14 +81,6 @@ public class Planet {
 
     public void setPlanetName(String planetName) {
         this.planetName = planetName;
-    }
-
-    public void setBiomes(List<DummyBiome> biomes) {
-        this.biomes = biomes;
-    }
-
-    public List<DummyBiome> getBiomes() {
-        return biomes;
     }
 
     public DimensionType getDimension() {

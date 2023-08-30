@@ -1,4 +1,4 @@
-package com.starl0stgaming.gregicalitystarbound.api.world.dimension;
+package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.state.IBlockState;
