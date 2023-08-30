@@ -1,0 +1,109 @@
+package com.starl0stgaming.gregicalitystarbound.api.world.dimension;
+
+import com.google.common.collect.ImmutableList;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldEntitySpawner;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkPrimer;
+import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.gen.MapGenBase;
+import net.minecraft.world.gen.MapGenCaves;
+import net.minecraftforge.event.terraingen.TerrainGen;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Random;
+
+import static net.minecraftforge.event.terraingen.InitMapGenEvent.EventType.CAVE;
+
+public class DummyChunkGenerator implements IChunkGenerator {
+
+    private final World worldObj;
+    private Random random;
+    private Biome[] biomesForGeneration;
+
+    private List<Biome.SpawnListEntry> mobs;
+
+    private MapGenBase caveGenerator = new MapGenCaves();
+    private DummyTerrainGenerator terraingen;
+
+    public DummyChunkGenerator(World worldObj, List<Biome.SpawnListEntry> mobs, IBlockState stone, IBlockState bedrock) {
+        this.worldObj = worldObj;
+        this.mobs = mobs;
+        this.terraingen = new DummyTerrainGenerator(stone, bedrock);
+        long seed = worldObj.getSeed();
+        this.random = new Random((seed + 516) * 314);
+        terraingen.setup(worldObj, random);
+        caveGenerator = TerrainGen.getModdedMapGen(caveGenerator, CAVE);
+    }
+
+    @Override
+    public Chunk generateChunk(int x, int z) {
+        ChunkPrimer chunkprimer = new ChunkPrimer();
+
+        this.biomesForGeneration = this.worldObj.getBiomeProvider().getBiomesForGeneration(this.biomesForGeneration, x * 4 - 2, z * 4 - 2, 10, 10);
+        terraingen.setBiomesForGeneration(biomesForGeneration);
+        terraingen.generate(x, z, chunkprimer);
+
+        this.biomesForGeneration = this.worldObj.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
+        terraingen.replaceBiomeBlocks(x, z, chunkprimer, this, biomesForGeneration);
+
+        this.caveGenerator.generate(this.worldObj, x, z, chunkprimer);
+
+        Chunk chunk = new Chunk(this.worldObj, chunkprimer, x, z);
+
+        byte[] biomeArray = chunk.getBiomeArray();
+        for (int i = 0; i < biomeArray.length; ++i) {
+            biomeArray[i] = (byte)Biome.getIdForBiome(this.biomesForGeneration[i]);
+        }
+
+        chunk.generateSkylightMap();
+        return chunk;
+    }
+
+    @Override
+    public void populate(int x, int z) {
+        int i = x * 16;
+        int j = z * 16;
+        BlockPos blockpos = new BlockPos(i, 0, j);
+        Biome biome = this.worldObj.getBiome(blockpos.add(16, 0, 16));
+
+        biome.decorate(this.worldObj, this.random, blockpos);
+
+        WorldEntitySpawner.performWorldGenSpawning(this.worldObj, biome, i + 8, j + 8, 16, 16, this.random);
+    }
+
+    @Override
+    public boolean generateStructures(Chunk chunkIn, int x, int z) {
+        return false;
+    }
+
+    @Override
+    public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos) {
+
+        if (creatureType == EnumCreatureType.MONSTER){
+            return mobs;
+        }
+        return ImmutableList.of();
+    }
+
+    @Nullable
+    @Override
+    public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored) {
+        return null;
+    }
+
+    @Override
+    public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos) {
+        return false;
+    }
+
+    @Override
+    public void recreateStructures(Chunk chunkIn, int x, int z) {
+    }
+
+}
