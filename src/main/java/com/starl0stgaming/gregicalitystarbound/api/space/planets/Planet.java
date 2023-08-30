@@ -1,5 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.planets;
 
+import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
+
 public class Planet {
 
     //Defining variables
@@ -28,6 +30,23 @@ public class Planet {
         this.planetName = planetName;
     }
 
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void load() {
+        if(!isLoaded) {
+            isLoaded = true;
+            GCSBLog.LOGGER.info("Loaded Planet with ID " + this.getId() + " and name " + this.getPlanetName());
+        }
+    }
+
+    public void unload() {
+        if(isLoaded) {
+            isLoaded = false;
+            GCSBLog.LOGGER.info("Unloaded Planet with ID " + this.getId() + " and name " + this.getPlanetName());
+        }
+    }
 
     public int getId() {
         return id;

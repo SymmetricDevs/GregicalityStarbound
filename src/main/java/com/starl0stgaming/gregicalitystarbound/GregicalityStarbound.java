@@ -1,9 +1,9 @@
 package com.starl0stgaming.gregicalitystarbound;
 
 import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBConfigHandler;
+import com.starl0stgaming.gregicalitystarbound.api.configuration.space.SpaceConfigHandler;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
-import com.starl0stgaming.gregicalitystarbound.common.space.planets.PlanetSystemManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -21,6 +21,7 @@ public class GregicalityStarbound {
 
     public static final SpaceController SPACE_CONTROLLER = new SpaceController();
     public static final GCSBConfigHandler CONFIG_HANDLER = new GCSBConfigHandler();
+    public static final SpaceConfigHandler SPACE_CONFIG_HANDLER = new SpaceConfigHandler();
 
     public static KeyBinding keyBinding;
 
