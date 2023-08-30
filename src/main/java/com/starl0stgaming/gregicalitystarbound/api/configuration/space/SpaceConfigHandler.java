@@ -4,6 +4,7 @@ import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBConfigHandler;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
 import com.starl0stgaming.gregicalitystarbound.api.space.solarsystem.SolarSystem;
+import net.minecraft.world.biome.Biome;
 
 import java.io.File;
 import java.io.IOException;

@@ -90,6 +90,5 @@ public class PlanetBiome {
 
         this.biome = new DummyBiome(properties, fillerBlock, topBlock, this.skyColor);
 
-        
     }
 }
