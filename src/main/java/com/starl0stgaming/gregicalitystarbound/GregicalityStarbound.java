@@ -30,9 +30,11 @@ public class GregicalityStarbound {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        GregicalityStarbound.CONFIG_HANDLER.init();
+
         proxy.preLoad();
 
-        GregicalityStarbound.CONFIG_HANDLER.init();
+
 
 
         keyBinding = new KeyBinding("key.gregicalitystarbound.test", Keyboard.KEY_P,"key.gregicalitystarbound.category");
