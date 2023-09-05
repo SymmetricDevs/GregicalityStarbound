@@ -4,8 +4,17 @@ import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyBiome;
 import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyWorldProvider;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.types.PlanetType;
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.PlanetBiome;
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.WorldGenDetails;
+import com.starl0stgaming.gregicalitystarbound.common.space.dimension.GCSBDimensionManager;
+import com.starl0stgaming.gregicalitystarbound.common.space.dimension.ModDimension;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeChunkManager;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Planet {
@@ -21,6 +30,7 @@ public class Planet {
 
     private DimensionType PlanetDimension;
 
+    private WorldGenDetails worldGenDetails;
 
 
 
@@ -46,7 +56,23 @@ public class Planet {
             isLoaded = true;
             //TODO: add check if dim already exists, if it does load it/or idk
             if (this.dimID != 0) {
-                PlanetDimension = DimensionType.register(this.planetName, "_gcsb", this.dimID, DummyWorldProvider.class, false);
+                List<PlanetBiome> pbiomes = worldGenDetails.getBiomeList();
+                List<Biome> biomes = new ArrayList<>();
+                pbiomes.forEach((biome) -> {
+                    biome.initiateBiome();
+                    biomes.add(biome.getBiome());
+                });
+                GCSBDimensionManager.addDetailsTolist(dimID, worldGenDetails);
+
+                if (!DimensionManager.isDimensionRegistered(this.dimID)) {
+                    DimensionManager.registerDimension(this.dimID, ModDimension.planetType);
+                }
+                if(DimensionManager.getWorld(this.dimID) == null) {
+                    File chunkDir = new File(DimensionManager.getCurrentSaveRootDirectory(), DimensionManager.createProviderFor(this.dimID).getSaveFolder());
+                    if(ForgeChunkManager.savedWorldHasForcedChunkTickets(chunkDir)) {
+                        DimensionManager.initDimension(this.dimID);
+                    }
+                }
             }
             GCSBLog.LOGGER.info("Loaded Planet with ID " + this.getId() + " and name " + this.getPlanetName());
         }
@@ -81,6 +107,13 @@ public class Planet {
 
     public void setPlanetName(String planetName) {
         this.planetName = planetName;
+    }
+
+    public WorldGenDetails getWorldGenDetails() {
+        return worldGenDetails;
+    }
+    public void setWorldGenDetails(WorldGenDetails worldGenDetails) {
+        this.worldGenDetails = worldGenDetails;
     }
 
     public DimensionType getDimension() {

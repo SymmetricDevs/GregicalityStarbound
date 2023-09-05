@@ -1,58 +1,61 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world;
 
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.WorldGenDetails;
+import com.starl0stgaming.gregicalitystarbound.common.space.dimension.GCSBDimensionManager;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.ChunkGeneratorFlat;
+import net.minecraft.world.gen.ChunkGeneratorOverworld;
 import net.minecraft.world.gen.IChunkGenerator;
 
 import java.util.List;
 
 public class DummyWorldProvider extends WorldProvider {
 
-    public List<Biome> biomeList;
-    public List<Biome.SpawnListEntry> mobs;
-    public IBlockState stone;
-    public IBlockState bedrock;
+    private WorldGenDetails details;
+    public WorldGenDetails getDimensionInformation() {
+        int dim = getDimension();
+        details = GCSBDimensionManager.getSpecificWorldGenDetails(dim);
 
-    public int averageGroundLevel;
-    public DimensionType dimensionType;
-
-    public DummyWorldProvider(List<Biome> biomeList, List<Biome.SpawnListEntry> mobs, IBlockState stone, IBlockState bedrock, int averageGroundLevel) {
-        this.biomeList = biomeList;
-        this.mobs = mobs;
-        this.stone = stone;
-        this.bedrock = bedrock;
-        this.averageGroundLevel = averageGroundLevel;
-        this.dimensionType = dimensionType;
+        return GCSBDimensionManager.getSpecificWorldGenDetails(dim);
     }
-
-
 
     @Override
     protected void init() {
-        biomeProvider = new DummyBiomeProvider(biomeList);
+        biomeProvider = new DummyBiomeProvider(GCSBDimensionManager.getBiomeListFromDetails(details));
     }
     @Override
     public IChunkGenerator createChunkGenerator() {
-        return new DummyChunkGenerator(world, mobs, stone, bedrock);
+        getDimensionInformation();
+        if (details != null) {
+            return new DummyChunkGenerator(world, details.getStone(), details.getBedrock());
+        }
+
+        return new ChunkGeneratorFlat(world, world.getSeed(), false, "");
     }
 
     @Override
     public int getAverageGroundLevel() {
-        return 50;
-    }
+        getDimensionInformation();
+        if (details != null) {
+            return details.getAverageGroundLevel();
+        }
 
-    @Override
-    public DimensionType getDimensionType() {
-        return null;
+        return 50;
     }
 
     // TODO
     // make sure to add planet name to this
     @Override
     public String getSaveFolder() {
-        return "";
+        return details.getName();
+    }
+
+    @Override
+    public DimensionType getDimensionType() {
+        return null;
     }
 
 }

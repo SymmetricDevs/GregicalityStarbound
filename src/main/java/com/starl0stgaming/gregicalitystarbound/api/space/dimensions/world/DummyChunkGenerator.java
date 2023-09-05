@@ -31,9 +31,8 @@ public class DummyChunkGenerator implements IChunkGenerator {
     private MapGenBase caveGenerator = new MapGenCaves();
     private DummyTerrainGenerator terraingen;
 
-    public DummyChunkGenerator(World worldObj, List<Biome.SpawnListEntry> mobs, IBlockState stone, IBlockState bedrock) {
+    public DummyChunkGenerator(World worldObj, IBlockState stone, IBlockState bedrock) {
         this.worldObj = worldObj;
-        this.mobs = mobs;
         this.terraingen = new DummyTerrainGenerator(stone, bedrock);
         long seed = worldObj.getSeed();
         this.random = new Random((seed + 516) * 314);
@@ -85,9 +84,6 @@ public class DummyChunkGenerator implements IChunkGenerator {
     @Override
     public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos) {
 
-        if (creatureType == EnumCreatureType.MONSTER){
-            return mobs;
-        }
         return ImmutableList.of();
     }
 

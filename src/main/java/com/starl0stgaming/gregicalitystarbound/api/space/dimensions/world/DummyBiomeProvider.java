@@ -6,8 +6,6 @@ import net.minecraft.world.biome.BiomeProvider;
 import java.util.List;
 
 public class DummyBiomeProvider extends BiomeProvider {
-
-
     public DummyBiomeProvider(List<Biome> biomes) {
         allowedBiomes = biomes;
     }
