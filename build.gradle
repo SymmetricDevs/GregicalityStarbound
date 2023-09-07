@@ -78,20 +78,46 @@ tasks.injectTags.configure {
 
 repositories {
     maven {
-        name 'CleanroomMC Maven'
-        url 'https://maven.cleanroommc.com'
+        url "https://maven.shadowfacts.net/"
     }
     maven {
-        name 'SpongePowered Maven'
-        url 'https://repo.spongepowered.org/maven'
+        url "https://maven.k-4u.nl"
     }
     maven {
-        name 'CurseMaven'
-        url 'https://cursemaven.com'
-        content {
-            includeGroup 'curse.maven'
-        }
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
     }
+    maven {
+        name = "blamejared"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = "CCL Maven"
+        url = "https://chickenbones.net/maven/"
+    }
+    maven {
+        name = "CyclopsMC"
+        url = "https://oss.jfrog.org/artifactory/simple/libs-release/"
+    }
+    maven {
+        name 'tterrag Maven'
+        url "https://maven.tterrag.com/"
+    }
+    maven {
+        name = "mcmoddev"
+        url = "https://maven.mcmoddev.com"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
+    maven {
+        url "https://maven.cleanroommc.com"
+    }
+    maven { url = "https://repo.spongepowered.org/maven" }
     mavenLocal() // Must be last for caching to work
 }
 
@@ -123,15 +149,16 @@ dependencies {
     // CCL 3.2.3.358
     implementation rfg.deobf('curse.maven:codechicken-lib-1-8-242818:2779848')
 
-    // GTCEU 2.6.1-beta
-    implementation rfg.deobf('curse.maven:gregtech-ce-unofficial-557242:4527757')
-
-    //GCYM 1.2.0
-    implementation rfg.deobf('curse.maven:gregicality-multiblocks-564858:4529101')
-
+    // GTCEU 2.7.3-beta
+    implementation rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:4701483")
 
     //HEI 4.24.6
     implementation rfg.deobf('curse.maven:had-enough-items-557549:4506796')
+
+    implementation "curse.maven:enderio-64578:3328811"
+    implementation "curse.maven:endercore-231868:2972849"
+    implementation "info.loenwind.autoconfig:AutoConfig:${project.minecraft.version}-1.0.2"
+    implementation "info.loenwind.autosave:AutoSave:${project.minecraft.version}-1.0.11"
 
 }
 

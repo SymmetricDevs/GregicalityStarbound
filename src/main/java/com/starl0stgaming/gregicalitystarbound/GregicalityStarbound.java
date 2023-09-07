@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.lwjgl.input.Keyboard;
 
-@Mod(name = GregicalityStarbound.NAME, modid = GregicalityStarbound.MODID, dependencies = "required-after:gcym")
+@Mod(name = GregicalityStarbound.NAME, modid = GregicalityStarbound.MODID)
 public class GregicalityStarbound {
 
 
@@ -30,11 +30,10 @@ public class GregicalityStarbound {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+
         GregicalityStarbound.CONFIG_HANDLER.init();
 
         proxy.preLoad();
-
-
 
 
         keyBinding = new KeyBinding("key.gregicalitystarbound.test", Keyboard.KEY_P,"key.gregicalitystarbound.category");
