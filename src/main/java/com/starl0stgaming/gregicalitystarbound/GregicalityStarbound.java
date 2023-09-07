@@ -36,9 +36,7 @@ public class GregicalityStarbound {
         proxy.preLoad();
 
 
-        keyBinding = new KeyBinding("key.gregicalitystarbound.test", Keyboard.KEY_P,"key.gregicalitystarbound.category");
 
-        ClientRegistry.registerKeyBinding(keyBinding);
 
 
 
