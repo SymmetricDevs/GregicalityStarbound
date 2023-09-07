@@ -1,20 +1,17 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen;
 
-import com.google.gson.JsonObject;
 import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyBiome;
 import com.starl0stgaming.gregicalitystarbound.api.util.StringUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import com.starl0stgaming.gregicalitystarbound.common.space.dimension.ModDimension;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 
 import net.minecraft.world.biome.Biome.BiomeProperties;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class PlanetBiome {
     // Both of these strings get turned into blocks
-    private IBlockState fillerBlock;
-    private IBlockState topBlock;
+    private String filler;
+    private String top;
 
     private String name;
     private int waterColor;
@@ -26,7 +23,7 @@ public class PlanetBiome {
 
     private boolean rainDisabled;
 
-    private Biome biome;
+    private transient Biome biome;
 
     public String getName() {
         return name;
@@ -36,20 +33,20 @@ public class PlanetBiome {
         this.name = name;
     }
 
-    public IBlockState getFillerBlock() {
-        return fillerBlock;
+    public String getFillerBlock() {
+        return filler;
     }
 
     public void setFillerBlock(String fillerBlock) {
-        this.fillerBlock = StringUtil.getBlockfromString(fillerBlock).getDefaultState();
+        this.filler = fillerBlock;
     }
 
-    public IBlockState getTopBlock() {
-        return topBlock;
+    public String getTopBlock() {
+        return top;
     }
 
     public void setTopBlock(String topBlock) {
-        this.fillerBlock = StringUtil.getBlockfromString(topBlock).getDefaultState();
+        this.top = topBlock;
     }
 
     public int getWaterColor() {
@@ -113,6 +110,7 @@ public class PlanetBiome {
         properties.setTemperature(this.temperature);
         properties.setRainfall(this.rainFall);
 
-        this.biome = new DummyBiome(properties, fillerBlock, topBlock, this.skyColor);
+        this.biome = new DummyBiome(properties, StringUtil.getBlockfromString(filler), StringUtil.getBlockfromString(top), this.skyColor);
+        ModDimension.BIOMES.add(biome.setRegistryName(new ResourceLocation("gcsb", name)));
     }
 }

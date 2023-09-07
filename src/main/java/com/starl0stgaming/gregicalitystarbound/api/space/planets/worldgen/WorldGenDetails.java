@@ -11,9 +11,9 @@ public class WorldGenDetails {
 
     public String name;
     public int averageGroundLevel;
-    public List<PlanetBiome> biomeList;
-    public IBlockState stone;
-    public IBlockState bedrock;
+    public PlanetBiome[] biomeList;
+    public String stone;
+    public String bedrock;
 
 
     public int getAverageGroundLevel() {
@@ -23,26 +23,26 @@ public class WorldGenDetails {
         this.averageGroundLevel = averageGroundLevel;
     }
 
-    public List<PlanetBiome> getBiomeList() {
+    public PlanetBiome[] getBiomeList() {
         return this.biomeList;
     }
 
-    public void setBiomeList(List<PlanetBiome> biomeList) {
+    public void setBiomeList(PlanetBiome[] biomeList) {
         this.biomeList = biomeList;
     }
 
-    public IBlockState getStone() {
+    public String getStone() {
         return this.stone;
     }
     public void setStone(String stone) {
-        this.stone = StringUtil.getBlockfromString(stone).getDefaultState();
+        this.stone = stone;
     }
 
-    public IBlockState getBedrock() {
+    public String getBedrock() {
         return this.bedrock;
     }
     public void setBedrock(String bedrock) {
-        this.bedrock = StringUtil.getBlockfromString(bedrock).getDefaultState();
+        this.bedrock = bedrock;
     }
 
     public String getName() {

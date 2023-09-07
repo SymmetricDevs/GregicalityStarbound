@@ -2,6 +2,8 @@ package com.starl0stgaming.gregicalitystarbound.common.space.dimension;
 
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.PlanetBiome;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.WorldGenDetails;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.world.DimensionType;
@@ -9,19 +11,20 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GCSBDimensionManager {
     private static List<Biome> biomeList = new ArrayList<>();
 
 
-    private static Object2ObjectMap<Integer, WorldGenDetails> worldGenDetailsList = new Object2ObjectOpenHashMap<>();
+    private static Int2ObjectMap<WorldGenDetails> worldGenDetailsList = new Int2ObjectOpenHashMap<>();
 
     public static List<Biome> getBiomeList() {
         return biomeList;
     }
 
-    public static Object2ObjectMap<Integer, WorldGenDetails> getWorldGenDetailsList() {
+    public static Int2ObjectMap<WorldGenDetails> getWorldGenDetailsList() {
         return worldGenDetailsList;
     }
 
@@ -34,9 +37,9 @@ public class GCSBDimensionManager {
     }
 
     public static List<Biome> getBiomeListFromDetails(WorldGenDetails details) {
-        List<PlanetBiome> pbiomes = details.getBiomeList();
+        PlanetBiome[] pbiomes = details.getBiomeList();
         List<Biome> biomes = new ArrayList<>();
-        pbiomes.forEach((biome) -> {
+        Arrays.stream(pbiomes).forEach((biome) -> {
             biomes.add(biome.getBiome());
         });
 

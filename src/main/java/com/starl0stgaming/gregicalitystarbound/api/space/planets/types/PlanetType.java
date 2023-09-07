@@ -14,8 +14,6 @@ public class PlanetType {
 
     public Atmosphere atmosphere;
 
-    private List<PlanetBiome> biomes;
-
     public PlanetType() {
 
     }
@@ -58,13 +56,5 @@ public class PlanetType {
 
     public void setAtmosphere(Atmosphere atmosphere) {
         this.atmosphere = atmosphere;
-    }
-
-    public List<PlanetBiome> getBiomes() {
-        return biomes;
-    }
-
-    public void setBiomes(List<PlanetBiome> biomes) {
-        this.biomes = biomes;
     }
 }
