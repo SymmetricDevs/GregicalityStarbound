@@ -21,11 +21,6 @@ import java.util.stream.Stream;
 public class SpaceConfigHandler {
 
 
-
-
-
-
-
     public File getPlanetDirInSolarSystem(File solarSystemFolder) {
         try {
             Stream<Path> solarSystemFiles = Files.walk(solarSystemFolder.toPath());
