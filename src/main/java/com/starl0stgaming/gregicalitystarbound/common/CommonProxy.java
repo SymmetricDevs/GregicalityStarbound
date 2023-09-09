@@ -29,12 +29,16 @@ public class CommonProxy {
 
     public void preLoad() {
         ModDimension.init();
-        GregicalityStarbound.SPACE_CONTROLLER.initializeSpace();
     }
 
+    public void load() {
+
+    }
 
     @SubscribeEvent
     public static void registerBiomes(RegistryEvent.Register<Biome> event) {
+        GregicalityStarbound.SPACE_CONTROLLER.initializeSpace();
+
         IForgeRegistry<Biome> registry = event.getRegistry();
 
         registry.registerAll(ModDimension.BIOMES.toArray(new Biome[0]));
