@@ -4,16 +4,14 @@ import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBConfigHandl
 import com.starl0stgaming.gregicalitystarbound.api.configuration.space.SpaceConfigHandler;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
-import gregtech.GTInternalTags;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.lwjgl.input.Keyboard;
 
-@Mod(name = GregicalityStarbound.NAME, modid = GregicalityStarbound.MODID, dependencies = GTInternalTags.DEP_VERSION_STRING)
+@Mod(name = GregicalityStarbound.NAME, modid = GregicalityStarbound.MODID)
 public class GregicalityStarbound {
 
 
@@ -38,13 +36,9 @@ public class GregicalityStarbound {
         proxy.preLoad();
 
 
-        keyBinding = new KeyBinding("key.gregicalitystarbound.test", Keyboard.KEY_P,"key.gregicalitystarbound.category");
 
-        ClientRegistry.registerKeyBinding(keyBinding);
-    }
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-        proxy.load();
+
+
     }
 }
