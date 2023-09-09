@@ -20,11 +20,12 @@ public class DummyBiome extends Biome {
         this.skyColor = skyColor;
         fillerBlock = filler;
         topBlock = top;
+
     }
 
     @Override
     public void decorate(World par1World, Random par2Random, BlockPos pos) {
-        // TODO Make the world feel alive
+        super.decorate(par1World, par2Random, pos);
     }
 
     @Override
