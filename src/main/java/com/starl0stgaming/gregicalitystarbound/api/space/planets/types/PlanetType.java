@@ -1,6 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.planets.types;
 
-import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.PlanetBiome;
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.PlanetBiome;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.atmosphere.Atmosphere;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public class PlanetType {
     public boolean hasMoon;
 
     public Atmosphere atmosphere;
+
+    private List<PlanetBiome> biomes;
 
     public PlanetType() {
 
@@ -56,5 +59,13 @@ public class PlanetType {
 
     public void setAtmosphere(Atmosphere atmosphere) {
         this.atmosphere = atmosphere;
+    }
+
+    public List<PlanetBiome> getBiomes() {
+        return biomes;
+    }
+
+    public void setBiomes(List<PlanetBiome> biomes) {
+        this.biomes = biomes;
     }
 }
