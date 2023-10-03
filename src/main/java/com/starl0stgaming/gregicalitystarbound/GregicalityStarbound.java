@@ -2,19 +2,27 @@ package com.starl0stgaming.gregicalitystarbound;
 
 import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBConfigHandler;
 import com.starl0stgaming.gregicalitystarbound.api.configuration.space.SpaceConfigHandler;
+import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
+
+
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.RocketEntity;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraft.entity.EntityList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 @Mod(name = GregicalityStarbound.NAME, modid = GregicalityStarbound.MODID)
 public class GregicalityStarbound {
 
 
+    @Mod.Instance(GregicalityStarbound.MODID)
+    public static GregicalityStarbound instance;
 
     public static final String NAME = "Gregicality Starbound";
     public static final String MODID = "gregicalitystarbound";
@@ -36,6 +44,9 @@ public class GregicalityStarbound {
         proxy.preLoad();
 
 
+        GCSBSounds.registerSounds();
+
+        EntityRegistry.registerModEntity(new ResourceLocation(GregicalityStarbound.MODID, "rocket"), RocketEntity.class, "Rocket", 1, GregicalityStarbound.instance, 64, 3, true);
 
 
 
