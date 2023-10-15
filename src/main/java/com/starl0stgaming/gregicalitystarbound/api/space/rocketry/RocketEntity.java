@@ -64,18 +64,13 @@ public class RocketEntity extends Entity {
 
     @Override
     protected void entityInit() {
-        this.guidanceComputer = new GuidanceComputer();
+        this.guidanceComputer = new GuidanceComputer(this);
         this.guidanceComputer.init();
 
         this.dataManager.register(LAUNCHED, false);
         this.dataManager.register(COUNTDOWN_STARTED, false);
         this.dataManager.register(START_POS, 0.F);
         this.dataManager.register(AGE, 0);
-        this.dataManager.register(LAUNCH_TIME, 0);
-        this.dataManager.register(FLIGHT_TIME, 0);
-
-
-
     }
 
     @Override
@@ -83,8 +78,6 @@ public class RocketEntity extends Entity {
         this.setLaunched(compound.getBoolean("Launched"));
         this.setCountdownStarted(compound.getBoolean("CountdownStarted"));
         this.setAge(compound.getInteger("Age"));
-        this.setLaunchTime(compound.getInteger("LaunchTime"));
-        this.setFlightTime(compound.getInteger("FlightTime"));
         this.setStartPos(compound.getFloat("StartPos"));
     }
 
@@ -93,63 +86,65 @@ public class RocketEntity extends Entity {
         compound.setBoolean("Launched", this.isLaunched());
         compound.setBoolean("CountdownStarted", this.isCountdownStarted());
         compound.setInteger("Age", this.getAge());
-        compound.setInteger("LaunchTime", this.getLaunchTime());
-        compound.setInteger("FlightTime", this.getFlightTime());
         compound.setFloat("StartPos", this.getStartPos());
     }
 
 
 
 
-    public void Launch(){
+    public void onLaunch(){
         this.setLaunched(true);
         this.isAirBorne = true;
+
+        this.playRocketSound();
     }
 
 
 
     @Override
     public void onUpdate() {
-        this.guidanceComputer.onUpdate();
-
-        if(this.firstUpdate) {
-            this.setCountdownStarted(true);
-            this.setStartPos((float)this.posY);
-            this.setLaunchTime(this.getAge() + 200);
-            this.playRocketSound();
-        }
-
         if(!world.isRemote) {
-            if(countdownTimer % 20 == 0) {
-                GCSBLog.LOGGER.info("gaming " + countdownTimer / 20);
+            this.guidanceComputer.onUpdate();
 
-
+            if(countdownTimer % 20 == 0 && this.guidanceComputer.isCountdownStarted()) {
+                this.guidanceComputer.countdownTimerSeconds += 1;
             }
 
+            if(countdownTimer % 1200 == 0 && this.guidanceComputer.isCountdownStarted()) {
+                int countdownMinutes = (this.guidanceComputer.getLaunchTime() - countdownTimer) / 1200;
+
+                if(countdownMinutes != 0) {
+                    GCSBLog.LOGGER.info("[GuidanceComputer] T-" + countdownMinutes + " minutes");
+                }
+            }
+
+            this.setAge(getAge() + 1);
+            if(this.guidanceComputer.isCountdownStarted()) {
+                this.countdownTimer += 1;
+            }
+        }
+
+        if(this.firstUpdate) {
+            this.setStartPos((float)this.posY);
+            this.guidanceComputer.startCountdown();
         }
 
         super.onUpdate();
-
-        if (this.isCountdownStarted() && !isLaunched() && this.getAge() >= this.getLaunchTime()) {
-            this.Launch();
-        }
 
 
         this.setRotation(0.0F, 90.0F);
 
         if(isLaunched()) {
-            int flightTime = getFlightTime();
+            int flightTime = this.guidanceComputer.getFlightTime();
             float startPos = this.getStartPos();
             this.prevPosX = this.posX;
             this.prevPosY = this.posY;
             this.prevPosZ = this.posZ;
-            this.motionY = jerk * Math.pow(getFlightTime(), 2) / 2;
+            this.motionY = jerk * Math.pow(this.guidanceComputer.getFlightTime(), 2) / 2;
             this.setPosition(this.posX, startPos + jerk * Math.pow(flightTime, 3) / 6, this.posZ);
-            this.setFlightTime(flightTime + 1);
         }
 
-        this.setAge(getAge() + 1);
-        this.countdownTimer += 1;
+
     }
 
     public void explode() {
@@ -162,6 +157,7 @@ public class RocketEntity extends Entity {
     }
 
     public void setLaunched(boolean launched){
+        this.guidanceComputer.setLaunched(launched);
         this.dataManager.set(LAUNCHED, launched);
     }
 
@@ -170,6 +166,7 @@ public class RocketEntity extends Entity {
     }
 
     public void setCountdownStarted(boolean countdownStarted){
+        this.guidanceComputer.setCountdownStarted(countdownStarted);
         this.dataManager.set(COUNTDOWN_STARTED, countdownStarted);
     }
 
@@ -177,31 +174,19 @@ public class RocketEntity extends Entity {
         return this.dataManager.get(AGE);
     }
 
-    public void setAge(Integer age){
+    public void setAge(int age){
+        this.guidanceComputer.setAge(age);
         this.dataManager.set(AGE, age);
     }
 
-    public int getFlightTime(){
-        return this.dataManager.get(FLIGHT_TIME);
-    }
 
-    public void setFlightTime(Integer flightTime){
-        this.dataManager.set(FLIGHT_TIME, flightTime);
-    }
-
-    public int getLaunchTime(){
-        return this.dataManager.get(LAUNCH_TIME);
-    }
-
-    public void setLaunchTime(Integer launchTime){
-        this.dataManager.set(LAUNCH_TIME, launchTime);
-    }
 
     public float getStartPos(){
         return this.dataManager.get(START_POS);
     }
 
     public void setStartPos(Float startPos){
+        this.guidanceComputer.setStartHeight(startPos);
         this.dataManager.set(START_POS, startPos);
     }
 
