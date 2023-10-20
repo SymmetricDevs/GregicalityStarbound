@@ -20,10 +20,10 @@ public class MissionConfig {
 
         //get required mission deltaV
         //TODO: Change to get planet id from destination orbit and get the planet and its mass
-        double planetaryConstant = (6.67e-11) * (5.54e24);
+        double planetaryConstant = (6.67e-11) * (5.97e24);
 
         //TODO: change to get from planet
-        double planetRadius = 6317000;
+        double planetRadius = 6.378e+6;
 
 
         this.getTrajectory().setRequiredDeltaV( Math.sqrt((planetaryConstant) / (planetRadius + this.getTrajectory().getDestinationOrbit().getOrbitalHeight())));
