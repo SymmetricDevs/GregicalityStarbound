@@ -65,7 +65,9 @@ public class RocketEntity extends Entity {
     @Override
     protected void entityInit() {
         this.guidanceComputer = new GuidanceComputer(this);
-        this.guidanceComputer.init();
+        if(!this.world.isRemote) {
+            this.guidanceComputer.init();
+        }
 
         this.dataManager.register(LAUNCHED, false);
         this.dataManager.register(COUNTDOWN_STARTED, false);
