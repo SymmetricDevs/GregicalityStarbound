@@ -1,5 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.mission;
 
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.payload.PayloadInfo;
+
 public class MissionConfig {
 
 
@@ -7,7 +9,7 @@ public class MissionConfig {
     private Trajectory trajectory;
 
     //private Timestamps timestamps
-    //private PayloadInfo payloadInfo;
+    private PayloadInfo payloadInfo;
 
     private int requiredFuelRate;
 
@@ -57,5 +59,13 @@ public class MissionConfig {
 
     public void setRequiredFuelRate(int requiredFuelRate) {
         this.requiredFuelRate = requiredFuelRate;
+    }
+
+    public PayloadInfo getPayloadInfo() {
+        return payloadInfo;
+    }
+
+    public void setPayloadInfo(PayloadInfo payloadInfo) {
+        this.payloadInfo = payloadInfo;
     }
 }

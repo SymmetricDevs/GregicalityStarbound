@@ -5,6 +5,7 @@ import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.RocketEntity;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.mission.MissionConfig;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.mission.Trajectory;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.orbit.Orbit;
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.payload.PayloadInfo;
 import crazypants.enderio.base.config.recipes.xml.Fuel;
 
 import java.util.List;
@@ -25,6 +26,11 @@ public class GuidanceComputer {
 
     //rocket stats
     private int maximumDeltaV;
+    private int maximumCargoCapacity;
+
+    private int massTotal;
+    private int massStructural;
+    private int massPropellant;
 
     private boolean isAbleToLaunch;
 
@@ -39,16 +45,23 @@ public class GuidanceComputer {
         //TODO: BUILD ROCKET STATS: DELTA-V, MASS AND CARGO CAPACITY
         this.maximumDeltaV = 10000;
 
+        this.massPropellant = 500;
+        this.massStructural = 300;
+
+        this.maximumCargoCapacity = 1000;
 
         Orbit orbit = new Orbit();
         orbit.setOrbitalHeight(450000);
         orbit.setPlanetID(5);
+
+        PayloadInfo payloadInfo = new PayloadInfo(400);
 
         Trajectory trajectory = new Trajectory(orbit);
 
         MissionConfig missionConfig = new MissionConfig();
         missionConfig.setLaunchTime(12000);
         missionConfig.setTrajectory(trajectory);
+        missionConfig.setPayloadInfo(payloadInfo);
         missionConfig.build();
 
         this.setMissionConfig(missionConfig);
@@ -73,8 +86,21 @@ public class GuidanceComputer {
            GCSBLog.LOGGER.info("[GuidanceComputer] Required fuel flow rate to comply with launch time requirements: " + this.missionConfig.getRequiredFuelRate() + "L/t [PASSED]");
 
            //TODO: Check for max cargo capacity to chosen orbit
-           boolean canCarryCargo = true;
-           GCSBLog.LOGGER.info("[GuidanceComputer] Enough cargo capacity: " + 5.6 + "t [PASSED]");
+           boolean canCarryCargo;
+
+           int payloadMass = this.getMissionConfig().getPayloadInfo().getMass();
+
+           this.massTotal = this.massPropellant + this.massStructural + payloadMass;
+
+           //TODO: change Ve (exhaust velocity) to be dynamic
+           double maxCargoMassToOrbit = (this.massPropellant / (1 - Math.pow(2.718281828459045, (this.getMissionConfig().getTrajectory().getRequiredDeltaV() / 250))) - this.massStructural);
+
+           if(this.maximumCargoCapacity > maxCargoMassToOrbit) {
+               canCarryCargo = true;
+               GCSBLog.LOGGER.info("[GuidanceComputer] Enough cargo capacity: " + maxCargoMassToOrbit + "t [PASSED]");
+           } else {
+               canCarryCargo = false;
+           }
 
            if(enoughDeltaV && enoughFuelFillRate && canCarryCargo) {
                passedPreCountdownChecks = true;
