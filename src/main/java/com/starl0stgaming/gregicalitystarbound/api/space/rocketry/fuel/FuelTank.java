@@ -10,24 +10,55 @@ public class FuelTank {
     private int pressure;
 
 
-    public FuelTank() {
+    private boolean isFull;
+    private boolean isEmpty;
 
+
+    public FuelTank(int maxPropellantCapacity, int maxPressureCapacity) {
+        this.maxPropellantCapacity = maxPropellantCapacity;
+        this.maxPressureCapacity = maxPressureCapacity;
     }
 
-    public void addPropellantToTank(int amountToAdd) {
+    //TODO: could use the isFull variable to determine if its able to take more fuel in
+    public int addPropellantToTank(int amountToAdd) {
         if(this.maxPropellantCapacity > (this.propellant + amountToAdd)) {
             this.propellant += amountToAdd;
+            if(this.propellant == this.maxPropellantCapacity && !this.isFull) {
+                this.setFull(true);
+            }
+            return amountToAdd;
+        } else if(this.maxPropellantCapacity < (this.propellant + amountToAdd)) {
+            int amountAdded = this.maxPropellantCapacity - this.propellant;
+            this.propellant += amountAdded;
+            if(this.propellant == this.maxPropellantCapacity && !this.isFull) {
+                this.setFull(true);
+            }
+            return amountAdded;
         }
+
+        return 0;
     }
 
 
     //TODO: Maybe do as a part of a FuelTransfer an operation result, and return false if the amount to be removed exceeds the current stored amount
-    public void removePropellantFromTank(int amountToRemove) {
+    public int removePropellantFromTank(int amountToRemove) {
         if(this.getPropellant() < amountToRemove) {
-            this.propellant =- this.getPropellant(); // :troll:
+            int amountRemoved = this.getPropellant();
+            this.propellant =- amountRemoved; // :troll:
+            if(this.getPropellant() == 0 && !this.isEmpty) {
+                this.setEmpty(true);
+            }
+            return amountRemoved;
         } else if(this.getPropellant() > amountToRemove) {
-            this.propellant -= amountToRemove;
+            int amountRemoved = this.propellant - amountToRemove;
+            this.propellant -= amountRemoved;
+            if(this.getPropellant() == 0 && !this.isEmpty) {
+                this.setEmpty(true);
+            }
+            return amountRemoved;
         }
+
+        return 0;
     }
 
     public int getMaxPropellantCapacity() {
@@ -60,5 +91,21 @@ public class FuelTank {
 
     public void setPressure(int pressure) {
         this.pressure = pressure;
+    }
+
+    public boolean isFull() {
+        return isFull;
+    }
+
+    public void setFull(boolean full) {
+        isFull = full;
+    }
+
+    public boolean isEmpty() {
+        return isEmpty;
+    }
+
+    public void setEmpty(boolean empty) {
+        isEmpty = empty;
     }
 }
