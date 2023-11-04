@@ -63,6 +63,28 @@ public class FuelNetwork {
         }
     }
 
+    public int getMaximumFuelCapacity() {
+        int maxFuelCapacity = 0;
+        for(int i = 0; i < getFuelTankList().toArray().length; i++) {
+            FuelTank fuelTank = getFuelTankList().get(i);
+
+            maxFuelCapacity += fuelTank.getMaxPropellantCapacity();
+        }
+
+        return maxFuelCapacity;
+    }
+
+    public int getCurrentStoredFuel() {
+        int currentStoredFuel = 0;
+        for(int i = 0; i < getFuelTankList().toArray().length; i++) {
+            FuelTank fuelTank = getFuelTankList().get(i);
+
+            currentStoredFuel += fuelTank.getPropellant();
+        }
+
+        return  currentStoredFuel;
+    }
+
     public int getId() {
         return id;
     }
