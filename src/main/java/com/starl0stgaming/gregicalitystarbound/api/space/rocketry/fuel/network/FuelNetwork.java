@@ -2,7 +2,9 @@ package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.network;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.FuelTank;
+import sun.misc.GC;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FuelNetwork {
@@ -15,6 +17,7 @@ public class FuelNetwork {
 
     public FuelNetwork(int id) {
         this.id = id;
+        this.fuelTankList = new ArrayList<>();
     }
 
 
@@ -37,7 +40,6 @@ public class FuelNetwork {
                 int amountAdded = fuelTank.addPropellantToTank(amountToAdd);
                 amountToAdd =- amountAdded;
                 if (amountToAdd <= 0) {
-                    GCSBLog.LOGGER.info("[FuelNetwork] Fuel Transfer Operation completed");
                     break;
                 }
             } else {
@@ -54,7 +56,6 @@ public class FuelNetwork {
                 int amountRemoved = fuelTank.removePropellantFromTank(amountToRemove);
                 amountToRemove =- amountRemoved;
                 if(amountToRemove <= 0) {
-                    GCSBLog.LOGGER.info("[FuelNetwork] Fuel Transfer Operation completed");
                     break;
                 }
             } else {
@@ -70,7 +71,6 @@ public class FuelNetwork {
 
             maxFuelCapacity += fuelTank.getMaxPropellantCapacity();
         }
-
         return maxFuelCapacity;
     }
 
@@ -81,8 +81,7 @@ public class FuelNetwork {
 
             currentStoredFuel += fuelTank.getPropellant();
         }
-
-        return  currentStoredFuel;
+        return currentStoredFuel;
     }
 
     public int getId() {

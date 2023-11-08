@@ -1,5 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel;
 
+import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
+
 public class FuelTank {
 
 

@@ -1,5 +1,6 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.mission;
 
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.network.FuelNetwork;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.payload.PayloadInfo;
 
 public class MissionConfig {
@@ -17,7 +18,7 @@ public class MissionConfig {
 
     }
 
-    public void build() {
+    public void build(FuelNetwork fuelNetwork) {
         System.out.println(this.getLaunchTime());
 
         //get required mission deltaV
@@ -32,8 +33,7 @@ public class MissionConfig {
 
         //calculate the fuel flow rate needed to be able to comply with launchTime
         //TODO: set to change depending on rocket's fuel tanks
-        this.setRequiredFuelRate(1000000 / this.getLaunchTime());
-        System.out.println(1000000 / this.getLaunchTime());
+        this.setRequiredFuelRate(fuelNetwork.getMaximumFuelCapacity() / this.getLaunchTime());
 
     }
 

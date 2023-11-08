@@ -13,8 +13,18 @@ public class GSEComputer {
 
 
     public GSEComputer() {
-
+        this.fuelNetwork = new FuelNetwork(3);
     }
 
+    public FuelNetwork getFuelNetwork() {
+        return fuelNetwork;
+    }
 
+    public int getFuelFlowRate() {
+        return fuelFlowRate;
+    }
+
+    public void setFuelFlowRate(int fuelFlowRate) {
+        this.fuelFlowRate = fuelFlowRate;
+    }
 }
