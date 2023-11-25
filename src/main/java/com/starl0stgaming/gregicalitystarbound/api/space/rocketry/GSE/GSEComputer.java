@@ -16,6 +16,11 @@ public class GSEComputer {
         this.fuelNetwork = new FuelNetwork(3);
     }
 
+
+    public void init() {
+
+    }
+
     public FuelNetwork getFuelNetwork() {
         return fuelNetwork;
     }

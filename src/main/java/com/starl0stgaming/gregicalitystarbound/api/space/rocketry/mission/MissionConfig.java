@@ -3,6 +3,8 @@ package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.mission;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.network.FuelNetwork;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.payload.PayloadInfo;
 
+import java.util.List;
+
 public class MissionConfig {
 
 
@@ -13,6 +15,7 @@ public class MissionConfig {
     private PayloadInfo payloadInfo;
 
     private int requiredFuelRate;
+
 
     public MissionConfig() {
 
@@ -67,5 +70,10 @@ public class MissionConfig {
 
     public void setPayloadInfo(PayloadInfo payloadInfo) {
         this.payloadInfo = payloadInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "Launch Time: " + this.getLaunchTime() + " Fuel Fill Rate: " + this.getRequiredFuelRate() + " hi I exist (in theory)";
     }
 }

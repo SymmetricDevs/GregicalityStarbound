@@ -39,7 +39,7 @@ public class GuidanceComputer {
     private int massStructural;
     private int massPropellant;
 
-    private boolean isAbleToLaunch;
+    private boolean isLaunchApproved;
 
 
     //Calculates position, acceleration, trajectory, orbit and handles staging, fuel tanks and payload alongside propulsion
@@ -49,11 +49,6 @@ public class GuidanceComputer {
     }
 
     public void init() {
-        this.gseComputer = new GSEComputer();
-        //TODO: should be built from GSE's connected piping and tanks;
-        this.gseComputer.setFuelFlowRate(500);
-
-
         this.fuelNetwork = new FuelNetwork(1);
 
         FuelTank fuelTank1 = new FuelTank(1000000, 10000);
@@ -62,7 +57,7 @@ public class GuidanceComputer {
         this.fuelNetwork.addFuelTank(fuelTank1);
         this.fuelNetwork.addFuelTank(fuelTank2);
 
-        //TODO: BUILD ROCKET STATS: DELTA-V, MASS AND CARGO CAPACITY
+        //TODO: Need to build deltaV, mass values (propellant, structural, total), cargo capacity, Mission Config (Orbit, PayloadInfo, trajectory), fuel network based off parts.
         this.maximumDeltaV = 10000;
 
         this.massPropellant = 500;
@@ -87,69 +82,13 @@ public class GuidanceComputer {
         this.setMissionConfig(missionConfig);
     }
 
+    public void buildValues() {
+
+    }
+
     public void startCountdown() {
-       if(this.missionConfig != null) {
 
-           GCSBLog.LOGGER.info("[GuidanceComputer] Executing Pre-Countdown Mission Checks...");
-           boolean passedPreCountdownChecks;
 
-           boolean enoughDeltaV;
-           if (this.maximumDeltaV < this.missionConfig.getTrajectory().getRequiredDeltaV()) {
-               GCSBLog.LOGGER.warn("[GuidanceComputer] Cannot continue with launch procedures: Not enough deltaV capacity for required mission ");
-               enoughDeltaV = false;
-           } else {
-               enoughDeltaV = true;
-               GCSBLog.LOGGER.info("[GuidanceComputer] Required deltaV: " + this.missionConfig.getTrajectory().getRequiredDeltaV() + " [PASSED] ");
-           }
-           //TODO: Change to "GSE authorizes launch", which are checks by the GSE to keep it more organized
-           boolean enoughFuelFillRate;
-
-           if (this.gseComputer.getFuelFlowRate() >= this.missionConfig.getRequiredFuelRate()) {
-               enoughFuelFillRate = true;
-               GCSBLog.LOGGER.info("[GuidanceComputer] Required fuel flow rate to comply with launch time requirements: " + this.missionConfig.getRequiredFuelRate() + "L/t [PASSED]");
-           } else {
-               enoughFuelFillRate = false;
-           }
-
-           GCSBLog.LOGGER.info("[GuidanceComputer] Required fuel flow rate to comply with launch time requirements: " + this.missionConfig.getRequiredFuelRate() + "L/t [FAILED]");
-
-           //TODO: Check for max cargo capacity to chosen orbit
-           boolean canCarryCargo;
-
-           int payloadMass = this.getMissionConfig().getPayloadInfo().getMass();
-
-           this.massTotal = this.massPropellant + this.massStructural + payloadMass;
-
-           //TODO: change Ve (exhaust velocity) to be dynamic
-           double maxCargoMassToOrbit = (this.massPropellant / (1 - Math.pow(2.718281828459045, (this.getMissionConfig().getTrajectory().getRequiredDeltaV() / 250))) - this.massStructural);
-
-           if (this.maximumCargoCapacity > maxCargoMassToOrbit) {
-               canCarryCargo = true;
-               GCSBLog.LOGGER.info("[GuidanceComputer] Enough cargo capacity: " + maxCargoMassToOrbit + "t [PASSED]");
-           } else {
-               canCarryCargo = false;
-           }
-
-           if (enoughDeltaV && enoughFuelFillRate && canCarryCargo) {
-               passedPreCountdownChecks = true;
-           } else {
-
-               passedPreCountdownChecks = false;
-           }
-
-           if (!passedPreCountdownChecks) {
-               //TODO: specify what is missing
-               GCSBLog.LOGGER.warn("[GuidanceComputer] Pre-Countdown Checks failed, aborting.");
-               return;
-           }
-
-           this.setLaunchTime(this.missionConfig.getLaunchTime());
-           this.setCountdownStarted(true);
-
-           GCSBLog.LOGGER.info("[GuidanceComputer] Initiating Launch Procedures for rocket with entity id " + this.rocketEntity.getEntityId());
-           GCSBLog.LOGGER.info("[GuidanceComputer] T-10 minutes");
-
-       }
 
     }
 
@@ -161,6 +100,10 @@ public class GuidanceComputer {
 
         if(this.fuelNetwork.getCurrentStoredFuel() == 2000000 && isCountdownStarted()) {
             GCSBLog.LOGGER.info("[GuidanceComputer] Fuel Loading Complete: " + this.fuelNetwork.getCurrentStoredFuel() + "L/s");
+        }
+
+        if(this.isCountdownStarted() && this.countdownTimerSeconds % 60 == 0) {
+            GCSBLog.LOGGER.info("[GuidanceComputer] Current stored fuel: " + this.fuelNetwork.getCurrentStoredFuel());
         }
 
         if (this.isCountdownStarted() && !isLaunched() && this.rocketEntity.getAge() >= this.getLaunchTime()) {
@@ -236,5 +179,85 @@ public class GuidanceComputer {
 
     public void setMissionConfig(MissionConfig missionConfig) {
         this.missionConfig = missionConfig;
+    }
+
+    public RocketEntity getRocketEntity() {
+        return rocketEntity;
+    }
+
+    public void setRocketEntity(RocketEntity rocketEntity) {
+        this.rocketEntity = rocketEntity;
+    }
+
+    public GSEComputer getGseComputer() {
+        return gseComputer;
+    }
+
+    public void setGseComputer(GSEComputer gseComputer) {
+        this.gseComputer = gseComputer;
+    }
+
+    public FuelNetwork getFuelNetwork() {
+        return fuelNetwork;
+    }
+
+    public void setFuelNetwork(FuelNetwork fuelNetwork) {
+        this.fuelNetwork = fuelNetwork;
+    }
+
+    public int getCountdownTimerSeconds() {
+        return countdownTimerSeconds;
+    }
+
+    public void setCountdownTimerSeconds(int countdownTimerSeconds) {
+        this.countdownTimerSeconds = countdownTimerSeconds;
+    }
+
+    public int getMaximumDeltaV() {
+        return maximumDeltaV;
+    }
+
+    public void setMaximumDeltaV(int maximumDeltaV) {
+        this.maximumDeltaV = maximumDeltaV;
+    }
+
+    public int getMaximumCargoCapacity() {
+        return maximumCargoCapacity;
+    }
+
+    public void setMaximumCargoCapacity(int maximumCargoCapacity) {
+        this.maximumCargoCapacity = maximumCargoCapacity;
+    }
+
+    public int getMassTotal() {
+        return massTotal;
+    }
+
+    public void setMassTotal(int massTotal) {
+        this.massTotal = massTotal;
+    }
+
+    public int getMassStructural() {
+        return massStructural;
+    }
+
+    public void setMassStructural(int massStructural) {
+        this.massStructural = massStructural;
+    }
+
+    public int getMassPropellant() {
+        return massPropellant;
+    }
+
+    public void setMassPropellant(int massPropellant) {
+        this.massPropellant = massPropellant;
+    }
+
+    public boolean isLaunchApproved() {
+        return isLaunchApproved;
+    }
+
+    public void setLaunchApproved(boolean launchApproved) {
+        isLaunchApproved = launchApproved;
     }
 }
