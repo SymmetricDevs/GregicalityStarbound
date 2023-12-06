@@ -1,22 +1,19 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.guidance;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
-import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.GSE.GSEComputer;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.RocketEntity;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.FuelTank;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.network.FuelNetwork;
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.launchcontrol.profile.LaunchProfile;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.mission.MissionConfig;
-import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.mission.Trajectory;
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.orbit.Trajectory;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.orbit.Orbit;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.payload.PayloadInfo;
-import crazypants.enderio.base.config.recipes.xml.Fuel;
-
-import java.util.List;
 
 public class GuidanceComputer {
     private RocketEntity rocketEntity;
 
-    private GSEComputer gseComputer;
+    private LaunchProfile launchProfile;
 
     private FuelNetwork fuelNetwork;
 
@@ -80,16 +77,6 @@ public class GuidanceComputer {
         missionConfig.build(this.fuelNetwork);
 
         this.setMissionConfig(missionConfig);
-    }
-
-    public void buildValues() {
-
-    }
-
-    public void startCountdown() {
-
-
-
     }
 
     public void onUpdate() {
@@ -187,14 +174,6 @@ public class GuidanceComputer {
 
     public void setRocketEntity(RocketEntity rocketEntity) {
         this.rocketEntity = rocketEntity;
-    }
-
-    public GSEComputer getGseComputer() {
-        return gseComputer;
-    }
-
-    public void setGseComputer(GSEComputer gseComputer) {
-        this.gseComputer = gseComputer;
     }
 
     public FuelNetwork getFuelNetwork() {

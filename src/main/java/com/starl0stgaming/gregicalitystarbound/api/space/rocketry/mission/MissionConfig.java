@@ -1,9 +1,8 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.mission;
 
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.network.FuelNetwork;
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.orbit.Trajectory;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.payload.PayloadInfo;
-
-import java.util.List;
 
 public class MissionConfig {
 

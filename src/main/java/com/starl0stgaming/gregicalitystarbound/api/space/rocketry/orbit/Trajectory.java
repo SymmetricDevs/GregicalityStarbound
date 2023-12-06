@@ -1,4 +1,4 @@
-package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.mission;
+package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.orbit;
 
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.orbit.Orbit;
 

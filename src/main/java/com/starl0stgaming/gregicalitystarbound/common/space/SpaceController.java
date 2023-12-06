@@ -3,6 +3,7 @@ package com.starl0stgaming.gregicalitystarbound.common.space;
 import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.launchcontrol.LaunchController;
 import com.starl0stgaming.gregicalitystarbound.api.space.solarsystem.SolarSystem;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 public class SpaceController {
 
     public static final CelestialBodyManager CELESTIAL_BODY_MANAGER = new CelestialBodyManager();
+    public static final LaunchController LAUNCH_CONTROLLER = new LaunchController();
 
     public SpaceController() {
 
@@ -40,6 +42,12 @@ public class SpaceController {
 
 
         // Galaxies
+
+
+
+        // Rocketry
+        LAUNCH_CONTROLLER.init();
+
 
     }
 

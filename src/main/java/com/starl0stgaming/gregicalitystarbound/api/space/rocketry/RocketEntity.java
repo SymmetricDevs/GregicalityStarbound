@@ -128,7 +128,6 @@ public class RocketEntity extends Entity {
 
         if(this.firstUpdate) {
             this.setStartPos((float)this.posY);
-            this.guidanceComputer.startCountdown();
         }
 
         super.onUpdate();
