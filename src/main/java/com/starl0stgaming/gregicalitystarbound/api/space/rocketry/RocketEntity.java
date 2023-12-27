@@ -3,14 +3,12 @@ package com.starl0stgaming.gregicalitystarbound.api.space.rocketry;
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
 import com.starl0stgaming.gregicalitystarbound.api.sound.MovingSoundRocket;
-import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.guidance.GuidanceComputer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,7 +26,6 @@ public class RocketEntity extends Entity {
     @SideOnly(Side.CLIENT)
     private MovingSoundRocket soundRocket;
 
-    private GuidanceComputer guidanceComputer;
     private String name;
     private int id;
 
@@ -106,19 +103,6 @@ public class RocketEntity extends Entity {
     @Override
     public void onUpdate() {
         if(!world.isRemote) {
-            this.guidanceComputer.onUpdate();
-
-            if(countdownTimer % 20 == 0 && this.guidanceComputer.isCountdownStarted()) {
-                this.guidanceComputer.countdownTimerSeconds += 1;
-            }
-
-            if(countdownTimer % 1200 == 0 && this.guidanceComputer.isCountdownStarted()) {
-                int countdownMinutes = (this.guidanceComputer.getLaunchTime() - countdownTimer) / 1200;
-
-                if(countdownMinutes != 0) {
-                    GCSBLog.LOGGER.info("[GuidanceComputer] T-" + countdownMinutes + " minutes");
-                }
-            }
 
             this.setAge(getAge() + 1);
             if(this.guidanceComputer.isCountdownStarted()) {
