@@ -6,6 +6,8 @@ import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.payload.Payloa
 
 public class Rocket {
 
+    //TODO: unite with RocketEntity class
+
     //fuel
     private FuelNetwork fuelNetwork;
 
