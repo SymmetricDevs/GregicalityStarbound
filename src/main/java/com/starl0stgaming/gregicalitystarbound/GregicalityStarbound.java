@@ -7,6 +7,7 @@ import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
 
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.RocketEntity;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
+import com.starl0stgaming.gregicalitystarbound.common.metatileentities.GCSBMetaTileEntities;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityList;
@@ -48,7 +49,7 @@ public class GregicalityStarbound {
 
         EntityRegistry.registerModEntity(new ResourceLocation(GregicalityStarbound.MODID, "rocket"), RocketEntity.class, "Rocket", 1, GregicalityStarbound.instance, 64, 3, true);
 
-
+        GCSBMetaTileEntities.init();
 
 
     }

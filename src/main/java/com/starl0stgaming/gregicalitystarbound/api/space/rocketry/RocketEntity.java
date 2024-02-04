@@ -3,6 +3,7 @@ package com.starl0stgaming.gregicalitystarbound.api.space.rocketry;
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
 import com.starl0stgaming.gregicalitystarbound.api.sound.MovingSoundRocket;
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.GuidanceComputer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,6 +30,7 @@ public class RocketEntity extends Entity {
     private String name;
     private int id;
 
+    private GuidanceComputer guidanceComputer;
 
     private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.<Boolean>createKey(RocketEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.<Boolean>createKey(RocketEntity.class, DataSerializers.BOOLEAN);
