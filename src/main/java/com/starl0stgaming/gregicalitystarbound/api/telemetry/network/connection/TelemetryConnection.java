@@ -1,6 +1,8 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection;
 
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,11 @@ public class TelemetryConnection {
 
     public TelemetryConnection(int id) {
         this.endpointList = new ArrayList<>();
+    }
+
+
+    public static void sendPacketToNetwork(TelemetryPacket telemetryPacket, int priority) {
+
     }
 
     public void addEndpoint(TelemetryEndpoint endpoint) {
