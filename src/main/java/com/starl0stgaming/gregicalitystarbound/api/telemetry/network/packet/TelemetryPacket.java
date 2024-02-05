@@ -12,6 +12,13 @@ public class TelemetryPacket<T extends TelemetryPacketData> {
     }
 
 
+    public T getPacketData() {
+        return packetData;
+    }
+
+    public void setPacketData(T packetData) {
+        this.packetData = packetData;
+    }
 
     public int getPriority() {
         return priority;
