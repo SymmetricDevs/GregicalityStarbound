@@ -1,24 +1,29 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection;
 
+import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TelemetryConnection {
+public class TelemetryNetwork {
 
     private List<TelemetryEndpoint> endpointList;
 
 
-    public TelemetryConnection(int id) {
+    public TelemetryNetwork(int id) {
         this.endpointList = new ArrayList<>();
     }
 
 
-    public static void sendPacketToNetwork(TelemetryPacket telemetryPacket, int priority) {
-
+    public void sendPacketToNetwork(TelemetryPacket telemetryPacket) {
+        if(this.endpointList.isEmpty()) return;
+        for(int i = 0; i < this.endpointList.toArray().length; i++) {
+            TelemetryEndpoint endpoint = this.endpointList.get(i);
+            endpoint.receivePacket(telemetryPacket);
+            GCSBLog.LOGGER.info("Sent packet to endpoint with id " + endpoint.getId());
+        }
     }
 
     public void addEndpoint(TelemetryEndpoint endpoint) {
