@@ -2,7 +2,6 @@ package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.network;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.FuelTank;
-import sun.misc.GC;
 
 import java.util.ArrayList;
 import java.util.List;
