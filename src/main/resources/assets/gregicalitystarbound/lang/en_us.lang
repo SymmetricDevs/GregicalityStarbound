@@ -1,1 +1,4 @@
-launch_pad=Launch Pad
+
+
+# Machines
+gregtech.machine.launch_pad.name=Launch Pad

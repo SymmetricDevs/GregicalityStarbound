@@ -129,8 +129,6 @@ dependencies {
         implementation 'zone.rong:mixinbooter:7.1'
     }
 
-    // Example of deobfuscating a dependency
-    // implementation rfg.deobf('curse.maven:had-enough-items-557549:4543375')
 
     if (project.use_mixins.toBoolean()) {
         // Change your mixin refmap name here:
@@ -145,22 +143,12 @@ dependencies {
             transitive = false
         }
     }
-
-    // CCL 3.2.3.358
-    implementation rfg.deobf('curse.maven:codechicken-lib-1-8-242818:2779848')
-
-    // GTCEU 2.7.3-beta
-    implementation rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:4701483")
-
-    //HEI 4.24.6
-    implementation rfg.deobf('curse.maven:had-enough-items-557549:4506796')
-
-    implementation "curse.maven:enderio-64578:3328811"
-    implementation "curse.maven:endercore-231868:2972849"
-    implementation "info.loenwind.autoconfig:AutoConfig:${project.minecraft.version}-1.0.2"
-    implementation "info.loenwind.autosave:AutoSave:${project.minecraft.version}-1.0.11"
-
 }
+
+if (getFile('dependencies.gradle').exists()) {
+    apply from: 'dependencies.gradle'
+}
+
 
 // Adds Access Transformer files to tasks
 if (project.use_access_transformer.toBoolean()) {
@@ -244,4 +232,11 @@ idea {
 
 tasks.named("processIdeaSettings").configure {
     dependsOn("injectTags")
+}
+
+
+// Helpers
+
+def getFile(String relativePath) {
+    return new File(projectDir, relativePath)
 }
