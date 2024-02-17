@@ -1,16 +1,14 @@
 package com.starl0stgaming.gregicalitystarbound.api.util;
 
-import com.sun.istack.internal.NotNull;
 import gregtech.api.GTValues;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class StringUtil {
 
-    public static @NotNull ResourceLocation gcsbId(@NotNull String name) {
+    public static ResourceLocation gcsbId(String name) {
         return new ResourceLocation(GTValues.MODID, name);
     }
 
