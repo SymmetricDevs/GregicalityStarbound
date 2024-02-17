@@ -6,7 +6,7 @@ public class RocketPacketData extends TelemetryPacketData {
 
 
     public RocketPacketData(int priority) {
-        super(priority);
+        super(/*priority*/);
     }
 
     @Override
