@@ -7,6 +7,7 @@ import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
 
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.RocketEntity;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
+import com.starl0stgaming.gregicalitystarbound.common.metatileentities.GCSBMetaTileEntities;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityList;
@@ -14,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
@@ -49,7 +51,10 @@ public class GregicalityStarbound {
         EntityRegistry.registerModEntity(new ResourceLocation(GregicalityStarbound.MODID, "rocket"), RocketEntity.class, "Rocket", 1, GregicalityStarbound.instance, 64, 3, true);
 
 
+    }
 
-
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        GCSBMetaTileEntities.init();
     }
 }

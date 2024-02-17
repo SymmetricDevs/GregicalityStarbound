@@ -29,7 +29,6 @@ public class RocketEntity extends Entity {
     private String name;
     private int id;
 
-
     private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.<Boolean>createKey(RocketEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.<Boolean>createKey(RocketEntity.class, DataSerializers.BOOLEAN);
 
@@ -61,9 +60,7 @@ public class RocketEntity extends Entity {
 
     @Override
     protected void entityInit() {
-        this.guidanceComputer = new GuidanceComputer(this);
         if(!this.world.isRemote) {
-            this.guidanceComputer.init();
         }
 
         this.dataManager.register(LAUNCHED, false);
@@ -105,9 +102,6 @@ public class RocketEntity extends Entity {
         if(!world.isRemote) {
 
             this.setAge(getAge() + 1);
-            if(this.guidanceComputer.isCountdownStarted()) {
-                this.countdownTimer += 1;
-            }
         }
 
         if(this.firstUpdate) {
@@ -120,13 +114,10 @@ public class RocketEntity extends Entity {
         this.setRotation(0.0F, 90.0F);
 
         if(isLaunched()) {
-            int flightTime = this.guidanceComputer.getFlightTime();
             float startPos = this.getStartPos();
             this.prevPosX = this.posX;
             this.prevPosY = this.posY;
             this.prevPosZ = this.posZ;
-            this.motionY = jerk * Math.pow(this.guidanceComputer.getFlightTime(), 2) / 2;
-            this.setPosition(this.posX, startPos + jerk * Math.pow(flightTime, 3) / 6, this.posZ);
         }
 
 
@@ -142,7 +133,6 @@ public class RocketEntity extends Entity {
     }
 
     public void setLaunched(boolean launched){
-        this.guidanceComputer.setLaunched(launched);
         this.dataManager.set(LAUNCHED, launched);
     }
 
@@ -151,7 +141,6 @@ public class RocketEntity extends Entity {
     }
 
     public void setCountdownStarted(boolean countdownStarted){
-        this.guidanceComputer.setCountdownStarted(countdownStarted);
         this.dataManager.set(COUNTDOWN_STARTED, countdownStarted);
     }
 
@@ -160,7 +149,6 @@ public class RocketEntity extends Entity {
     }
 
     public void setAge(int age){
-        this.guidanceComputer.setAge(age);
         this.dataManager.set(AGE, age);
     }
 
@@ -171,7 +159,6 @@ public class RocketEntity extends Entity {
     }
 
     public void setStartPos(Float startPos){
-        this.guidanceComputer.setStartHeight(startPos);
         this.dataManager.set(START_POS, startPos);
     }
 
