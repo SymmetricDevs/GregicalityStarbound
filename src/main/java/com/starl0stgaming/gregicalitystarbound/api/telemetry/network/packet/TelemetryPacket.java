@@ -1,24 +1,24 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet;
 
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketData;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
 
-public class TelemetryPacket<T extends TelemetryPacketData> {
+public class TelemetryPacket {
 
     private int priority;
     //gets cleared after each send operation is completed, if value equals 0 then it will be sent to whole connection;
     private int destinationID;
-    private T packetData;
+    private TelemetryPacketPayload packetData;
 
     public TelemetryPacket() {
         this.priority = priority;
     }
 
 
-    public T getPacketData() {
+    public TelemetryPacketPayload getPacketData() {
         return packetData;
     }
 
-    public void setPacketData(T packetData) {
+    public void setPacketData(TelemetryPacketPayload packetData) {
         this.packetData = packetData;
     }
 
