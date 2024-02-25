@@ -3,8 +3,6 @@ package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.dat
 import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class TelemetryPacketPayload {
-
-
     private NBTTagCompound nbtTagCompound;
 
     public TelemetryPacketPayload() {
