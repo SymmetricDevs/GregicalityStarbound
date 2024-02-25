@@ -7,12 +7,12 @@ import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.Tele
 import java.util.ArrayList;
 import java.util.List;
 
-public class TelemetryNetwork {
+public class TelemetryConnection {
 
     private List<TelemetryEndpoint> endpointList;
 
 
-    public TelemetryNetwork(int id) {
+    public TelemetryConnection(int id) {
         this.endpointList = new ArrayList<>();
     }
 
@@ -23,6 +23,19 @@ public class TelemetryNetwork {
             TelemetryEndpoint endpoint = this.endpointList.get(i);
             endpoint.receivePacket(telemetryPacket);
             GCSBLog.LOGGER.info("Sent packet to endpoint with id " + endpoint.getId());
+        }
+    }
+
+    public void sendPacketToDestination(TelemetryPacket telemetryPacket) {
+        if(this.endpointList.isEmpty()) return;
+        for(int i = 0; i < this.endpointList.toArray().length; i++) {
+            if(this.endpointList.get(i).getId() == telemetryPacket.getDestinationID()) {
+                TelemetryEndpoint endpoint = this.endpointList.get(i);
+                endpoint.receivePacket(telemetryPacket);
+                GCSBLog.LOGGER.info("Sent packet to endpoint with id " + endpoint.getId());
+            } else if(telemetryPacket.getDestinationID() == 0) {
+                this.sendPacketToNetwork(telemetryPacket);
+            }
         }
     }
 

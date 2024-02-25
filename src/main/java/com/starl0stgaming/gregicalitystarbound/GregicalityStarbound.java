@@ -6,6 +6,7 @@ import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
 
 
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.RocketEntity;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetwork;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
 import net.minecraft.client.settings.KeyBinding;
@@ -30,6 +31,8 @@ public class GregicalityStarbound {
     public static final SpaceController SPACE_CONTROLLER = new SpaceController();
     public static final GCSBConfigHandler CONFIG_HANDLER = new GCSBConfigHandler();
     public static final SpaceConfigHandler SPACE_CONFIG_HANDLER = new SpaceConfigHandler();
+
+    public static final TelemetryNetwork TELEMETRY_NETWORK = new TelemetryNetwork();
 
     public static KeyBinding keyBinding;
 

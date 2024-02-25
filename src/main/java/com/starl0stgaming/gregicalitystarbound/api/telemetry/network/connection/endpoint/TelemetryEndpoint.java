@@ -1,7 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryNetwork;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 
 import java.util.Comparator;
@@ -10,16 +10,18 @@ import java.util.PriorityQueue;
 public class TelemetryEndpoint {
 
     private int id;
-    private TelemetryNetwork network;
+    private TelemetryConnection connection;
 
     private PriorityQueue<TelemetryPacket> inPacketQueue;
     private PriorityQueue<TelemetryPacket> outPacketQueue;
+
+
 
     //private Discriminator discriminator; or
     //private AuthKey authKey;
 
     public TelemetryEndpoint(int id) {
-        this.network = null;
+        this.connection = null;
         this.id = id;
 
         inPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
@@ -37,11 +39,10 @@ public class TelemetryEndpoint {
             }
         }
 
-        //read out packet queue and send packets to network
-        //TODO: add specific destinations for the packets, like a single endpoint in the connection or several specific ones
+        //read out packet queue and send packets to specified destination in packet info or whole network
         if(!this.outPacketQueue.isEmpty()) {
             for(int i = 0; i < this.outPacketQueue.toArray().length; i++) {
-                this.network.sendPacketToNetwork(this.outPacketQueue.poll());
+                this.connection.sendPacketToDestination(this.outPacketQueue.poll());
             }
         }
     }
@@ -52,7 +53,7 @@ public class TelemetryEndpoint {
     }
 
     public void sendPacket(TelemetryPacket packet) {
-        if(this.network == null) {
+        if(this.connection == null) {
             GCSBLog.LOGGER.error("[ERROR] Telemetry Endpoint with id " + this.getId() + " cant send packet because it has no bound network!");
             return;
         }
@@ -60,8 +61,8 @@ public class TelemetryEndpoint {
         GCSBLog.LOGGER.info("Sent packet from endpoint with id " + id);
     }
 
-    public void setNetwork(TelemetryNetwork network) {
-        this.network = network;
+    public void setNetwork(TelemetryConnection network) {
+        this.connection = network;
     }
 
     public int getId() {
