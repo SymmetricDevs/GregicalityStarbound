@@ -1,17 +1,9 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.INBTSerializable;
 
-public abstract class TelemetryPacketPayload {
-    private NBTTagCompound nbtTagCompound;
+public abstract class TelemetryPacketPayload implements INBTSerializable {
 
-    public TelemetryPacketPayload() {
-        this.nbtTagCompound = new NBTTagCompound();
-    }
 
-    public void readContents(NBTTagCompound nbtTagCompound) {
-        this.nbtTagCompound = nbtTagCompound;
-    }
 
-    public abstract NBTTagCompound writeContents(NBTTagCompound nbtTagCompound);
 }
