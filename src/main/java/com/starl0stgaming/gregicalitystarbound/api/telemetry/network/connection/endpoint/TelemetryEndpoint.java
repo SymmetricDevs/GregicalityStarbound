@@ -3,6 +3,7 @@ package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
@@ -14,6 +15,8 @@ public class TelemetryEndpoint {
 
     private PriorityQueue<TelemetryPacket> inPacketQueue;
     private PriorityQueue<TelemetryPacket> outPacketQueue;
+
+    public TelemetryPacketPayload[] dataBuffer;
 
 
 
@@ -31,11 +34,26 @@ public class TelemetryEndpoint {
     public void update() {
         //reads packet queues and processes in packets and sends out packets
 
+
         //read in packet queue
         if(!this.inPacketQueue.isEmpty())  {
+            int payloadCount = 0;
+
             for(int i = 0; i < this.inPacketQueue.toArray().length; i++) {
                 TelemetryPacket packetIn = this.inPacketQueue.poll();
-                //TODO: PROCESSING LOGIC FOR PACKETS
+                TelemetryPacketPayload packetPayload = packetIn.getPacketData();
+
+                boolean hasPayloadBeenAllocated = false;
+
+                while(hasPayloadBeenAllocated) {
+                    if(this.dataBuffer[payloadCount] == null) {
+                        this.dataBuffer[payloadCount] = packetPayload;
+                        payloadCount++;
+                        hasPayloadBeenAllocated = true;
+                    } else {
+                        payloadCount++;
+                    }
+                }
             }
         }
 
@@ -45,6 +63,20 @@ public class TelemetryEndpoint {
                 this.connection.sendPacketToDestination(this.outPacketQueue.poll());
             }
         }
+    }
+
+    /**
+     *
+     * @return returns the TelemetryPacketPayload in the index 0 of the endpoint's data buffer.
+     */
+    public TelemetryPacketPayload getBufferedPayload() {
+        TelemetryPacketPayload payload = this.dataBuffer[0];
+
+        //reshuffle array, probably shouldnt do this here though
+        for(int i = 0; i < this.dataBuffer.length - 1; i++) {
+            this.dataBuffer[i + 1] = this.dataBuffer[i];
+        }
+        return payload;
     }
 
     public void receivePacket(TelemetryPacket packet) {

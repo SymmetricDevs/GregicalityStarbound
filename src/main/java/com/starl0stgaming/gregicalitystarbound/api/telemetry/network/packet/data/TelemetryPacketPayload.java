@@ -2,7 +2,7 @@ package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.dat
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class TelemetryPacketPayload {
+public class TelemetryPacketPayload {
 
 
     private NBTTagCompound nbtTagCompound;
@@ -11,9 +11,11 @@ public abstract class TelemetryPacketPayload {
         this.nbtTagCompound = new NBTTagCompound();
     }
 
-    public void readContents(NBTTagCompound nbtTagCompound) {
-        this.nbtTagCompound = nbtTagCompound;
+    public NBTTagCompound getPayload() {
+        return nbtTagCompound;
     }
 
-    public abstract NBTTagCompound writeContents(NBTTagCompound nbtTagCompound);
+    public void setPayload(NBTTagCompound nbtTagCompound) {
+        this.nbtTagCompound = nbtTagCompound;
+    }
 }

@@ -9,7 +9,7 @@ public class TelemetryPacket {
     private int destinationID;
     private TelemetryPacketPayload packetData;
 
-    public TelemetryPacket() {
+    public TelemetryPacket(int priority) {
         this.priority = priority;
     }
 
