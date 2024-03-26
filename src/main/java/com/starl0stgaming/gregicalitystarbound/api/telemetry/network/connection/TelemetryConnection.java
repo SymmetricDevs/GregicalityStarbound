@@ -41,10 +41,18 @@ public class TelemetryConnection {
 
     public void addEndpoint(TelemetryEndpoint endpoint) {
         this.endpointList.add(endpoint);
+        endpoint.setConnection(this);
+    }
+
+    public void addEndpoints(TelemetryEndpoint... endpoints) {
+        for (TelemetryEndpoint endpoint : endpoints) {
+            this.addEndpoint(endpoint);
+        }
     }
 
     public void removeEndpoint(TelemetryEndpoint endpoint) {
         this.endpointList.remove(endpoint);
+        endpoint.setConnection(null);
     }
 
     public TelemetryEndpoint getEndpointByID(int id) {

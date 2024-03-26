@@ -122,6 +122,7 @@ repositories {
 }
 
 dependencies {
+    testImplementation 'junit:junit:4.13.1'
     if (project.use_assetmover.toBoolean()) {
         implementation 'com.cleanroommc:assetmover:2.5'
     }

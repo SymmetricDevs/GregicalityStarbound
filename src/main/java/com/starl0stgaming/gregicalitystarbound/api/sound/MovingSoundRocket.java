@@ -1,9 +1,8 @@
 package com.starl0stgaming.gregicalitystarbound.api.sound;
 
-import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.RocketEntity;
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.entity.RocketEntity;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 
 public class MovingSoundRocket extends MovingSound {

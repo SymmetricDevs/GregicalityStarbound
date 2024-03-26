@@ -4,12 +4,14 @@ import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class TelemetryEndpoint {
 
+    //private static int ID_TRACKER = 0;
     private int id;
     private TelemetryConnection connection;
 
@@ -26,7 +28,7 @@ public class TelemetryEndpoint {
     public TelemetryEndpoint(int id) {
         this.connection = null;
         this.id = id;
-
+        this.dataBuffer = new TelemetryPacketPayload[2];
         inPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
         outPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
     }
@@ -45,7 +47,7 @@ public class TelemetryEndpoint {
 
                 boolean hasPayloadBeenAllocated = false;
 
-                while(hasPayloadBeenAllocated) {
+                while(!hasPayloadBeenAllocated) {
                     if(this.dataBuffer[payloadCount] == null) {
                         this.dataBuffer[payloadCount] = packetPayload;
                         payloadCount++;
@@ -67,12 +69,12 @@ public class TelemetryEndpoint {
 
     /**
      *
-     * @return returns the TelemetryPacketPayload in the index 0 of the endpoint's data buffer.
+     * @return returns the TelemetryPacketPayload in the index 0 of the endpoint's data buffer, which may be null.
      */
-    public TelemetryPacketPayload getBufferedPayload() {
+    public TelemetryPacketPayload poll() {
         TelemetryPacketPayload payload = this.dataBuffer[0];
 
-        //reshuffle array, probably shouldnt do this here though
+        //reshuffle array, probably shouldn't do this here though
         for(int i = 0; i < this.dataBuffer.length - 1; i++) {
             this.dataBuffer[i + 1] = this.dataBuffer[i];
         }
@@ -93,8 +95,16 @@ public class TelemetryEndpoint {
         GCSBLog.LOGGER.info("Sent packet from endpoint with id " + id);
     }
 
-    public void setNetwork(TelemetryConnection network) {
-        this.connection = network;
+    public void writeToNBT(NBTTagCompound data) {
+
+    }
+
+    public NBTTagCompound readFromNBT(NBTTagCompound data) {
+        return new NBTTagCompound();
+    }
+
+    public void setConnection(TelemetryConnection connection) {
+        this.connection = connection;
     }
 
     public int getId() {
