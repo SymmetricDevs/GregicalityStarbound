@@ -1,6 +1,8 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.AuthKey;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.Discriminator;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
@@ -16,25 +18,24 @@ public class TelemetryEndpoint {
     private PriorityQueue<TelemetryPacket> inPacketQueue;
     private PriorityQueue<TelemetryPacket> outPacketQueue;
 
-    public TelemetryPacketPayload[] dataBuffer;
+    public TelemetryPacketPayload dataBuffer[];
 
+    protected Discriminator discriminator;
+    protected AuthKey authKey;
 
-
-    //private Discriminator discriminator; or
-    //private AuthKey authKey;
-
-    public TelemetryEndpoint(int id) {
+    public TelemetryEndpoint(int id, Discriminator discriminator, AuthKey authKey) {
         this.connection = null;
         this.id = id;
 
         inPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
         outPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
+
+        this.discriminator = discriminator;
+        this.authKey = authKey;
     }
 
     public void update() {
         //reads packet queues and processes in packets and sends out packets
-
-
         //read in packet queue
         if(!this.inPacketQueue.isEmpty())  {
             int payloadCount = 0;
