@@ -5,11 +5,13 @@ import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class TelemetryEndpoint {
+public class TelemetryEndpoint implements INBTSerializable<NBTTagCompound> {
 
     //private static int ID_TRACKER = 0;
     private int id;
@@ -19,6 +21,7 @@ public class TelemetryEndpoint {
     private PriorityQueue<TelemetryPacket> outPacketQueue;
 
     public TelemetryPacketPayload[] dataBuffer;
+    private int bufferBeg;
 
 
 
@@ -28,10 +31,21 @@ public class TelemetryEndpoint {
     public TelemetryEndpoint(int id) {
         this.connection = null;
         this.id = id;
-        this.dataBuffer = new TelemetryPacketPayload[2];
+        this.dataBuffer = new TelemetryPacketPayload[8];
+        this.bufferBeg = 0;
         inPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
         outPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
     }
+
+    public TelemetryEndpoint(NBTTagCompound ntc) {
+        this.connection = null;
+        this.dataBuffer = new TelemetryPacketPayload[8];
+        this.bufferBeg = 0;
+        inPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
+        outPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
+        deserializeNBT(ntc);
+    }
+
 
     public void update() {
         //reads packet queues and processes in packets and sends out packets
@@ -39,7 +53,7 @@ public class TelemetryEndpoint {
 
         //read in packet queue
         if(!this.inPacketQueue.isEmpty())  {
-            int payloadCount = 0;
+            int payloadCount = bufferBeg;
 
             for(int i = 0; i < this.inPacketQueue.toArray().length; i++) {
                 TelemetryPacket packetIn = this.inPacketQueue.poll();
@@ -50,10 +64,13 @@ public class TelemetryEndpoint {
                 while(!hasPayloadBeenAllocated) {
                     if(this.dataBuffer[payloadCount] == null) {
                         this.dataBuffer[payloadCount] = packetPayload;
-                        payloadCount++;
                         hasPayloadBeenAllocated = true;
-                    } else {
-                        payloadCount++;
+                    }
+                    payloadCount = (++payloadCount) % dataBuffer.length;
+                    if (payloadCount == bufferBeg) {
+                        this.dataBuffer[payloadCount] = packetPayload;
+                        hasPayloadBeenAllocated = true;
+                        bufferBeg = (++bufferBeg) % dataBuffer.length;
                     }
                 }
             }
@@ -95,12 +112,15 @@ public class TelemetryEndpoint {
         GCSBLog.LOGGER.info("Sent packet from endpoint with id " + id);
     }
 
-    public void writeToNBT(NBTTagCompound data) {
-
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger("id", this.id);
+        return nbt;
     }
 
-    public NBTTagCompound readFromNBT(NBTTagCompound data) {
-        return new NBTTagCompound();
+    public void deserializeNBT(NBTTagCompound data) {
+        this.setId(data.getInteger("id"));
     }
 
     public void setConnection(TelemetryConnection connection) {

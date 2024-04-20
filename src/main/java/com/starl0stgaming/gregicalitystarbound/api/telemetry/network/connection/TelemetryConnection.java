@@ -3,17 +3,27 @@ package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TelemetryConnection {
+public class TelemetryConnection implements INBTSerializable<NBTTagCompound> {
 
     private List<TelemetryEndpoint> endpointList;
 
 
     public TelemetryConnection(int id) {
         this.endpointList = new ArrayList<>();
+    }
+
+    public TelemetryConnection(NBTTagCompound nbtBase) {
+        deserializeNBT(nbtBase);
     }
 
 
@@ -67,5 +77,23 @@ public class TelemetryConnection {
 
     public List<TelemetryEndpoint> getEndpointList() {
         return endpointList;
+    }
+
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound ntc = new NBTTagCompound();
+        NBTTagList ntcList = new NBTTagList();
+        for (TelemetryEndpoint ep: endpointList) {
+            ntcList.appendTag(ep.serializeNBT());
+        }
+        ntc.setTag("endpoints", ntcList);
+        return ntc;
+    }
+
+    public void deserializeNBT(NBTTagCompound data) {
+        this.endpointList = new ArrayList<>();
+        NBTTagList epList = data.getTagList("endpoints", Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < epList.tagCount(); i++) {
+            endpointList.add(new TelemetryEndpoint(epList.getCompoundTagAt(i)));
+        }
     }
 }

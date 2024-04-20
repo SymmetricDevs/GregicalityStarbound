@@ -32,7 +32,7 @@ public class GregicalityStarbound {
     public static final GCSBConfigHandler CONFIG_HANDLER = new GCSBConfigHandler();
     public static final SpaceConfigHandler SPACE_CONFIG_HANDLER = new SpaceConfigHandler();
 
-    public static final TelemetryNetwork TELEMETRY_NETWORK = new TelemetryNetwork();
+    //public static final TelemetryNetwork TELEMETRY_NETWORK = new TelemetryNetwork();
 
     public static KeyBinding keyBinding;
 
