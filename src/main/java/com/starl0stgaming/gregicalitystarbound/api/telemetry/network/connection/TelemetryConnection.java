@@ -18,7 +18,7 @@ public class TelemetryConnection implements INBTSerializable<NBTTagCompound> {
     private List<TelemetryEndpoint> endpointList;
 
 
-    public TelemetryConnection(int id) {
+    public TelemetryConnection() {
         this.endpointList = new ArrayList<>();
     }
 

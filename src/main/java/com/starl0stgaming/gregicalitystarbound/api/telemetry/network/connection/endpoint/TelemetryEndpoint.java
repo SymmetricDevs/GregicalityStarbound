@@ -1,6 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
@@ -13,8 +14,7 @@ import java.util.PriorityQueue;
 
 public class TelemetryEndpoint implements INBTSerializable<NBTTagCompound> {
 
-    //private static int ID_TRACKER = 0;
-    private int id;
+    private long id;
     private TelemetryConnection connection;
 
     private PriorityQueue<TelemetryPacket> inPacketQueue;
@@ -28,7 +28,7 @@ public class TelemetryEndpoint implements INBTSerializable<NBTTagCompound> {
     //private Discriminator discriminator; or
     //private AuthKey authKey;
 
-    public TelemetryEndpoint(int id) {
+    public TelemetryEndpoint(long id) {
         this.connection = null;
         this.id = id;
         this.dataBuffer = new TelemetryPacketPayload[8];
@@ -115,23 +115,22 @@ public class TelemetryEndpoint implements INBTSerializable<NBTTagCompound> {
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setInteger("id", this.id);
+        nbt.setLong("id", this.id);
         return nbt;
     }
 
     public void deserializeNBT(NBTTagCompound data) {
-        this.setId(data.getInteger("id"));
+        this.id = data.getInteger("id");
+        if (this.id > TelemetryNetworkManager.ENDPOINT_ID_COUNT) {
+            TelemetryNetworkManager.ENDPOINT_ID_COUNT = this.id;
+        }
     }
 
     public void setConnection(TelemetryConnection connection) {
         this.connection = connection;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

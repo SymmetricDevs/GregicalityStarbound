@@ -6,7 +6,7 @@ public class TelemetryPacket {
 
     private int priority;
     //gets cleared after each send operation is completed, if value equals 0 then it will be sent to whole connection;
-    private int destinationID;
+    private long destinationID;
     private TelemetryPacketPayload packetData;
 
     public TelemetryPacket(int priority) {
@@ -30,11 +30,11 @@ public class TelemetryPacket {
         this.priority = priority;
     }
 
-    public int getDestinationID() {
+    public long getDestinationID() {
         return destinationID;
     }
 
-    public void setDestinationID(int destinationID) {
+    public void setDestinationID(long destinationID) {
         this.destinationID = destinationID;
     }
 }

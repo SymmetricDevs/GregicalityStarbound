@@ -1,4 +1,5 @@
 package gregicalitystarbound;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
@@ -16,21 +17,22 @@ public class TelemetryTests {
     @Test
     public void packetSendAndReceive() {
         System.out.println("Testing is happening!");
-        TelemetryEndpoint endpointSender = new TelemetryEndpoint(0);
-        TelemetryEndpoint epReceiver1 = new TelemetryEndpoint(1);
-        TelemetryEndpoint epReceiver2 = new TelemetryEndpoint(2);
-        TelemetryConnection tcMain = new TelemetryConnection(0);
+        TelemetryNetworkManager tnm = new TelemetryNetworkManager("tnm");
+        TelemetryEndpoint endpointSender = tnm.createEndpoint();
+        TelemetryEndpoint epReceiver1 = tnm.createEndpoint();
+        TelemetryEndpoint epReceiver2 = tnm.createEndpoint();
+        TelemetryConnection tcMain = tnm.createConnection();
         tcMain.addEndpoints(endpointSender, epReceiver1, epReceiver2);
         TelemetryPacket tp0 = new TelemetryPacket(0);
         NBTTagCompound relayedData = new NBTTagCompound();
         relayedData.setString("test", "Hello, World!");
         tp0.setPacketData(new TelemetryPacketPayload(relayedData));
-        tp0.setDestinationID(2);
+        tp0.setDestinationID(epReceiver2.getId());
         endpointSender.sendPacket(tp0);
         endpointSender.update();
         epReceiver2.update();
         assert(epReceiver2.poll().getPayload().getString("test")).equals("Hello, World!");
-        tp0.setDestinationID(1);
+        tp0.setDestinationID(epReceiver1.getId());
         endpointSender.sendPacket(tp0);
         endpointSender.update();
         epReceiver1.update();

@@ -6,7 +6,6 @@ import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
 
 
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.entity.RocketEntity;
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetwork;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.metatileentities.GCSBMetaTileEntities;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
