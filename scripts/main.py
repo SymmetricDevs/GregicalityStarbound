@@ -7,7 +7,7 @@ import util
 G = 6.7430e-11 # in m^3/kg/s^2
 
 # Speed of light
-c = 2.997e8 # in m/s
+c = 299792458 # in m/s
 
 # Mass of the Sun
 M_sun = 1.989e30 # in kg
