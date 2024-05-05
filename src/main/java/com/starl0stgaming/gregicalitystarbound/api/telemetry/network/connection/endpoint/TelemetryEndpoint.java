@@ -2,7 +2,6 @@ package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.AuthKey;
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.Discriminator;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
@@ -20,17 +19,24 @@ public class TelemetryEndpoint {
 
     public TelemetryPacketPayload dataBuffer[];
 
-    protected Discriminator discriminator;
+    protected String packetDiscriminator;
     protected AuthKey authKey;
 
-    public TelemetryEndpoint(int id, Discriminator discriminator, AuthKey authKey) {
+    private boolean enableDiscriminator;
+    private boolean enableEncryption;
+
+    public TelemetryEndpoint(int id, String discriminator, AuthKey authKey) {
         this.connection = null;
         this.id = id;
+
+        //TODO: LOOK AT THIS SHIT BC IT DOESNT FIT, HOW DO I EVEN GET THE DISCRIMINATOR HUH
+        this.enableDiscriminator = false;
+        this.enableEncryption = false;
 
         inPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
         outPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
 
-        this.discriminator = discriminator;
+        this.packetDiscriminator = discriminator;
         this.authKey = authKey;
     }
 
@@ -42,7 +48,7 @@ public class TelemetryEndpoint {
 
             for(int i = 0; i < this.inPacketQueue.toArray().length; i++) {
                 TelemetryPacket packetIn = this.inPacketQueue.poll();
-                TelemetryPacketPayload packetPayload = packetIn.getPacketData();
+                TelemetryPacketPayload packetPayload = packetIn.getPacketPayload();
 
                 boolean hasPayloadBeenAllocated = false;
 
@@ -72,10 +78,9 @@ public class TelemetryEndpoint {
      */
     public TelemetryPacketPayload getBufferedPayload() {
         TelemetryPacketPayload payload = this.dataBuffer[0];
-
         //reshuffle array, probably shouldnt do this here though
         for(int i = 0; i < this.dataBuffer.length - 1; i++) {
-            this.dataBuffer[i + 1] = this.dataBuffer[i];
+            this.dataBuffer[i] = this.dataBuffer[i + 1];
         }
         return payload;
     }
@@ -104,5 +109,21 @@ public class TelemetryEndpoint {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPacketDiscriminator() {
+        return packetDiscriminator;
+    }
+
+    public void setPacketDiscriminator(String packetDiscriminator) {
+        this.packetDiscriminator = packetDiscriminator;
+    }
+
+    public AuthKey getAuthKey() {
+        return authKey;
+    }
+
+    public void setAuthKey(AuthKey authKey) {
+        this.authKey = authKey;
     }
 }

@@ -7,19 +7,23 @@ public class TelemetryPacket {
     private int priority;
     //gets cleared after each send operation is completed, if value equals 0 then it will be sent to whole connection;
     private int destinationID;
-    private TelemetryPacketPayload packetData;
+    private TelemetryPacketPayload packetPayload;
+
+    private String discriminator;
 
     public TelemetryPacket(int priority) {
         this.priority = priority;
     }
 
 
-    public TelemetryPacketPayload getPacketData() {
-        return packetData;
+
+
+    public TelemetryPacketPayload getPacketPayload() {
+        return packetPayload;
     }
 
-    public void setPacketData(TelemetryPacketPayload packetData) {
-        this.packetData = packetData;
+    public void setPacketPayload(TelemetryPacketPayload packetData) {
+        this.packetPayload = packetData;
     }
 
     public int getPriority() {
@@ -36,5 +40,13 @@ public class TelemetryPacket {
 
     public void setDestinationID(int destinationID) {
         this.destinationID = destinationID;
+    }
+
+    public String getDiscriminator() {
+        return discriminator;
+    }
+
+    public void setDiscriminator(String discriminator) {
+        this.discriminator = discriminator;
     }
 }
