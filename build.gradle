@@ -118,6 +118,7 @@ repositories {
         url "https://maven.cleanroommc.com"
     }
     maven { url = "https://repo.spongepowered.org/maven" }
+    mavenCentral()
     mavenLocal() // Must be last for caching to work
 }
 

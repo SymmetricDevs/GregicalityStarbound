@@ -1,8 +1,7 @@
-package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint;
+package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.AuthKey;
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
 
@@ -11,13 +10,14 @@ import java.util.PriorityQueue;
 
 public class TelemetryEndpoint {
 
-    private int id;
+    // Ids are set in constructor, but it might be better to set them in TelemetryConnection
+    private final int id;
     private TelemetryConnection connection;
 
     private PriorityQueue<TelemetryPacket> inPacketQueue;
     private PriorityQueue<TelemetryPacket> outPacketQueue;
 
-    public TelemetryPacketPayload dataBuffer[];
+    private TelemetryPacketPayload[] dataBuffer;
 
     protected String packetDiscriminator;
     protected AuthKey authKey;
@@ -26,6 +26,10 @@ public class TelemetryEndpoint {
     private boolean enableEncryption;
 
     public TelemetryEndpoint(int id, String discriminator, AuthKey authKey) {
+        this(id, discriminator, authKey, 32);
+    }
+
+    public TelemetryEndpoint(int id, String discriminator, AuthKey authKey, int bufferSize) {
         this.connection = null;
         this.id = id;
 
@@ -38,6 +42,8 @@ public class TelemetryEndpoint {
 
         this.packetDiscriminator = discriminator;
         this.authKey = authKey;
+
+        this.dataBuffer = new TelemetryPacketPayload[bufferSize];
     }
 
     public void update() {
@@ -50,16 +56,13 @@ public class TelemetryEndpoint {
                 TelemetryPacket packetIn = this.inPacketQueue.poll();
                 TelemetryPacketPayload packetPayload = packetIn.getPacketPayload();
 
-                boolean hasPayloadBeenAllocated = false;
-
-                while(hasPayloadBeenAllocated) {
+                while(true) {
                     if(this.dataBuffer[payloadCount] == null) {
                         this.dataBuffer[payloadCount] = packetPayload;
-                        payloadCount++;
-                        hasPayloadBeenAllocated = true;
-                    } else {
-                        payloadCount++;
+                        break;
                     }
+
+                    payloadCount++;
                 }
             }
         }
@@ -85,7 +88,7 @@ public class TelemetryEndpoint {
         return payload;
     }
 
-    public void receivePacket(TelemetryPacket packet) {
+    protected void receivePacket(TelemetryPacket packet) {
         this.inPacketQueue.add(packet);
         GCSBLog.LOGGER.info("Received packet on endpoint with id " + id);
     }
@@ -99,16 +102,16 @@ public class TelemetryEndpoint {
         GCSBLog.LOGGER.info("Sent packet from endpoint with id " + id);
     }
 
-    public void setNetwork(TelemetryConnection network) {
+    public TelemetryConnection getNetwork() {
+        return connection;
+    }
+
+    protected void setNetwork(TelemetryConnection network) {
         this.connection = network;
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getPacketDiscriminator() {
