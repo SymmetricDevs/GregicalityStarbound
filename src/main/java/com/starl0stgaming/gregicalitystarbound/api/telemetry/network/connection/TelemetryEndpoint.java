@@ -26,7 +26,7 @@ public class TelemetryEndpoint {
     private boolean enableEncryption;
 
     public TelemetryEndpoint(int id, String discriminator, AuthKey authKey) {
-        this(id, discriminator, authKey, 8);
+        this(id, discriminator, authKey, 32);
     }
 
     public TelemetryEndpoint(int id, String discriminator, AuthKey authKey, int bufferSize) {
