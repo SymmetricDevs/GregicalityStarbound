@@ -23,8 +23,10 @@ public class TelemetryEndpoint {
 
     public ArrayList<TelemetryPacketPayload> dataBuffer;
 
+    protected String packetDiscriminator;
     protected AuthKey authKey;
 
+    private boolean enableDiscriminator;
     private boolean enableEncryption;
 
     public TelemetryEndpoint(int id) {
@@ -32,24 +34,28 @@ public class TelemetryEndpoint {
         this.id = id;
         this.dataBuffer = new ArrayList<>();
 
+        this.enableDiscriminator = false;
         this.enableEncryption = false;
 
         inPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
         outPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
 
-        this.authKey = new AuthKey(id, "remove this line");
+        this.packetDiscriminator = "";
+        this.authKey = new AuthKey(id, packetDiscriminator);
     }
 
-    public TelemetryEndpoint(int id, AuthKey authKey) {
+    public TelemetryEndpoint(int id, String discriminator, AuthKey authKey) {
         this.connection = null;
         this.id = id;
         this.dataBuffer = new ArrayList<>();
         //TODO: LOOK AT THIS SHIT BC IT DOESNT FIT, HOW DO I EVEN GET THE DISCRIMINATOR HUH
+        this.enableDiscriminator = false;
         this.enableEncryption = false;
 
         inPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
         outPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
 
+        this.packetDiscriminator = discriminator;
         this.authKey = authKey;
     }
 
@@ -105,6 +111,7 @@ public class TelemetryEndpoint {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setLong("id", this.id);
+        nbt.setString("discr", packetDiscriminator);
         return nbt;
     }
     public TelemetryConnection getNetwork() {
@@ -120,6 +127,7 @@ public class TelemetryEndpoint {
         if (this.id > TelemetryNetworkManager.ENDPOINT_ID_COUNT) {
             TelemetryNetworkManager.ENDPOINT_ID_COUNT = this.id;
         }
+        this.packetDiscriminator=data.getString("discr");
     }
 
     public void setConnection(TelemetryConnection connection) {
@@ -128,6 +136,14 @@ public class TelemetryEndpoint {
 
     public int getId() {
         return id;
+    }
+
+    public String getPacketDiscriminator() {
+        return packetDiscriminator;
+    }
+
+    public void setPacketDiscriminator(String packetDiscriminator) {
+        this.packetDiscriminator = packetDiscriminator;
     }
 
     public AuthKey getAuthKey() {
