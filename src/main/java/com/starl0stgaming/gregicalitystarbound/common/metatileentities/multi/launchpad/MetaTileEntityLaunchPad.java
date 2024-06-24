@@ -1,5 +1,8 @@
 package com.starl0stgaming.gregicalitystarbound.common.metatileentities.multi.launchpad;
 import com.starl0stgaming.gregicalitystarbound.api.recipes.GCSBRecipeMaps;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.IEndpointSerializable;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
 import gregtech.api.capability.GregtechDataCodes;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.gui.ModularUI;
@@ -27,6 +30,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,7 +40,7 @@ import static gregtech.api.util.RelativeDirection.RIGHT;
 import static gregtech.api.util.RelativeDirection.FRONT;
 import static gregtech.api.util.RelativeDirection.UP;
 
-public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController {
+public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController implements IEndpointSerializable {
 
     // Probably needs a fluid inventory for a water deluge system
     protected FluidTankList inputFluidInventory;
@@ -267,5 +271,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController {
     public void invalidateStructure(){
         super.invalidateStructure();
     }
+    public void handleMessage(NBTTagCompound ntc) {
 
+    }
 }

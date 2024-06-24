@@ -17,6 +17,8 @@ public class TelemetryEndpoint implements INBTSerializable<NBTTagCompound> {
     private long id;
     private TelemetryConnection connection;
 
+    private IEndpointSerializable linkedSystem;
+
     private PriorityQueue<TelemetryPacket> inPacketQueue;
     private PriorityQueue<TelemetryPacket> outPacketQueue;
 
@@ -86,7 +88,7 @@ public class TelemetryEndpoint implements INBTSerializable<NBTTagCompound> {
 
     /**
      *
-     * @return returns the TelemetryPacketPayload in the index 0 of the endpoint's data buffer, which may be null.
+     * @return returns the TelemetryPacketPayload in index 0 of the endpoint's data buffer, which may be null.
      */
     public TelemetryPacketPayload poll() {
         TelemetryPacketPayload payload = this.dataBuffer[0];
@@ -95,6 +97,7 @@ public class TelemetryEndpoint implements INBTSerializable<NBTTagCompound> {
         for(int i = 0; i < this.dataBuffer.length - 1; i++) {
             this.dataBuffer[i + 1] = this.dataBuffer[i];
         }
+        this.dataBuffer[this.dataBuffer.length - 1] = null;
         return payload;
     }
 
@@ -116,6 +119,7 @@ public class TelemetryEndpoint implements INBTSerializable<NBTTagCompound> {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setLong("id", this.id);
+        linkedSystem.writeToNBT(nbt);
         return nbt;
     }
 

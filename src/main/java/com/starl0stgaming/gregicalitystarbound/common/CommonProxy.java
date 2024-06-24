@@ -4,20 +4,25 @@ import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
 import com.starl0stgaming.gregicalitystarbound.common.recipe.GCSBRecipeLoader;
 import com.starl0stgaming.gregicalitystarbound.common.space.dimension.ModDimension;
 import gregtech.api.GregTechAPI;
 import gregtech.api.unification.material.event.PostMaterialEvent;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
@@ -62,5 +67,20 @@ public class CommonProxy {
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
         GCSBRecipeLoader.init();
+    }
+
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent fmlevt) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
+            if (!world.isRemote) {
+                TelemetryNetworkManager saveData = (TelemetryNetworkManager) world.loadData(TelemetryNetworkManager.class, TelemetryNetworkManager.dataName);
+                if (saveData == null) {
+                    saveData = new TelemetryNetworkManager(TelemetryNetworkManager.dataName);
+                    world.setData(TelemetryNetworkManager.dataName, saveData);
+                }
+                TelemetryNetworkManager.setInstance(saveData);
+            }
+        }
     }
 }
