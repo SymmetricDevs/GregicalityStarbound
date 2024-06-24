@@ -38,7 +38,7 @@ public class TelemetryPacket {
         return destinationID;
     }
 
-    public void setDestinationID(long destinationID) {
+    public void setDestinationID(int destinationID) {
         this.destinationID = destinationID;
     }
 

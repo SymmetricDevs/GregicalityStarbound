@@ -1,46 +1,23 @@
 package gregicalitystarbound;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.AuthKey;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
 import net.minecraft.nbt.NBTTagCompound;
 import org.junit.Test;
 
 public class TelemetryTests {
-
     @Test
-    public void packetSendAndReceive() {
-        System.out.println("Testing is happening!");
-        TelemetryNetworkManager tnm = new TelemetryNetworkManager("tnm");
-        TelemetryEndpoint endpointSender = tnm.createEndpoint();
-        TelemetryEndpoint epReceiver1 = tnm.createEndpoint();
-        TelemetryEndpoint epReceiver2 = tnm.createEndpoint();
-        TelemetryConnection tcMain = tnm.createConnection();
-        tcMain.addEndpoints(endpointSender, epReceiver1, epReceiver2);
-        TelemetryPacket tp0 = new TelemetryPacket(0);
-        NBTTagCompound relayedData = new NBTTagCompound();
-        relayedData.setString("test", "Hello, World!");
-        tp0.setPacketData(new TelemetryPacketPayload(relayedData));
-        tp0.setDestinationID(epReceiver2.getId());
-        endpointSender.sendPacket(tp0);
-        endpointSender.update();
-        epReceiver2.update();
-        assert(epReceiver2.poll().getPayload().getString("test")).equals("Hello, World!");
-        tp0.setDestinationID(epReceiver1.getId());
-        endpointSender.sendPacket(tp0);
-        endpointSender.update();
-        epReceiver1.update();
-        assert(epReceiver1.poll().getPayload().getString("test")).equals("Hello, World!");
-    }
     public void test() {
         TelemetryConnection connection0 = new TelemetryConnection(0);
 
-        TelemetryEndpoint endpoint0 = new TelemetryEndpoint(0, "disc0", new AuthKey(0, "disc0"), 8);
-        TelemetryEndpoint endpoint1 = new TelemetryEndpoint(1, "disc1", new AuthKey(1, "disc1"), 16);
-        TelemetryEndpoint endpoint2 = new TelemetryEndpoint(2, "disc2", new AuthKey(2, "disc2"), 1);
+        TelemetryEndpoint endpoint0 = new TelemetryEndpoint(0, "disc0", new AuthKey(0, "disc0"));
+        TelemetryEndpoint endpoint1 = new TelemetryEndpoint(1, "disc1", new AuthKey(1, "disc1"));
+        TelemetryEndpoint endpoint2 = new TelemetryEndpoint(2, "disc2", new AuthKey(2, "disc2"));
 
-        connection0.addEndpoint(endpoint0);
-        connection0.addEndpoint(endpoint1);
-        connection0.addEndpoint(endpoint2);
+        connection0.addEndpoints(endpoint0, endpoint1, endpoint2);
 
         NBTTagCompound compound0 = new NBTTagCompound();
         compound0.setString("message", "Hello");
@@ -73,8 +50,11 @@ public class TelemetryTests {
         endpoint1.update();
         endpoint2.update();
 
-        NBTTagCompound bufCompound0 = endpoint1.getBufferedPayload().getPayload();
-        NBTTagCompound bufCompound1 = endpoint2.getBufferedPayload().getPayload();
+        NBTTagCompound bufCompound0 = endpoint1.poll().getPayload();
+        NBTTagCompound bufCompound1 = endpoint2.poll().getPayload();
+
+        assert bufCompound0.getString("message").equals("Hello");
+        assert bufCompound1.getString("answer").equals("Goodbye");
 
         System.out.println("Message is " + bufCompound0.getString("message"));
         System.out.println("Answer is " + bufCompound1.getString("answer"));

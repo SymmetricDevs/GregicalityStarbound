@@ -9,10 +9,10 @@ public class AuthKey {
     private int id;
     protected String keyIdentifier;
 
-    public AuthKey(int id, String keyIdenfifier) {
+    public AuthKey(int id, String keyIdentifier) {
         key = UUID.randomUUID();
         this.id = id;
-        this.keyIdentifier = keyIdenfifier;
+        this.keyIdentifier = keyIdentifier;
     }
 
     public UUID getKey(String keyIdentifier) {

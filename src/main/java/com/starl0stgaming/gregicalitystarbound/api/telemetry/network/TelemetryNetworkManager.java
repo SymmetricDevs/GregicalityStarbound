@@ -19,7 +19,7 @@ public class TelemetryNetworkManager extends WorldSavedData implements INBTSeria
 
     public static final String dataName = GregicalityStarbound.MODID + ".telemetryData";
     private static TelemetryNetworkManager INSTANCE;
-    public static long ENDPOINT_ID_COUNT = 0;
+    public static int ENDPOINT_ID_COUNT = 0;
     private final List<TelemetryEndpoint> endpointList;
     private List<TelemetryConnection> connectionList;
 
@@ -37,8 +37,8 @@ public class TelemetryNetworkManager extends WorldSavedData implements INBTSeria
         this.connectionList.remove(connection);
     }
 
-    public TelemetryConnection createConnection() {
-        TelemetryConnection conn = new TelemetryConnection();
+    public TelemetryConnection createConnection(int id) {
+        TelemetryConnection conn = new TelemetryConnection(id);
         addConnection(conn);
         return conn;
     }
