@@ -3,23 +3,22 @@ package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TelemetryConnection implements INBTSerializable<NBTTagCompound> {
+public class TelemetryConnection {
 
-    private List<TelemetryEndpoint> endpointList;
+    /* Map is more suitable for this job because
+     * - You can't add two end points with same ids
+     * - It's faster to reach endpoints like this
+     *
+     * Lists might be used if ids are going to be handled in connections
+     **/
+    private final Int2ObjectMap<TelemetryEndpoint> endpointMap;
 
-
-    public TelemetryConnection() {
-        this.endpointList = new ArrayList<>();
+    public TelemetryConnection(int id) {
+        this.endpointMap = new Int2ObjectOpenHashMap<>();
     }
 
     public TelemetryConnection(NBTTagCompound nbtBase) {
@@ -28,55 +27,45 @@ public class TelemetryConnection implements INBTSerializable<NBTTagCompound> {
 
 
     public void sendPacketToNetwork(TelemetryPacket telemetryPacket) {
-        if(this.endpointList.isEmpty()) return;
-        for(int i = 0; i < this.endpointList.toArray().length; i++) {
-            TelemetryEndpoint endpoint = this.endpointList.get(i);
+        if (endpointMap.isEmpty()) return;
+        for (int i : endpointMap.keySet()) {
+            TelemetryEndpoint endpoint = endpointMap.get(i);
             endpoint.receivePacket(telemetryPacket);
             GCSBLog.LOGGER.info("Sent packet to endpoint with id " + endpoint.getId());
         }
     }
 
     public void sendPacketToDestination(TelemetryPacket telemetryPacket) {
-        if(this.endpointList.isEmpty()) return;
-        for(int i = 0; i < this.endpointList.toArray().length; i++) {
-            if(this.endpointList.get(i).getId() == telemetryPacket.getDestinationID()) {
-                TelemetryEndpoint endpoint = this.endpointList.get(i);
+        if (this.endpointMap.isEmpty()) return;
+        for (int i : endpointMap.keySet()) {
+            if (i == telemetryPacket.getDestinationID()) {
+                TelemetryEndpoint endpoint = endpointMap.get(i);
                 endpoint.receivePacket(telemetryPacket);
                 GCSBLog.LOGGER.info("Sent packet to endpoint with id " + endpoint.getId());
-            } else if(telemetryPacket.getDestinationID() == 0) {
-                this.sendPacketToNetwork(telemetryPacket);
             }
         }
     }
 
     public void addEndpoint(TelemetryEndpoint endpoint) {
-        this.endpointList.add(endpoint);
-        endpoint.setConnection(this);
-    }
+        endpointMap.put(endpoint.getId(), endpoint);
 
-    public void addEndpoints(TelemetryEndpoint... endpoints) {
-        for (TelemetryEndpoint endpoint : endpoints) {
-            this.addEndpoint(endpoint);
+        if (endpoint.getNetwork() != null) {
+            endpoint.getNetwork().removeEndpoint(endpoint);
         }
+
+        endpoint.setNetwork(this);
     }
 
     public void removeEndpoint(TelemetryEndpoint endpoint) {
-        this.endpointList.remove(endpoint);
-        endpoint.setConnection(null);
+        this.endpointMap.remove(endpoint.getId());
     }
 
     public TelemetryEndpoint getEndpointByID(int id) {
-        for(int i = 0; i < this.endpointList.toArray().length; i++) {
-            if(this.endpointList.get(i).getId() == id) {
-                return this.endpointList.get(i);
-            }
-        }
-
-        return null;
+        return this.endpointMap.get(id);
     }
 
     public List<TelemetryEndpoint> getEndpointList() {
-        return endpointList;
+        return ImmutableList.copyOf(endpointMap.values());
     }
 
     public NBTTagCompound serializeNBT() {
