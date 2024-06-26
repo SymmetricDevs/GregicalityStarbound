@@ -74,10 +74,10 @@ public class CommonProxy {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
             World world = FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld();
             if (!world.isRemote) {
-                TelemetryNetworkManager saveData = (TelemetryNetworkManager) world.loadData(TelemetryNetworkManager.class, TelemetryNetworkManager.dataName);
+                TelemetryNetworkManager saveData = (TelemetryNetworkManager) world.loadData(TelemetryNetworkManager.class, TelemetryNetworkManager.DATA_NAME);
                 if (saveData == null) {
-                    saveData = new TelemetryNetworkManager(TelemetryNetworkManager.dataName);
-                    world.setData(TelemetryNetworkManager.dataName, saveData);
+                    saveData = new TelemetryNetworkManager(TelemetryNetworkManager.DATA_NAME);
+                    world.setData(TelemetryNetworkManager.DATA_NAME, saveData);
                 }
                 TelemetryNetworkManager.setInstance(saveData);
             }

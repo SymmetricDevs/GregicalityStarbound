@@ -2,6 +2,7 @@ package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection
 
 import com.google.common.collect.ImmutableList;
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -66,10 +67,12 @@ public class TelemetryConnection {
 
             ep.setNetwork(this);
         }
+        TelemetryNetworkManager.setDirty();
     }
 
     public void removeEndpoint(TelemetryEndpoint endpoint) {
         this.endpointMap.remove(endpoint.getId());
+        TelemetryNetworkManager.setDirty();
     }
 
     public TelemetryEndpoint getEndpointByID(int id) {
