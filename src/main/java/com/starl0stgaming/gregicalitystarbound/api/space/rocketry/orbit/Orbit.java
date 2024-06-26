@@ -14,6 +14,7 @@ public class Orbit {
     public Orbit build() {
         return this;
     }
+
     public int getOrbitalHeight() {
         return orbitalHeight;
     }

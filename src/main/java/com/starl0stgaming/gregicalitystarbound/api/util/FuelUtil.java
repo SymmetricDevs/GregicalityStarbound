@@ -11,7 +11,6 @@ public class FuelUtil {
          networkFrom.removeFuelFromNetwork(amountToTransfer);
 
          int amountRemoved = amountInNetwork1 - networkFrom.getCurrentStoredFuel();
-
          if(amountRemoved < amountToTransfer) {
              //idk cry about it
          }
@@ -19,8 +18,8 @@ public class FuelUtil {
          int amountInNetwork2 = networkTo.getCurrentStoredFuel();
          networkTo.addFuelToNetwork(amountRemoved);
 
-         int amountRemoved2 = amountInNetwork2 - networkTo.getCurrentStoredFuel();
-         if(amountRemoved2 < amountToTransfer) {
+         int amountAdded = amountInNetwork2 - networkTo.getCurrentStoredFuel();
+         if(amountAdded < amountToTransfer) {
              //cry about it
          }
 

@@ -7,6 +7,8 @@ import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
 
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.RocketEntity;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetwork;
+import com.starl0stgaming.gregicalitystarbound.api.vehicle.VehicleManager;
+import com.starl0stgaming.gregicalitystarbound.api.vehicle.components.ComponentManager;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.metatileentities.GCSBMetaTileEntities;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
@@ -35,6 +37,8 @@ public class GregicalityStarbound {
     public static final SpaceConfigHandler SPACE_CONFIG_HANDLER = new SpaceConfigHandler();
 
     public static final TelemetryNetwork TELEMETRY_NETWORK = new TelemetryNetwork();
+    public static final ComponentManager COMPONENT_MANAGER = new ComponentManager();
+    public static final VehicleManager VEHICLE_MANAGER = new VehicleManager();
 
     public static KeyBinding keyBinding;
 
