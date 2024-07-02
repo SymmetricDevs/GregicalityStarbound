@@ -34,7 +34,7 @@ public class TelemetryPacket {
         this.priority = priority;
     }
 
-    public int getDestinationID() {
+    public long getDestinationID() {
         return destinationID;
     }
 

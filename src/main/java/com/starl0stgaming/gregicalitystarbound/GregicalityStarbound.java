@@ -5,15 +5,12 @@ import com.starl0stgaming.gregicalitystarbound.api.configuration.space.SpaceConf
 import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
 
 
-import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.RocketEntity;
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetwork;
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.entity.RocketEntity;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.metatileentities.GCSBMetaTileEntities;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -34,7 +31,7 @@ public class GregicalityStarbound {
     public static final GCSBConfigHandler CONFIG_HANDLER = new GCSBConfigHandler();
     public static final SpaceConfigHandler SPACE_CONFIG_HANDLER = new SpaceConfigHandler();
 
-    public static final TelemetryNetwork TELEMETRY_NETWORK = new TelemetryNetwork();
+    //public static final TelemetryNetwork TELEMETRY_NETWORK = new TelemetryNetwork();
 
     public static KeyBinding keyBinding;
 

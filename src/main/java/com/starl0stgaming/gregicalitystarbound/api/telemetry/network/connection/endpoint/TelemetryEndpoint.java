@@ -1,23 +1,27 @@
-package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection;
+package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.AuthKey;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
+import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class TelemetryEndpoint {
 
     // Ids are set in constructor, but it might be better to set them in TelemetryConnection
-    private final int id;
+    private int id;
     private TelemetryConnection connection;
 
     private PriorityQueue<TelemetryPacket> inPacketQueue;
     private PriorityQueue<TelemetryPacket> outPacketQueue;
 
-    private TelemetryPacketPayload[] dataBuffer;
+    public ArrayList<TelemetryPacketPayload> dataBuffer;
 
     protected String packetDiscriminator;
     protected AuthKey authKey;
@@ -25,14 +29,25 @@ public class TelemetryEndpoint {
     private boolean enableDiscriminator;
     private boolean enableEncryption;
 
-    public TelemetryEndpoint(int id, String discriminator, AuthKey authKey) {
-        this(id, discriminator, authKey, 32);
-    }
-
-    public TelemetryEndpoint(int id, String discriminator, AuthKey authKey, int bufferSize) {
+    public TelemetryEndpoint(int id) {
         this.connection = null;
         this.id = id;
+        this.dataBuffer = new ArrayList<>();
 
+        this.enableDiscriminator = false;
+        this.enableEncryption = false;
+
+        inPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
+        outPacketQueue = new PriorityQueue<>(Comparator.comparingInt(packet -> -packet.getPriority()));
+
+        this.packetDiscriminator = "";
+        this.authKey = new AuthKey(id, packetDiscriminator);
+    }
+
+    public TelemetryEndpoint(int id, String discriminator, AuthKey authKey) {
+        this.connection = null;
+        this.id = id;
+        this.dataBuffer = new ArrayList<>();
         //TODO: LOOK AT THIS SHIT BC IT DOESNT FIT, HOW DO I EVEN GET THE DISCRIMINATOR HUH
         this.enableDiscriminator = false;
         this.enableEncryption = false;
@@ -42,28 +57,24 @@ public class TelemetryEndpoint {
 
         this.packetDiscriminator = discriminator;
         this.authKey = authKey;
+    }
 
-        this.dataBuffer = new TelemetryPacketPayload[bufferSize];
+    public TelemetryEndpoint(NBTTagCompound compoundTagAt) {
+        deserializeNBT(compoundTagAt);
     }
 
     public void update() {
         //reads packet queues and processes in packets and sends out packets
+
+
         //read in packet queue
         if(!this.inPacketQueue.isEmpty())  {
-            int payloadCount = 0;
 
             for(int i = 0; i < this.inPacketQueue.toArray().length; i++) {
                 TelemetryPacket packetIn = this.inPacketQueue.poll();
                 TelemetryPacketPayload packetPayload = packetIn.getPacketPayload();
 
-                while(true) {
-                    if(this.dataBuffer[payloadCount] == null) {
-                        this.dataBuffer[payloadCount] = packetPayload;
-                        break;
-                    }
-
-                    payloadCount++;
-                }
+                this.dataBuffer.add(packetPayload);
             }
         }
 
@@ -79,16 +90,11 @@ public class TelemetryEndpoint {
      *
      * @return returns the TelemetryPacketPayload in the index 0 of the endpoint's data buffer.
      */
-    public TelemetryPacketPayload getBufferedPayload() {
-        TelemetryPacketPayload payload = this.dataBuffer[0];
-        //reshuffle array, probably shouldnt do this here though
-        for(int i = 0; i < this.dataBuffer.length - 1; i++) {
-            this.dataBuffer[i] = this.dataBuffer[i + 1];
-        }
-        return payload;
+    public TelemetryPacketPayload poll() {
+        return this.dataBuffer.remove(0);
     }
 
-    protected void receivePacket(TelemetryPacket packet) {
+    public void receivePacket(TelemetryPacket packet) {
         this.inPacketQueue.add(packet);
         GCSBLog.LOGGER.info("Received packet on endpoint with id " + id);
     }
@@ -102,12 +108,30 @@ public class TelemetryEndpoint {
         GCSBLog.LOGGER.info("Sent packet from endpoint with id " + id);
     }
 
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setLong("id", this.id);
+        nbt.setString("discr", packetDiscriminator);
+        return nbt;
+    }
     public TelemetryConnection getNetwork() {
         return connection;
     }
 
-    protected void setNetwork(TelemetryConnection network) {
+    public void setNetwork(TelemetryConnection network) {
         this.connection = network;
+    }
+
+    public void deserializeNBT(NBTTagCompound data) {
+        this.id = data.getInteger("id");
+        if (this.id > TelemetryNetworkManager.ENDPOINT_ID_COUNT) {
+            TelemetryNetworkManager.ENDPOINT_ID_COUNT = this.id;
+        }
+        this.packetDiscriminator=data.getString("discr");
+    }
+
+    public void setConnection(TelemetryConnection connection) {
+        this.connection = connection;
     }
 
     public int getId() {
