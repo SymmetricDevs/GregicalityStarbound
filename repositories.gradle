@@ -1,0 +1,47 @@
+// Add any additional repositories for your dependencies here
+
+repositories {
+    maven {
+        url "https://maven.shadowfacts.net/"
+    }
+    maven {
+        url "https://maven.k-4u.nl"
+    }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven {
+        name = "blamejared"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = "CCL Maven"
+        url = "https://chickenbones.net/maven/"
+    }
+    maven {
+        name = "CyclopsMC"
+        url = "https://oss.jfrog.org/artifactory/simple/libs-release/"
+    }
+    maven {
+        name 'tterrag Maven'
+        url "https://maven.tterrag.com/"
+    }
+    maven {
+        name = "mcmoddev"
+        url = "https://maven.mcmoddev.com"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
+    maven {
+        url "https://maven.cleanroommc.com"
+    }
+    maven { url = "https://repo.spongepowered.org/maven" }
+    mavenCentral()
+    mavenLocal() // Must be last for caching to work
+}
