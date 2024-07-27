@@ -3,6 +3,7 @@ package com.starl0stgaming.gregicalitystarbound.common.entity;
 import com.starl0stgaming.gregicalitystarbound.client.sound.MovingSoundRocket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -12,8 +13,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntityRocket extends Entity {
+public class EntityRocket extends EntityLiving implements IAnimatable {
 
     protected static final float jerk = 0.0001F;
     private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(EntityRocket.class, DataSerializers.BOOLEAN);
@@ -59,7 +63,7 @@ public class EntityRocket extends Entity {
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         this.setLaunched(compound.getBoolean("Launched"));
         this.setCountdownStarted(compound.getBoolean("CountdownStarted"));
         this.setAge(compound.getInteger("Age"));
@@ -67,7 +71,7 @@ public class EntityRocket extends Entity {
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         compound.setBoolean("Launched", this.isLaunched());
         compound.setBoolean("CountdownStarted", this.isCountdownStarted());
         compound.setInteger("Age", this.getAge());
@@ -155,4 +159,13 @@ public class EntityRocket extends Entity {
         }
     }
 
+    @Override
+    public void registerControllers(AnimationData animationData) {
+
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return null;
+    }
 }
