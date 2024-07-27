@@ -72,6 +72,8 @@ public class TelemetryEndpoint {
 
             for(int i = 0; i < this.inPacketQueue.toArray().length; i++) {
                 TelemetryPacket packetIn = this.inPacketQueue.poll();
+                if(!packetIn.getDiscriminator().equals(this.packetDiscriminator) && this.enableDiscriminator) break;
+
                 TelemetryPacketPayload packetPayload = packetIn.getPacketPayload();
 
                 this.dataBuffer.add(packetPayload);

@@ -1,5 +1,6 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet;
 
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.AuthKey;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
 
 public class TelemetryPacket {
@@ -10,13 +11,29 @@ public class TelemetryPacket {
     private TelemetryPacketPayload packetPayload;
 
     private String discriminator;
+    private AuthKey authKey;
+
+    private boolean enableEncryption;
 
     public TelemetryPacket(int priority) {
         this.priority = priority;
     }
 
+    public AuthKey getAuthKey() {
+        return authKey;
+    }
 
+    public void setAuthKey(AuthKey authKey) {
+        this.authKey = authKey;
+    }
 
+    public boolean isEncrypted() {
+        return enableEncryption;
+    }
+
+    public void setEncryptionState(boolean enableEncryption) {
+        this.enableEncryption = enableEncryption;
+    }
 
     public TelemetryPacketPayload getPacketPayload() {
         return packetPayload;
