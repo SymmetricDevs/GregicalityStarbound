@@ -47,6 +47,9 @@ dependencies {
     // TOP 1.4.28
     implementation rfg.deobf('curse.maven:top-245211:2667280')
 
+    //geckolib
+    implementation rfg.deobf('curse.maven:geckolib-388172:4020277')
+
     //implementation "curse.maven:enderio-64578:3328811"
     //implementation "curse.maven:endercore-231868:2972849"
     implementation "info.loenwind.autoconfig:AutoConfig:${project.minecraft.version}-1.0.2"
