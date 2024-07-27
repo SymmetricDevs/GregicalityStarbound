@@ -2,8 +2,6 @@ package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.layer
 
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.layer.GenLayer;
-import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
-import net.minecraft.world.gen.layer.GenLayerZoom;
 import net.minecraft.world.gen.layer.IntCache;
 
 public class DummyGenLayer extends GenLayer {

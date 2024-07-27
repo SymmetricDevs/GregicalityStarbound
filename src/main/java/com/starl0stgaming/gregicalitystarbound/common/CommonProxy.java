@@ -1,7 +1,6 @@
 package com.starl0stgaming.gregicalitystarbound.common;
 
 import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
-
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
 import com.starl0stgaming.gregicalitystarbound.common.recipe.GCSBRecipeLoader;
@@ -24,14 +23,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class CommonProxy {
 
 
-    public void preLoad() {
-        ModDimension.init();
-    }
-
-    public void load() {
-
-    }
-
     @SubscribeEvent
     public static void registerBiomes(RegistryEvent.Register<Biome> event) {
         GregicalityStarbound.SPACE_CONTROLLER.initializeSpace();
@@ -51,6 +42,7 @@ public class CommonProxy {
 
 
     }
+
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
 
@@ -59,6 +51,14 @@ public class CommonProxy {
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
         GCSBRecipeLoader.init();
+    }
+
+    public void preLoad() {
+        ModDimension.init();
+    }
+
+    public void load() {
+
     }
 
     @Mod.EventHandler

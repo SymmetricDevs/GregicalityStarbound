@@ -1,6 +1,6 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.entity;
 
-import com.starl0stgaming.gregicalitystarbound.api.sound.MovingSoundRocket;
+import com.starl0stgaming.gregicalitystarbound.client.sound.MovingSoundRocket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,24 +16,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RocketEntity extends Entity {
 
     protected static final float jerk = 0.0001F;
-
-    private int countdownTimer = 0;
-
+    private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(RocketEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.createKey(RocketEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(RocketEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> LAUNCH_TIME = EntityDataManager.createKey(RocketEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> FLIGHT_TIME = EntityDataManager.createKey(RocketEntity.class, DataSerializers.VARINT);
+    private static final DataParameter<Float> START_POS = EntityDataManager.createKey(RocketEntity.class, DataSerializers.FLOAT);
+    private final int countdownTimer = 0;
     @SideOnly(Side.CLIENT)
     private MovingSoundRocket soundRocket;
-
     private String name;
     private int id;
-
-    private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.<Boolean>createKey(RocketEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.<Boolean>createKey(RocketEntity.class, DataSerializers.BOOLEAN);
-
-    private static final DataParameter<Integer> AGE = EntityDataManager.<Integer>createKey(RocketEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> LAUNCH_TIME = EntityDataManager.<Integer>createKey(RocketEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> FLIGHT_TIME = EntityDataManager.<Integer>createKey(RocketEntity.class, DataSerializers.VARINT);
-
-    private static final DataParameter<Float> START_POS = EntityDataManager.<Float>createKey(RocketEntity.class, DataSerializers.FLOAT);
-
 
 
     public RocketEntity(World worldIn) {
@@ -56,7 +49,7 @@ public class RocketEntity extends Entity {
 
     @Override
     protected void entityInit() {
-        if(!this.world.isRemote) {
+        if (!this.world.isRemote) {
         }
 
         this.dataManager.register(LAUNCHED, false);
@@ -82,9 +75,7 @@ public class RocketEntity extends Entity {
     }
 
 
-
-
-    public void onLaunch(){
+    public void onLaunch() {
         this.setLaunched(true);
         this.isAirBorne = true;
 
@@ -92,16 +83,15 @@ public class RocketEntity extends Entity {
     }
 
 
-
     @Override
     public void onUpdate() {
-        if(!world.isRemote) {
+        if (!world.isRemote) {
 
             this.setAge(getAge() + 1);
         }
 
-        if(this.firstUpdate) {
-            this.setStartPos((float)this.posY);
+        if (this.firstUpdate) {
+            this.setStartPos((float) this.posY);
         }
 
         super.onUpdate();
@@ -109,7 +99,7 @@ public class RocketEntity extends Entity {
 
         this.setRotation(0.0F, 90.0F);
 
-        if(isLaunched()) {
+        if (isLaunched()) {
             float startPos = this.getStartPos();
             this.prevPosX = this.posX;
             this.prevPosY = this.posY;
@@ -124,43 +114,42 @@ public class RocketEntity extends Entity {
         this.setDead();
     }
 
-    public boolean isLaunched(){
+    public boolean isLaunched() {
         return this.dataManager.get(LAUNCHED);
     }
 
-    public void setLaunched(boolean launched){
+    public void setLaunched(boolean launched) {
         this.dataManager.set(LAUNCHED, launched);
     }
 
-    public boolean isCountdownStarted(){
+    public boolean isCountdownStarted() {
         return this.dataManager.get(COUNTDOWN_STARTED);
     }
 
-    public void setCountdownStarted(boolean countdownStarted){
+    public void setCountdownStarted(boolean countdownStarted) {
         this.dataManager.set(COUNTDOWN_STARTED, countdownStarted);
     }
 
-    public int getAge(){
+    public int getAge() {
         return this.dataManager.get(AGE);
     }
 
-    public void setAge(int age){
+    public void setAge(int age) {
         this.dataManager.set(AGE, age);
     }
 
 
-
-    public float getStartPos(){
+    public float getStartPos() {
         return this.dataManager.get(START_POS);
     }
 
-    public void setStartPos(Float startPos){
+    public void setStartPos(Float startPos) {
         this.dataManager.set(START_POS, startPos);
     }
 
     @SideOnly(Side.CLIENT)
     public void playRocketSound() {
-        if(this.world.isRemote) {
+        if (this.world.isRemote) {
             this.soundRocket = new MovingSoundRocket(this);
             Minecraft.getMinecraft().getSoundHandler().playSound(this.soundRocket);
         }

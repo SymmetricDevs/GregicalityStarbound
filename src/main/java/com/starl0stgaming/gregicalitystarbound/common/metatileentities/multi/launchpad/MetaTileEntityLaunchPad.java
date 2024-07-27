@@ -1,4 +1,5 @@
 package com.starl0stgaming.gregicalitystarbound.common.metatileentities.multi.launchpad;
+
 import com.starl0stgaming.gregicalitystarbound.api.recipes.GCSBRecipeMaps;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.IEndpointSerializable;
 import gregtech.api.capability.GregtechDataCodes;
@@ -33,20 +34,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-import static gregtech.api.util.RelativeDirection.RIGHT;
-import static gregtech.api.util.RelativeDirection.FRONT;
-import static gregtech.api.util.RelativeDirection.UP;
+import static gregtech.api.util.RelativeDirection.*;
 
 public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController implements IEndpointSerializable {
 
+    public static final int MIN_LENGTH = 5; // accounts for the edge blocks
+    private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
+            MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.MAINTENANCE_HATCH
+    };
     // Probably needs a fluid inventory for a water deluge system
     protected FluidTankList inputFluidInventory;
-    public static final int MIN_LENGTH = 5; // accounts for the edge blocks
     private int cbAxLen = MIN_LENGTH; // controller-back axis length
     private int sAxLen = 5; //side-side axis length
-    private static final MultiblockAbility<?>[] ALLOWED_ABILITIES = {
-      MultiblockAbility.IMPORT_FLUIDS, MultiblockAbility.MAINTENANCE_HATCH
-    };
+
     public MetaTileEntityLaunchPad(ResourceLocation mteId) {
         super(mteId, GCSBRecipeMaps.LAUNCH_PAD_LOADING_RECIPES);
         resetTileAbilities();
@@ -64,6 +64,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     public void resetTileAbilities() {
         this.inputFluidInventory = new FluidTankList(true);
     }
+
     @Override
     protected void updateFormedValid() {
         // not necessary for now
@@ -83,16 +84,16 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
 
         //T stands for template
         StringBuilder frontTopT = new StringBuilder(new String(new char[sAxLen]).replace("\0", " "));
-        frontTopT.setCharAt(sAxLen/2, 'S');
+        frontTopT.setCharAt(sAxLen / 2, 'S');
         StringBuilder frontT = new StringBuilder(new String(new char[sAxLen]).replace("\0", "E"));
-        frontT.setCharAt(sAxLen/2, 'C');
+        frontT.setCharAt(sAxLen / 2, 'C');
         StringBuilder centerT = new StringBuilder(new String(new char[sAxLen]).replace("\0", "X"));
         centerT.setCharAt(0, 'E');
         centerT.setCharAt(sAxLen - 1, 'E');
         StringBuilder backT = new StringBuilder(new String(new char[sAxLen]).replace("\0", "E"));
         StringBuilder baseFBTS = new StringBuilder();
-        for (int i = 0; i < sAxLen/2; i++) {
-            baseFBTS.append(i % 2 == 0 ? "S": " ");
+        for (int i = 0; i < sAxLen / 2; i++) {
+            baseFBTS.append(i % 2 == 0 ? "S" : " ");
         }
         String baseFBT = baseFBTS + (sAxLen % 2 == 1 ? "S" : "") + baseFBTS.reverse();
         StringBuilder baseCT = new StringBuilder(new String(new char[sAxLen]).replace("\0", " "));
@@ -131,15 +132,15 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
 
 
         return FactoryBlockPattern.start(RIGHT, FRONT, UP).aisle(bottomAisle)
-                    .aisle(secondAisle)
-                    .aisle(otherAisle)
-                    .aisle(otherAisle)
-                    .aisle(otherAisle)
-                    .where('C', selfPredicate())
-                    .where('X', states(MetaBlocks.STONE_BLOCKS.get(StoneVariantBlock.StoneVariant.SMOOTH).getState(StoneVariantBlock.StoneType.CONCRETE_LIGHT)))
-                    .where('S', states(MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel)))
-                    .where('E', states(getCasingState()).or(autoAbilities()))
-                    .where(' ', air())
+                .aisle(secondAisle)
+                .aisle(otherAisle)
+                .aisle(otherAisle)
+                .aisle(otherAisle)
+                .where('C', selfPredicate())
+                .where('X', states(MetaBlocks.STONE_BLOCKS.get(StoneVariantBlock.StoneVariant.SMOOTH).getState(StoneVariantBlock.StoneType.CONCRETE_LIGHT)))
+                .where('S', states(MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel)))
+                .where('E', states(getCasingState()).or(autoAbilities()))
+                .where(' ', air())
                 .build();
     }
 
@@ -259,15 +260,18 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     public boolean isBlockEdge(@Nonnull World world, @Nonnull BlockPos.MutableBlockPos pos, @Nonnull EnumFacing direction) {
         return world.getBlockState(pos.move(direction)) == getCasingState() || world.getTileEntity(pos) instanceof MetaTileEntityHolder;
     }
+
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
         initializeAbilities();
     }
+
     @Override
-    public void invalidateStructure(){
+    public void invalidateStructure() {
         super.invalidateStructure();
     }
+
     public void handleMessage(NBTTagCompound ntc) {
 
     }

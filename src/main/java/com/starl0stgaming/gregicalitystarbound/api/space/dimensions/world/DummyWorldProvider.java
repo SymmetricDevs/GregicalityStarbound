@@ -13,6 +13,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 public class DummyWorldProvider extends WorldProvider {
 
     private WorldGenDetails details;
+
     public WorldGenDetails getDimensionInformation() {
         int dim = getDimension();
         details = GCSBDimensionManager.getSpecificWorldGenDetails(dim);

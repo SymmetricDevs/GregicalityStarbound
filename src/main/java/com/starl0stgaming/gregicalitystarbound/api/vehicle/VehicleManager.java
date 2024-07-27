@@ -1,10 +1,6 @@
 package com.starl0stgaming.gregicalitystarbound.api.vehicle;
 
-import com.starl0stgaming.gregicalitystarbound.api.vehicle.components.ComponentManager;
-
 import java.util.HashMap;
-
-import static com.starl0stgaming.gregicalitystarbound.GregicalityStarbound.COMPONENT_MANAGER;
 
 public class VehicleManager {
 

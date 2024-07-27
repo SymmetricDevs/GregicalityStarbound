@@ -1,4 +1,4 @@
-package com.starl0stgaming.gregicalitystarbound.api.sound;
+package com.starl0stgaming.gregicalitystarbound.client.sound;
 
 import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 import net.minecraft.util.ResourceLocation;
@@ -9,7 +9,7 @@ public class GCSBSounds {
 
     public static SoundEvent ROCKET_LAUNCH;
 
-    public static void registerSounds(){
+    public static void registerSounds() {
         ROCKET_LAUNCH = registerSound("entity.rocket_launch");
     }
 

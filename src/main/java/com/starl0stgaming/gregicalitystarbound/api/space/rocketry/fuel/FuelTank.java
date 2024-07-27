@@ -1,7 +1,5 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel;
 
-import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
-
 public class FuelTank {
 
 
@@ -23,16 +21,16 @@ public class FuelTank {
 
     //TODO: could use the isFull variable to determine if its able to take more fuel in
     public int addPropellantToTank(int amountToAdd) {
-        if(this.maxPropellantCapacity > (this.propellant + amountToAdd)) {
+        if (this.maxPropellantCapacity > (this.propellant + amountToAdd)) {
             this.propellant += amountToAdd;
-            if(this.propellant == this.maxPropellantCapacity && !this.isFull) {
+            if (this.propellant == this.maxPropellantCapacity && !this.isFull) {
                 this.setFull(true);
             }
             return amountToAdd;
-        } else if(this.maxPropellantCapacity < (this.propellant + amountToAdd)) {
+        } else if (this.maxPropellantCapacity < (this.propellant + amountToAdd)) {
             int amountAdded = this.maxPropellantCapacity - this.propellant;
             this.propellant += amountAdded;
-            if(this.propellant == this.maxPropellantCapacity && !this.isFull) {
+            if (this.propellant == this.maxPropellantCapacity && !this.isFull) {
                 this.setFull(true);
             }
             return amountAdded;
@@ -44,17 +42,17 @@ public class FuelTank {
 
     //TODO: Maybe do as a part of a FuelTransfer an operation result, and return false if the amount to be removed exceeds the current stored amount
     public int removePropellantFromTank(int amountToRemove) {
-        if(this.getPropellant() < amountToRemove) {
+        if (this.getPropellant() < amountToRemove) {
             int amountRemoved = this.getPropellant();
-            this.propellant =- amountRemoved; // :troll:
-            if(this.getPropellant() == 0 && !this.isEmpty) {
+            this.propellant = -amountRemoved; // :troll:
+            if (this.getPropellant() == 0 && !this.isEmpty) {
                 this.setEmpty(true);
             }
             return amountRemoved;
-        } else if(this.getPropellant() > amountToRemove) {
+        } else if (this.getPropellant() > amountToRemove) {
             int amountRemoved = this.propellant - amountToRemove;
             this.propellant -= amountRemoved;
-            if(this.getPropellant() == 0 && !this.isEmpty) {
+            if (this.getPropellant() == 0 && !this.isEmpty) {
                 this.setEmpty(true);
             }
             return amountRemoved;

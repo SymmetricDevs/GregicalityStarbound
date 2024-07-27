@@ -4,11 +4,7 @@ import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.Planet
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.WorldGenDetails;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.DimensionManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;

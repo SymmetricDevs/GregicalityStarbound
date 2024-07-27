@@ -4,16 +4,13 @@ import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBConfigHandler;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
 import com.starl0stgaming.gregicalitystarbound.api.space.solarsystem.SolarSystem;
-import net.minecraft.world.biome.Biome;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,7 +23,7 @@ public class SpaceConfigHandler {
             Stream<Path> solarSystemFiles = Files.walk(solarSystemFolder.toPath());
 
             Path planetDirPath = solarSystemFiles.filter(Files::isDirectory).filter(entry -> entry.getFileName().toString().equals("planets")).findFirst().orElse(null);
-            if(planetDirPath == null) return null;
+            if (planetDirPath == null) return null;
 
             return planetDirPath.toFile();
         } catch (IOException e) {
@@ -42,18 +39,18 @@ public class SpaceConfigHandler {
                     .collect(Collectors.toList());
 
             Path solarSystemMainFilePath = solarSystemFiles.stream().findFirst().orElse(null);
-            if(solarSystemMainFilePath == null) return null;
+            if (solarSystemMainFilePath == null) return null;
             File solarSystemFile = solarSystemMainFilePath.toFile();
 
             SolarSystem solarSystem = this.getSolarSystemFromFile(solarSystemFile);
-            if(solarSystem == null) return null;
+            if (solarSystem == null) return null;
             solarSystem.load();
 
             //Planet Loading
             File planetDir = this.getPlanetDirInSolarSystem(solarSystemFolder);
 
             List<Planet> planetList = this.getPlanetListFromFolder(planetDir);
-            if(planetList == null) return null;
+            if (planetList == null) return null;
 
             planetList.forEach((planet) -> {
                 planet.load();
@@ -91,23 +88,23 @@ public class SpaceConfigHandler {
     }
 
     public SolarSystem getSolarSystemFromFile(File solarSystemFile) {
-         try {
-             Reader reader = Files.newBufferedReader(solarSystemFile.toPath());
+        try {
+            Reader reader = Files.newBufferedReader(solarSystemFile.toPath());
 
-             SolarSystem solarSystem = GCSBConfigHandler.GSON.fromJson(reader, SolarSystem.class);
+            SolarSystem solarSystem = GCSBConfigHandler.GSON.fromJson(reader, SolarSystem.class);
 
-             if(solarSystem == null) return null;
+            if (solarSystem == null) return null;
 
-             return solarSystem;
-         } catch (IOException e) {
-             throw new RuntimeException(e);
-         }
+            return solarSystem;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<Planet> getPlanetListFromFolder(File planetFolder) {
         List<Planet> planetList = new ArrayList<>();
 
-        try  {
+        try {
             Stream<Path> stream = Files.list(planetFolder.toPath());
 
             stream.filter(Files::isRegularFile).forEach((planetPath) -> {

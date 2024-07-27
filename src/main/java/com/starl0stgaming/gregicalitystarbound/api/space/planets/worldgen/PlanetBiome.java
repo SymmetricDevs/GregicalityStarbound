@@ -5,7 +5,6 @@ import com.starl0stgaming.gregicalitystarbound.api.util.StringUtil;
 import com.starl0stgaming.gregicalitystarbound.common.space.dimension.ModDimension;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
-
 import net.minecraft.world.biome.Biome.BiomeProperties;
 
 public class PlanetBiome {
@@ -96,6 +95,7 @@ public class PlanetBiome {
     public Biome getBiome() {
         return biome;
     }
+
     public void initiateBiome() {
         BiomeProperties properties = new BiomeProperties(this.name);
         if (this.waterColor != -1) {

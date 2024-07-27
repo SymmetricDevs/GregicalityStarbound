@@ -18,27 +18,25 @@ import java.util.Random;
 
 public class DummyChunkGenerator implements IChunkGenerator {
     private final Random rand;
-    private NoiseGeneratorOctaves minLimitPerlinNoise;
-    private NoiseGeneratorOctaves maxLimitPerlinNoise;
-    private NoiseGeneratorOctaves mainPerlinNoise;
-    private NoiseGeneratorPerlin surfaceNoise;
-    public NoiseGeneratorOctaves scaleNoise;
-    public NoiseGeneratorOctaves depthNoise;
-    public NoiseGeneratorOctaves forestNoise;
     private final World world;
     private final boolean mapFeaturesEnabled;
     private final WorldType terrainType;
     private final double[] heightMap;
     private final float[] biomeWeights;
-    private double[] depthBuffer = new double[256];
-    private MapGenBase caveGenerator = new MapGenCaves();
-
-    private Biome[] biomesForGeneration;
+    public NoiseGeneratorOctaves scaleNoise;
+    public NoiseGeneratorOctaves depthNoise;
+    public NoiseGeneratorOctaves forestNoise;
     double[] mainNoiseRegion;
     double[] minLimitRegion;
     double[] maxLimitRegion;
     double[] depthRegion;
-
+    private NoiseGeneratorOctaves minLimitPerlinNoise;
+    private NoiseGeneratorOctaves maxLimitPerlinNoise;
+    private NoiseGeneratorOctaves mainPerlinNoise;
+    private NoiseGeneratorPerlin surfaceNoise;
+    private double[] depthBuffer = new double[256];
+    private MapGenBase caveGenerator = new MapGenCaves();
+    private Biome[] biomesForGeneration;
     private double depthNoiseScaleX = 200.0D;
     private double depthNoiseScaleZ = 200.0D;
     private double depthNoiseScaleExponent = 0.5D;
@@ -101,6 +99,7 @@ public class DummyChunkGenerator implements IChunkGenerator {
 
     /**
      * Creates base terrain (air and stone) using heightmaps.
+     *
      * @param chunkX
      * @param chunkZ
      * @param primer
@@ -160,8 +159,7 @@ public class DummyChunkGenerator implements IChunkGenerator {
                                 // If the noiseLevel is above 0, set block to stone.
                                 if (height < 2) {
                                     primer.setBlockState(iX * 4 + jX, iY * 8 + jY, iZ * 4 + jZ, bedrock);
-                                } else
-                                if ((finalNoise += d16) > 0.0D) {
+                                } else if ((finalNoise += d16) > 0.0D) {
                                     primer.setBlockState(iX * 4 + jX, iY * 8 + jY, iZ * 4 + jZ, stone);
                                 }
 
@@ -345,7 +343,7 @@ public class DummyChunkGenerator implements IChunkGenerator {
     }
 
     public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos) {
-            return false;
+        return false;
     }
 
     @Nullable

@@ -23,14 +23,12 @@ public class DummyWorldType extends WorldType {
     }
 
     @Override
-    public BiomeProvider getBiomeProvider(World world)
-    {
+    public BiomeProvider getBiomeProvider(World world) {
         return new DummyBiomeProvider(world, biomes);
     }
 
     @Override
-    public IChunkGenerator getChunkGenerator(World world, String generatorOptions)
-    {
+    public IChunkGenerator getChunkGenerator(World world, String generatorOptions) {
         return new DummyChunkGenerator(world, world.getSeed(), stone, bedrock);
     }
 }

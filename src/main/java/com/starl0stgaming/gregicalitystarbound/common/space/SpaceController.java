@@ -1,6 +1,5 @@
 package com.starl0stgaming.gregicalitystarbound.common.space;
 
-import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 
 
@@ -34,16 +33,12 @@ public class SpaceController {
         // Galaxies
 
 
-
         // Rocketry
 
         //simple example usage
 
 
-
     }
-
-
 
 
     public void loadSolarSystems() {

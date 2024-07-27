@@ -2,23 +2,18 @@ package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world;
 
 import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.layer.DummyGenLayer;
 import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.layer.DummyGenLayerBiomes;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.init.Biomes;
-import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeCache;
 import net.minecraft.world.biome.BiomeProvider;
-import net.minecraft.world.gen.ChunkGeneratorSettings;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
 import net.minecraft.world.gen.layer.GenLayerZoom;
 import net.minecraft.world.gen.layer.IntCache;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class DummyBiomeProvider extends BiomeProvider {
@@ -27,6 +22,7 @@ public class DummyBiomeProvider extends BiomeProvider {
     GenLayer biomeIndex;
     private List<Biome> biomesToSpawnIn;
     private BiomeCache cache;
+
     public DummyBiomeProvider(World world, List<Biome> biomes) {
         super(world.getWorldInfo());
 
@@ -59,15 +55,13 @@ public class DummyBiomeProvider extends BiomeProvider {
     }
 
     @Override
-    public List<Biome> getBiomesToSpawnIn()
-    {
+    public List<Biome> getBiomesToSpawnIn() {
         return biomesToSpawnIn;
     }
 
     @Override
-    public Biome getBiome(BlockPos pos)
-    {
-        return this.getBiome(pos, (Biome)null);
+    public Biome getBiome(BlockPos pos) {
+        return this.getBiome(pos, (Biome) null);
     }
 
     @Override
@@ -81,8 +75,7 @@ public class DummyBiomeProvider extends BiomeProvider {
     }
 
     @Override
-    public Biome[] getBiomesForGeneration(Biome[] biomes, int par2, int par3, int par4, int par5)
-    {
+    public Biome[] getBiomesForGeneration(Biome[] biomes, int par2, int par3, int par4, int par5) {
         if (biomes == null || biomes.length < par4 * par5)
             biomes = new Biome[par4 * par5];
 
@@ -98,8 +91,7 @@ public class DummyBiomeProvider extends BiomeProvider {
     }
 
     @Override
-    public Biome[] getBiomes(Biome[] biomes, int x, int y, int width, int length, boolean cacheFlag)
-    {
+    public Biome[] getBiomes(Biome[] biomes, int x, int y, int width, int length, boolean cacheFlag) {
         IntCache.resetIntCache();
 
         if (biomes == null || biomes.length < width * length)
@@ -123,8 +115,7 @@ public class DummyBiomeProvider extends BiomeProvider {
     }
 
     @Override
-    public void cleanupCache()
-    {
+    public void cleanupCache() {
         cache.cleanupCache();
     }
 }

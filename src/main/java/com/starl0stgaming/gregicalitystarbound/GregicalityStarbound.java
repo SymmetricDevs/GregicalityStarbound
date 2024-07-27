@@ -2,9 +2,6 @@ package com.starl0stgaming.gregicalitystarbound;
 
 import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBConfigHandler;
 import com.starl0stgaming.gregicalitystarbound.api.configuration.space.SpaceConfigHandler;
-import com.starl0stgaming.gregicalitystarbound.api.sound.GCSBSounds;
-
-
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.entity.RocketEntity;
 import com.starl0stgaming.gregicalitystarbound.api.vehicle.VehicleManager;
 import com.starl0stgaming.gregicalitystarbound.api.vehicle.components.ComponentManager;
@@ -23,20 +20,16 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 public class GregicalityStarbound {
 
 
-    @Mod.Instance(GregicalityStarbound.MODID)
-    public static GregicalityStarbound instance;
-
     public static final String NAME = "Gregicality Starbound";
     public static final String MODID = "gregicalitystarbound";
-
     public static final SpaceController SPACE_CONTROLLER = new SpaceController();
     public static final GCSBConfigHandler CONFIG_HANDLER = new GCSBConfigHandler();
     public static final SpaceConfigHandler SPACE_CONFIG_HANDLER = new SpaceConfigHandler();
-
     public static final ComponentManager COMPONENT_MANAGER = new ComponentManager();
     public static final VehicleManager VEHICLE_MANAGER = new VehicleManager();
+    @Mod.Instance(GregicalityStarbound.MODID)
+    public static GregicalityStarbound instance;
     //public static final TelemetryNetwork TELEMETRY_NETWORK = new TelemetryNetwork();
-
     public static KeyBinding keyBinding;
 
     @SidedProxy(modId = GregicalityStarbound.MODID, clientSide = "com.starl0stgaming.gregicalitystarbound.client.ClientProxy", serverSide = "gregicalitystarbound.common.CommonProxy")
@@ -48,9 +41,6 @@ public class GregicalityStarbound {
         GregicalityStarbound.CONFIG_HANDLER.init();
 
         proxy.preLoad();
-
-
-        GCSBSounds.registerSounds();
 
         EntityRegistry.registerModEntity(new ResourceLocation(GregicalityStarbound.MODID, "rocket"), RocketEntity.class, "Rocket", 1, GregicalityStarbound.instance, 64, 3, true);
 

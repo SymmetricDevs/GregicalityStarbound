@@ -13,7 +13,7 @@ public class ComponentManager {
     }
 
     public void registerComponent(String identifier, VehicleComponent component) {
-        if(component != null) {
+        if (component != null) {
             componentList.put(identifier, component);
         }
     }

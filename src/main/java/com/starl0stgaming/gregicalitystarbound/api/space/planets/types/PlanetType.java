@@ -1,9 +1,6 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.planets.types;
 
-import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.PlanetBiome;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.atmosphere.Atmosphere;
-
-import java.util.List;
 
 public class PlanetType {
 

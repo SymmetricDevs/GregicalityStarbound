@@ -36,8 +36,6 @@ public class TelemetryConnection {
     }
 
 
-
-
     public void sendPacketToNetwork(TelemetryPacket telemetryPacket) {
         if (endpointMap.isEmpty()) return;
         for (int i : endpointMap.keySet()) {
@@ -59,7 +57,7 @@ public class TelemetryConnection {
     }
 
     public void addEndpoints(TelemetryEndpoint... endpoints) {
-        for(TelemetryEndpoint ep: endpoints) {
+        for (TelemetryEndpoint ep : endpoints) {
             endpointMap.put(ep.getId(), ep);
             if (ep.getNetwork() != null) {
                 ep.getNetwork().removeEndpoint(ep);
@@ -86,7 +84,7 @@ public class TelemetryConnection {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound ntc = new NBTTagCompound();
         NBTTagList ntcList = new NBTTagList();
-        for (TelemetryEndpoint ep: getEndpointList()) {
+        for (TelemetryEndpoint ep : getEndpointList()) {
             ntcList.appendTag(ep.serializeNBT());
         }
         ntc.setTag("endpoints", ntcList);

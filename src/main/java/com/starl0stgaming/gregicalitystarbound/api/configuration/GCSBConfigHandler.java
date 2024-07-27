@@ -9,21 +9,12 @@ import java.io.File;
 public class GCSBConfigHandler {
 
 
-
-    private boolean loadDefaultPlanets = true;
-
-
-    private File GCSBConfigFolder = new File(Loader.instance().getConfigDir(), "gregicalitystarbound");
-
-    private File solarSystemConfigFolder = new File(GCSBConfigFolder, "solarsystems");
-
-
-
-
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();
-
+    private boolean loadDefaultPlanets = true;
+    private File GCSBConfigFolder = new File(Loader.instance().getConfigDir(), "gregicalitystarbound");
+    private File solarSystemConfigFolder = new File(GCSBConfigFolder, "solarsystems");
 
     public void init() {
         GCSBConfigFolder.mkdirs();

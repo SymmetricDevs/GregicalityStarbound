@@ -7,6 +7,7 @@ import static gregtech.common.metatileentities.MetaTileEntities.registerMetaTile
 
 public class GCSBMetaTileEntities {
     public static MetaTileEntityLaunchPad LAUNCH_PAD;
+
     public static void init() {
         LAUNCH_PAD = registerMetaTileEntity(11000, new MetaTileEntityLaunchPad(gcsbId("launch_pad")));
     }

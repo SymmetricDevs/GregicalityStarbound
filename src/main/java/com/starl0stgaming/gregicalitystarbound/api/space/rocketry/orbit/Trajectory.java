@@ -1,7 +1,5 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.orbit;
 
-import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.orbit.Orbit;
-
 public class Trajectory {
 
 

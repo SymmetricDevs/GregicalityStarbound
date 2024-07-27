@@ -12,29 +12,24 @@ import net.minecraft.world.gen.NoiseGeneratorPerlin;
 import java.util.Random;
 
 public class DummyTerrainGenerator {
+    private final double[] heightMap;
+    private final float[] biomeWeights;
+    private final IBlockState filling;
+    private final IBlockState bottom;
     private World world;
     private Random random;
-
-    private final double[] heightMap;
     private double[] mainNoiseRegion;
     private double[] minLimitRegion;
     private double[] maxLimitRegion;
     private double[] depthRegion;
-
     private NoiseGeneratorOctaves minLimitPerlinNoise;
     private NoiseGeneratorOctaves maxLimitPerlinNoise;
     private NoiseGeneratorOctaves mainPerlinNoise;
     private NoiseGeneratorPerlin surfaceNoise;
-
     // A NoiseGeneratorOctaves used in generating terrain
     private NoiseGeneratorOctaves depthNoise;
-
-    private final float[] biomeWeights;
     private double[] depthBuffer = new double[256];
-
     private Biome[] biomesForGeneration;
-    private final IBlockState filling;
-    private final IBlockState bottom;
 
     public DummyTerrainGenerator(IBlockState stone, IBlockState bottom) {
         this.heightMap = new double[825];
@@ -225,7 +220,8 @@ public class DummyTerrainGenerator {
     }
 
     public void replaceBiomeBlocks(int x, int z, ChunkPrimer primer, IChunkGenerator generator, Biome[] biomes) {
-        if (!net.minecraftforge.event.ForgeEventFactory.onReplaceBiomeBlocks(generator, x, z, primer, this.world)) return;
+        if (!net.minecraftforge.event.ForgeEventFactory.onReplaceBiomeBlocks(generator, x, z, primer, this.world))
+            return;
         this.depthBuffer = this.surfaceNoise.getRegion(this.depthBuffer, (x * 16), (z * 16), 16, 16, 0.0625D, 0.0625D, 1.0D);
 
         for (int i = 0; i < 16; ++i) {

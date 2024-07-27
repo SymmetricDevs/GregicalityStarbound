@@ -3,26 +3,22 @@ package com.starl0stgaming.gregicalitystarbound.api.telemetry.network;
 import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
-import gregtech.api.GTValues;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TelemetryNetworkManager extends WorldSavedData implements INBTSerializable<NBTTagCompound> {
 
     public static final String DATA_NAME = GregicalityStarbound.MODID + ".telemetryData";
-    private static TelemetryNetworkManager INSTANCE;
     public static int ENDPOINT_ID_COUNT = 0;
+    private static TelemetryNetworkManager INSTANCE;
     private final List<TelemetryEndpoint> endpointList;
     private List<TelemetryConnection> connectionList;
 
@@ -43,6 +39,12 @@ public class TelemetryNetworkManager extends WorldSavedData implements INBTSeria
             INSTANCE.markDirty();
     }
 
+    public static void setInstance(TelemetryNetworkManager tnm) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            INSTANCE = tnm;
+        }
+    }
+
     public void addConnection(TelemetryConnection connection) {
         this.connectionList.add(connection);
     }
@@ -60,7 +62,7 @@ public class TelemetryNetworkManager extends WorldSavedData implements INBTSeria
     }
 
     public TelemetryEndpoint createEndpoint() {
-        TelemetryEndpoint endpoint = new TelemetryEndpoint(ENDPOINT_ID_COUNT+1);
+        TelemetryEndpoint endpoint = new TelemetryEndpoint(ENDPOINT_ID_COUNT + 1);
         endpointList.add(endpoint);
         TelemetryNetworkManager.setDirty();
         ENDPOINT_ID_COUNT++;
@@ -70,8 +72,10 @@ public class TelemetryNetworkManager extends WorldSavedData implements INBTSeria
     public List<TelemetryConnection> getConnections() {
         return this.connectionList;
     }
-    public List<TelemetryEndpoint> getEndpoints() { return this.endpointList; }
 
+    public List<TelemetryEndpoint> getEndpoints() {
+        return this.endpointList;
+    }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
@@ -91,12 +95,6 @@ public class TelemetryNetworkManager extends WorldSavedData implements INBTSeria
         NBTTagList connData = nbt.getTagList("GCSBnets", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < connData.tagCount(); i++) {
             connectionList.add(new TelemetryConnection(connData.getCompoundTagAt(i)));
-        }
-    }
-
-    public static void setInstance(TelemetryNetworkManager tnm)  {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-            INSTANCE = tnm;
         }
     }
 }

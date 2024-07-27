@@ -6,8 +6,8 @@ import java.util.UUID;
 public class AuthKey {
 
     protected UUID key;
-    private int id;
     protected String keyIdentifier;
+    private int id;
 
     public AuthKey(int id, String keyIdentifier) {
         key = UUID.randomUUID();
@@ -16,7 +16,7 @@ public class AuthKey {
     }
 
     public UUID getKey(String keyIdentifier) {
-        if(Objects.equals(this.keyIdentifier, keyIdentifier)) {
+        if (Objects.equals(this.keyIdentifier, keyIdentifier)) {
             return key;
         } else {
             return null;
@@ -24,7 +24,7 @@ public class AuthKey {
     }
 
     public void setKey(UUID key, String keyIdentifier) {
-        if(Objects.equals(this.keyIdentifier, keyIdentifier)) {
+        if (Objects.equals(this.keyIdentifier, keyIdentifier)) {
             this.key = key;
         }
     }

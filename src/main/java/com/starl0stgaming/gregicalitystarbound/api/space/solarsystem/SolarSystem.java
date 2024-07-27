@@ -26,14 +26,14 @@ public class SolarSystem {
     }
 
     public void load() {
-        if(!isLoaded) {
+        if (!isLoaded) {
             isLoaded = true;
             this.planetList = new ArrayList<>();
         }
     }
 
     public void unload() {
-        if(isLoaded) {
+        if (isLoaded) {
             isLoaded = false;
         }
     }

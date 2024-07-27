@@ -29,8 +29,6 @@ public class Rocket {
     //api
 
 
-
-
     public Rocket(int id, String name) {
         this.fuelNetwork = new FuelNetwork(0);
 

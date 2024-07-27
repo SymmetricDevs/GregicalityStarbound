@@ -14,18 +14,14 @@ import java.util.PriorityQueue;
 
 public class TelemetryEndpoint {
 
+    public ArrayList<TelemetryPacketPayload> dataBuffer;
+    protected String packetDiscriminator;
+    protected AuthKey authKey;
     // Ids are set in constructor, but it might be better to set them in TelemetryConnection
     private int id;
     private TelemetryConnection connection;
-
     private PriorityQueue<TelemetryPacket> inPacketQueue;
     private PriorityQueue<TelemetryPacket> outPacketQueue;
-
-    public ArrayList<TelemetryPacketPayload> dataBuffer;
-
-    protected String packetDiscriminator;
-    protected AuthKey authKey;
-
     private boolean enableDiscriminator;
     private boolean enableEncryption;
 
@@ -68,11 +64,11 @@ public class TelemetryEndpoint {
 
 
         //read in packet queue
-        if(!this.inPacketQueue.isEmpty())  {
+        if (!this.inPacketQueue.isEmpty()) {
 
-            for(int i = 0; i < this.inPacketQueue.toArray().length; i++) {
+            for (int i = 0; i < this.inPacketQueue.toArray().length; i++) {
                 TelemetryPacket packetIn = this.inPacketQueue.poll();
-                if(!packetIn.getDiscriminator().equals(this.packetDiscriminator) && this.enableDiscriminator) break;
+                if (!packetIn.getDiscriminator().equals(this.packetDiscriminator) && this.enableDiscriminator) break;
 
                 TelemetryPacketPayload packetPayload = packetIn.getPacketPayload();
 
@@ -81,15 +77,14 @@ public class TelemetryEndpoint {
         }
 
         //read out packet queue and send packets to specified destination in packet info or whole network
-        if(!this.outPacketQueue.isEmpty()) {
-            for(int i = 0; i < this.outPacketQueue.toArray().length; i++) {
+        if (!this.outPacketQueue.isEmpty()) {
+            for (int i = 0; i < this.outPacketQueue.toArray().length; i++) {
                 this.connection.sendPacketToDestination(this.outPacketQueue.poll());
             }
         }
     }
 
     /**
-     *
      * @return returns the TelemetryPacketPayload in the index 0 of the endpoint's data buffer.
      */
     public TelemetryPacketPayload poll() {
@@ -102,7 +97,7 @@ public class TelemetryEndpoint {
     }
 
     public void sendPacket(TelemetryPacket packet) {
-        if(this.connection == null) {
+        if (this.connection == null) {
             GCSBLog.LOGGER.error("[ERROR] Telemetry Endpoint with id " + this.getId() + " cant send packet because it has no bound network!");
             return;
         }
@@ -116,6 +111,7 @@ public class TelemetryEndpoint {
         nbt.setString("discr", packetDiscriminator);
         return nbt;
     }
+
     public TelemetryConnection getNetwork() {
         return connection;
     }
@@ -129,7 +125,7 @@ public class TelemetryEndpoint {
         if (this.id > TelemetryNetworkManager.ENDPOINT_ID_COUNT) {
             TelemetryNetworkManager.ENDPOINT_ID_COUNT = this.id;
         }
-        this.packetDiscriminator=data.getString("discr");
+        this.packetDiscriminator = data.getString("discr");
     }
 
     public void setConnection(TelemetryConnection connection) {

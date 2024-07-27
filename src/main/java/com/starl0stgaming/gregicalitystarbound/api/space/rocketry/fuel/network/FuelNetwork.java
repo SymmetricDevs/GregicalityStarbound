@@ -25,7 +25,6 @@ public class FuelNetwork {
     }
 
 
-
     public void update() {
 
     }
@@ -33,11 +32,11 @@ public class FuelNetwork {
 
     public void addFuelToNetwork(int totalAmountToAdd) {
         int amountToAdd = totalAmountToAdd;
-        for(int i = 0; i < this.getFuelTankList().toArray().length; i++) {
+        for (int i = 0; i < this.getFuelTankList().toArray().length; i++) {
             FuelTank fuelTank = this.getFuelTankList().get(i);
-            if(!fuelTank.isFull() && amountToAdd > 0) {
+            if (!fuelTank.isFull() && amountToAdd > 0) {
                 int amountAdded = fuelTank.addPropellantToTank(amountToAdd);
-                amountToAdd =- amountAdded;
+                amountToAdd = -amountAdded;
                 if (amountToAdd <= 0) {
                     break;
                 }
@@ -49,12 +48,12 @@ public class FuelNetwork {
 
     public void removeFuelFromNetwork(int totalAmountToRemove) {
         int amountToRemove = totalAmountToRemove;
-        for (int i=0; i < this.getFuelTankList().toArray().length; i++) {
+        for (int i = 0; i < this.getFuelTankList().toArray().length; i++) {
             FuelTank fuelTank = this.fuelTankList.get(i);
-            if(!fuelTank.isEmpty() && amountToRemove > 0) {
+            if (!fuelTank.isEmpty() && amountToRemove > 0) {
                 int amountRemoved = fuelTank.removePropellantFromTank(amountToRemove);
-                amountToRemove =- amountRemoved;
-                if(amountToRemove <= 0) {
+                amountToRemove = -amountRemoved;
+                if (amountToRemove <= 0) {
                     break;
                 }
             } else {
@@ -65,7 +64,7 @@ public class FuelNetwork {
 
     public int getMaximumFuelCapacity() {
         int maxFuelCapacity = 0;
-        for(int i = 0; i < getFuelTankList().toArray().length; i++) {
+        for (int i = 0; i < getFuelTankList().toArray().length; i++) {
             FuelTank fuelTank = getFuelTankList().get(i);
 
             maxFuelCapacity += fuelTank.getMaxPropellantCapacity();
@@ -75,7 +74,7 @@ public class FuelNetwork {
 
     public int getCurrentStoredFuel() {
         int currentStoredFuel = 0;
-        for(int i = 0; i < getFuelTankList().toArray().length; i++) {
+        for (int i = 0; i < getFuelTankList().toArray().length; i++) {
             FuelTank fuelTank = getFuelTankList().get(i);
 
             currentStoredFuel += fuelTank.getPropellant();
@@ -95,11 +94,11 @@ public class FuelNetwork {
         return fuelTankList;
     }
 
-    public void addFuelTank(FuelTank fuelTank) {
-        this.fuelTankList.add(fuelTank);
-    }
-
     public void setFuelTankList(List<FuelTank> fuelTankList) {
         this.fuelTankList = fuelTankList;
+    }
+
+    public void addFuelTank(FuelTank fuelTank) {
+        this.fuelTankList.add(fuelTank);
     }
 }

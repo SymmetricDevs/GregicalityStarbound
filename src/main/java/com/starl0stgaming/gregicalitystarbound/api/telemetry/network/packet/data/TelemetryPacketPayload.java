@@ -10,6 +10,7 @@ public class TelemetryPacketPayload {
     public TelemetryPacketPayload() {
         this.nbtTagCompound = new NBTTagCompound();
     }
+
     public TelemetryPacketPayload(NBTTagCompound nbtTagCompound) {
         this.nbtTagCompound = nbtTagCompound;
     }

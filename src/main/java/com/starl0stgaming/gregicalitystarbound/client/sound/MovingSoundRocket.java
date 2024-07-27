@@ -1,4 +1,4 @@
-package com.starl0stgaming.gregicalitystarbound.api.sound;
+package com.starl0stgaming.gregicalitystarbound.client.sound;
 
 import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.entity.RocketEntity;
 import net.minecraft.client.audio.MovingSound;
@@ -9,6 +9,7 @@ public class MovingSoundRocket extends MovingSound {
 
     private final RocketEntity rocketEntity;
     private float distance = 0.0F;
+
     public MovingSoundRocket(RocketEntity rocketEntity) {
         super(GCSBSounds.ROCKET_LAUNCH, SoundCategory.NEUTRAL);
         this.rocketEntity = rocketEntity;
@@ -27,7 +28,7 @@ public class MovingSoundRocket extends MovingSound {
 
     @Override
     public void update() {
-        if(this.rocketEntity.isDead) {
+        if (this.rocketEntity.isDead) {
             this.donePlaying = true;
         } else {
             this.xPosF = (float) this.rocketEntity.posX;

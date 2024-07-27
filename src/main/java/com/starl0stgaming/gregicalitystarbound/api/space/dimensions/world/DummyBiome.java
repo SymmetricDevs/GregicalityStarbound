@@ -29,8 +29,7 @@ public class DummyBiome extends Biome {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int getSkyColorByTemp(float par1)
-    {
+    public int getSkyColorByTemp(float par1) {
         return skyColor;
     }
 }
