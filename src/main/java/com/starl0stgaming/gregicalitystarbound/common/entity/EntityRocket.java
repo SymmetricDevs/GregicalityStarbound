@@ -1,4 +1,4 @@
-package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.entity;
+package com.starl0stgaming.gregicalitystarbound.common.entity;
 
 import com.starl0stgaming.gregicalitystarbound.client.sound.MovingSoundRocket;
 import net.minecraft.client.Minecraft;
@@ -13,15 +13,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class RocketEntity extends Entity {
+public class EntityRocket extends Entity {
 
     protected static final float jerk = 0.0001F;
-    private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(RocketEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.createKey(RocketEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(RocketEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> LAUNCH_TIME = EntityDataManager.createKey(RocketEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> FLIGHT_TIME = EntityDataManager.createKey(RocketEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<Float> START_POS = EntityDataManager.createKey(RocketEntity.class, DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(EntityRocket.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.createKey(EntityRocket.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> LAUNCH_TIME = EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> FLIGHT_TIME = EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
+    private static final DataParameter<Float> START_POS = EntityDataManager.createKey(EntityRocket.class, DataSerializers.FLOAT);
     private final int countdownTimer = 0;
     @SideOnly(Side.CLIENT)
     private MovingSoundRocket soundRocket;
@@ -29,12 +29,12 @@ public class RocketEntity extends Entity {
     private int id;
 
 
-    public RocketEntity(World worldIn) {
+    public EntityRocket(World worldIn) {
         super(worldIn);
         this.setSize(3F, 31F);
     }
 
-    public RocketEntity(World worldIn, double x, double y, double z) {
+    public EntityRocket(World worldIn, double x, double y, double z) {
         super(worldIn);
         this.setLocationAndAngles(x, y, z, this.rotationYaw, 180.0F);
         this.setSize(3F, 31F);
@@ -43,7 +43,7 @@ public class RocketEntity extends Entity {
         this.setEntityBoundingBox(new AxisAlignedBB(x - 1, y + 0.1, z - 1, x + 1, y + 40, z + 1));
     }
 
-    public RocketEntity(World worldIn, BlockPos pos) {
+    public EntityRocket(World worldIn, BlockPos pos) {
         this(worldIn, (float) pos.getX() + 0.5F, pos.getY(), (float) pos.getZ() + 0.5F);
     }
 

@@ -1,18 +1,18 @@
 package com.starl0stgaming.gregicalitystarbound.client.sound;
 
-import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.entity.RocketEntity;
+import com.starl0stgaming.gregicalitystarbound.common.entity.EntityRocket;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 
 public class MovingSoundRocket extends MovingSound {
 
-    private final RocketEntity rocketEntity;
+    private final EntityRocket entityRocket;
     private float distance = 0.0F;
 
-    public MovingSoundRocket(RocketEntity rocketEntity) {
+    public MovingSoundRocket(EntityRocket entityRocket) {
         super(GCSBSounds.ROCKET_LAUNCH, SoundCategory.NEUTRAL);
-        this.rocketEntity = rocketEntity;
+        this.entityRocket = entityRocket;
         this.repeat = false;
         this.repeatDelay = 0;
         this.volume = 7F;
@@ -28,12 +28,12 @@ public class MovingSoundRocket extends MovingSound {
 
     @Override
     public void update() {
-        if (this.rocketEntity.isDead) {
+        if (this.entityRocket.isDead) {
             this.donePlaying = true;
         } else {
-            this.xPosF = (float) this.rocketEntity.posX;
-            this.yPosF = (float) this.rocketEntity.posY;
-            this.zPosF = (float) this.rocketEntity.posZ;
+            this.xPosF = (float) this.entityRocket.posX;
+            this.yPosF = (float) this.entityRocket.posY;
+            this.zPosF = (float) this.entityRocket.posZ;
 
             this.distance = MathHelper.clamp(this.distance + 0.0025F, 0.0F, 10F);
         }

@@ -2,7 +2,7 @@ package com.starl0stgaming.gregicalitystarbound;
 
 import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBConfigHandler;
 import com.starl0stgaming.gregicalitystarbound.api.configuration.space.SpaceConfigHandler;
-import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.rocket.entity.RocketEntity;
+import com.starl0stgaming.gregicalitystarbound.common.entity.EntityRocket;
 import com.starl0stgaming.gregicalitystarbound.api.vehicle.VehicleManager;
 import com.starl0stgaming.gregicalitystarbound.api.vehicle.components.ComponentManager;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
@@ -42,7 +42,7 @@ public class GregicalityStarbound {
 
         proxy.preLoad();
 
-        EntityRegistry.registerModEntity(new ResourceLocation(GregicalityStarbound.MODID, "rocket"), RocketEntity.class, "Rocket", 1, GregicalityStarbound.instance, 64, 3, true);
+        EntityRegistry.registerModEntity(new ResourceLocation(GregicalityStarbound.MODID, "rocket"), EntityRocket.class, "Rocket", 1, GregicalityStarbound.instance, 64, 3, true);
 
 
     }
