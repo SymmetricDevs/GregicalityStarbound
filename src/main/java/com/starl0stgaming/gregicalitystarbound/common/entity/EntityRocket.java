@@ -4,20 +4,28 @@ import com.starl0stgaming.gregicalitystarbound.client.sound.MovingSoundRocket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityRocket extends EntityLiving implements IAnimatable {
+    private AnimationFactory factory = new AnimationFactory(this);
 
     protected static final float jerk = 0.0001F;
     private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(EntityRocket.class, DataSerializers.BOOLEAN);
@@ -35,13 +43,11 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
     public EntityRocket(World worldIn) {
         super(worldIn);
-        this.setSize(3F, 31F);
     }
 
     public EntityRocket(World worldIn, double x, double y, double z) {
         super(worldIn);
         this.setLocationAndAngles(x, y, z, this.rotationYaw, 180.0F);
-        this.setSize(3F, 31F);
         rideCooldown = -1;
         ignoreFrustumCheck = true;
         this.setEntityBoundingBox(new AxisAlignedBB(x - 1, y + 0.1, z - 1, x + 1, y + 40, z + 1));
@@ -53,6 +59,7 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
     @Override
     protected void entityInit() {
+        super.entityInit();
         if (!this.world.isRemote) {
         }
 
@@ -90,7 +97,6 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     @Override
     public void onUpdate() {
         if (!world.isRemote) {
-
             this.setAge(getAge() + 1);
         }
 
@@ -105,6 +111,8 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
         if (isLaunched()) {
             float startPos = this.getStartPos();
+
+
             this.prevPosX = this.posX;
             this.prevPosY = this.posY;
             this.prevPosZ = this.posZ;
@@ -161,11 +169,45 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData animationData) {
-
+        animationData.addAnimationController(new AnimationController<>(this, "animationRocket", 0, (rocket) -> {
+            return PlayState.CONTINUE;
+        }));
     }
 
     @Override
     public AnimationFactory getFactory() {
-        return null;
+        return factory;
+    }
+
+
+    @Override
+    public boolean getIsInvulnerable() {
+        return true;
+    }
+
+    @Override
+    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+        ItemStack itemstack = player.getHeldItem(hand);
+        boolean flag = !itemstack.isEmpty();
+
+        if (flag) {
+            return super.processInteract(player, hand);
+        }
+        if (!this.isBeingRidden()) {
+            if (!this.world.isRemote)
+            {
+                player.startRiding(this);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void updatePassenger(Entity passenger) {
+        if (this.isPassenger(passenger))
+        {
+            Vec3d vec = getLookVec().crossProduct(getVectorForRotation(0, 0));
+            passenger.setPosition(this.posX, this.posY + this.getMountedYOffset() + passenger.getYOffset(), this.posZ);
+        }
     }
 }
