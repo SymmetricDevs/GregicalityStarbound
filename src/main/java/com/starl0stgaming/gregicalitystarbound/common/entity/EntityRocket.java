@@ -1,43 +1,60 @@
 package com.starl0stgaming.gregicalitystarbound.common.entity;
 
-import com.starl0stgaming.gregicalitystarbound.client.sound.MovingSoundRocket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityRocket extends Entity {
+import com.starl0stgaming.gregicalitystarbound.client.sound.MovingSoundRocket;
+
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+
+public class EntityRocket extends EntityLiving implements IAnimatable {
+
+    private AnimationFactory factory = new AnimationFactory(this);
 
     protected static final float jerk = 0.0001F;
-    private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(EntityRocket.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.createKey(EntityRocket.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> LAUNCH_TIME = EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> FLIGHT_TIME = EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
-    private static final DataParameter<Float> START_POS = EntityDataManager.createKey(EntityRocket.class, DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> LAUNCH_TIME = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> FLIGHT_TIME = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Float> START_POS = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.FLOAT);
     private final int countdownTimer = 0;
     @SideOnly(Side.CLIENT)
     private MovingSoundRocket soundRocket;
     private String name;
     private int id;
 
-
     public EntityRocket(World worldIn) {
         super(worldIn);
-        this.setSize(3F, 31F);
     }
 
     public EntityRocket(World worldIn, double x, double y, double z) {
         super(worldIn);
         this.setLocationAndAngles(x, y, z, this.rotationYaw, 180.0F);
-        this.setSize(3F, 31F);
         rideCooldown = -1;
         ignoreFrustumCheck = true;
         this.setEntityBoundingBox(new AxisAlignedBB(x - 1, y + 0.1, z - 1, x + 1, y + 40, z + 1));
@@ -49,8 +66,8 @@ public class EntityRocket extends Entity {
 
     @Override
     protected void entityInit() {
-        if (!this.world.isRemote) {
-        }
+        super.entityInit();
+        if (!this.world.isRemote) {}
 
         this.dataManager.register(LAUNCHED, false);
         this.dataManager.register(COUNTDOWN_STARTED, false);
@@ -59,7 +76,7 @@ public class EntityRocket extends Entity {
     }
 
     @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
+    public void readEntityFromNBT(NBTTagCompound compound) {
         this.setLaunched(compound.getBoolean("Launched"));
         this.setCountdownStarted(compound.getBoolean("CountdownStarted"));
         this.setAge(compound.getInteger("Age"));
@@ -67,13 +84,12 @@ public class EntityRocket extends Entity {
     }
 
     @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
+    public void writeEntityToNBT(NBTTagCompound compound) {
         compound.setBoolean("Launched", this.isLaunched());
         compound.setBoolean("CountdownStarted", this.isCountdownStarted());
         compound.setInteger("Age", this.getAge());
         compound.setFloat("StartPos", this.getStartPos());
     }
-
 
     public void onLaunch() {
         this.setLaunched(true);
@@ -82,11 +98,9 @@ public class EntityRocket extends Entity {
         this.playRocketSound();
     }
 
-
     @Override
     public void onUpdate() {
         if (!world.isRemote) {
-
             this.setAge(getAge() + 1);
         }
 
@@ -96,17 +110,16 @@ public class EntityRocket extends Entity {
 
         super.onUpdate();
 
-
         this.setRotation(0.0F, 90.0F);
 
         if (isLaunched()) {
             float startPos = this.getStartPos();
+
             this.prevPosX = this.posX;
             this.prevPosY = this.posY;
             this.prevPosZ = this.posZ;
+
         }
-
-
     }
 
     public void explode() {
@@ -138,7 +151,6 @@ public class EntityRocket extends Entity {
         this.dataManager.set(AGE, age);
     }
 
-
     public float getStartPos() {
         return this.dataManager.get(START_POS);
     }
@@ -155,4 +167,46 @@ public class EntityRocket extends Entity {
         }
     }
 
+    @Override
+    public void registerControllers(AnimationData animationData) {
+        animationData.addAnimationController(new AnimationController<>(this, "animationRocket", 0, (rocket) -> {
+            return PlayState.CONTINUE;
+        }));
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
+    }
+
+    @Override
+    public boolean getIsInvulnerable() {
+        return true;
+    }
+
+    @Override
+    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+        ItemStack itemstack = player.getHeldItem(hand);
+        boolean flag = !itemstack.isEmpty();
+
+        if (flag) {
+            return super.processInteract(player, hand);
+        }
+        if (!this.isBeingRidden()) {
+            if (!this.world.isRemote) {
+                player.startRiding(this);
+                this.onLaunch();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void updatePassenger(Entity passenger) {
+        if (this.isPassenger(passenger)) {
+            Vec3d passengerVec = getLookVec().rotatePitch(-90F);
+            passenger.setPositionAndRotation(this.posX, this.posY + this.getMountedYOffset() + passenger.getYOffset(),
+                    this.posZ, (float) Math.asin(passengerVec.y), (float) Math.atan2(passengerVec.x, passengerVec.z));
+        }
+    }
 }

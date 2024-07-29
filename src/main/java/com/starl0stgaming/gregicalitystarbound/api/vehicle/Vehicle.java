@@ -1,6 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.api.vehicle;
 
 public class Vehicle {
+
     private int id;
     private String type;
 

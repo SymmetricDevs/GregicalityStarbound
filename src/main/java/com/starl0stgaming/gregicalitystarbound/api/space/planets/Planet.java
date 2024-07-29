@@ -1,5 +1,15 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.planets;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import net.minecraft.world.WorldType;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeChunkManager;
+
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyWorldType;
 import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.PlanetBiome;
@@ -7,19 +17,10 @@ import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.WorldG
 import com.starl0stgaming.gregicalitystarbound.api.util.StringUtil;
 import com.starl0stgaming.gregicalitystarbound.common.space.dimension.GCSBDimensionManager;
 import com.starl0stgaming.gregicalitystarbound.common.space.dimension.ModDimension;
-import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Planet {
 
-    //Defining variables
+    // Defining variables
     private String planetName;
     private int id;
     private int dimID;
@@ -28,8 +29,7 @@ public class Planet {
 
     private WorldGenDetails worldGenDetails;
 
-
-    //Atmosphere
+    // Atmosphere
 
     public Planet(int id, String planetName) {
         this.id = id;
@@ -49,7 +49,7 @@ public class Planet {
     public void load() {
         if (!isLoaded) {
             isLoaded = true;
-            //TODO: add check if dim already exists, if it does load it/or idk
+            // TODO: add check if dim already exists, if it does load it/or idk
             if (this.dimID != 0) {
                 PlanetBiome[] pbiomes = worldGenDetails.getBiomeList();
                 List<Biome> biomes = new ArrayList<Biome>();
@@ -60,14 +60,16 @@ public class Planet {
 
                 GCSBDimensionManager.addDetailsTolist(dimID, worldGenDetails);
 
-
                 if (!DimensionManager.isDimensionRegistered(this.dimID)) {
                     DimensionManager.registerDimension(this.dimID, ModDimension.planetType);
-                    WorldType worldType = new DummyWorldType(worldGenDetails.getName(), biomes, StringUtil.getBlockfromString(getWorldGenDetails().getStone()), StringUtil.getBlockfromString(getWorldGenDetails().getBedrock()));
+                    WorldType worldType = new DummyWorldType(worldGenDetails.getName(), biomes,
+                            StringUtil.getBlockfromString(getWorldGenDetails().getStone()),
+                            StringUtil.getBlockfromString(getWorldGenDetails().getBedrock()));
                     ModDimension.WORLD_TYPES.add(worldType);
                 }
                 if (DimensionManager.getWorld(this.dimID) == null) {
-                    File chunkDir = new File(DimensionManager.getCurrentSaveRootDirectory(), DimensionManager.createProviderFor(this.dimID).getSaveFolder());
+                    File chunkDir = new File(DimensionManager.getCurrentSaveRootDirectory(),
+                            DimensionManager.createProviderFor(this.dimID).getSaveFolder());
                     if (ForgeChunkManager.savedWorldHasForcedChunkTickets(chunkDir)) {
                         DimensionManager.initDimension(this.dimID);
                     }
@@ -118,6 +120,7 @@ public class Planet {
 
     @Override
     public String toString() {
-        return "Planet Name: " + this.getPlanetName() + " Planet Id: " + this.getId() + " Planet DIM ID: " + this.getDimID();
+        return "Planet Name: " + this.getPlanetName() + " Planet Id: " + this.getId() + " Planet DIM ID: " +
+                this.getDimID();
     }
 }

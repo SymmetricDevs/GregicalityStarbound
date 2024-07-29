@@ -1,18 +1,20 @@
 package com.starl0stgaming.gregicalitystarbound.common.space.dimension;
 
-import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.PlanetBiome;
-import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.WorldGenDetails;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.world.biome.Biome;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GCSBDimensionManager {
-    private static List<Biome> biomeList = new ArrayList<>();
+import net.minecraft.world.biome.Biome;
 
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.PlanetBiome;
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen.WorldGenDetails;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+
+public class GCSBDimensionManager {
+
+    private static List<Biome> biomeList = new ArrayList<>();
 
     private static Int2ObjectMap<WorldGenDetails> worldGenDetailsList = new Int2ObjectOpenHashMap<>();
 
@@ -41,5 +43,4 @@ public class GCSBDimensionManager {
 
         return biomes;
     }
-
 }

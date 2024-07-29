@@ -1,5 +1,10 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world;
 
+import java.util.List;
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.math.BlockPos;
@@ -11,12 +16,8 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.gen.*;
 
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
-
-
 public class DummyChunkGenerator implements IChunkGenerator {
+
     private final Random rand;
     private final World world;
     private final boolean mapFeaturesEnabled;
@@ -58,7 +59,6 @@ public class DummyChunkGenerator implements IChunkGenerator {
     private IBlockState stone;
     private IBlockState bedrock;
 
-
     public DummyChunkGenerator(World worldIn, long seed, IBlockState stone, IBlockState bedrock) {
         world = worldIn;
         mapFeaturesEnabled = true;
@@ -84,9 +84,9 @@ public class DummyChunkGenerator implements IChunkGenerator {
 
         worldIn.setSeaLevel(this.seaLevel);
 
-
-        net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextOverworld ctx =
-                new net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextOverworld(minLimitPerlinNoise, maxLimitPerlinNoise, mainPerlinNoise, surfaceNoise, scaleNoise, depthNoise, forestNoise);
+        net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextOverworld ctx = new net.minecraftforge.event.terraingen.InitNoiseGensEvent.ContextOverworld(
+                minLimitPerlinNoise, maxLimitPerlinNoise, mainPerlinNoise, surfaceNoise, scaleNoise, depthNoise,
+                forestNoise);
         ctx = net.minecraftforge.event.terraingen.TerrainGen.getModdedNoiseGenerators(worldIn, this.rand, ctx);
         this.minLimitPerlinNoise = ctx.getLPerlin1();
         this.maxLimitPerlinNoise = ctx.getLPerlin2();
@@ -105,9 +105,9 @@ public class DummyChunkGenerator implements IChunkGenerator {
      * @param primer
      */
     public void generateTerrain(int chunkX, int chunkZ, ChunkPrimer primer) {
-
         // Get biomes being used in this chunk
-        this.biomesForGeneration = this.world.getBiomeProvider().getBiomesForGeneration(this.biomesForGeneration, chunkX * 4 - 2, chunkZ * 4 - 2, 10, 10);
+        this.biomesForGeneration = this.world.getBiomeProvider().getBiomesForGeneration(this.biomesForGeneration,
+                chunkX * 4 - 2, chunkZ * 4 - 2, 10, 10);
 
         // Get heightmap for this chunk
         this.generateHeightmap(chunkX * 4, 0, chunkZ * 4);
@@ -182,7 +182,8 @@ public class DummyChunkGenerator implements IChunkGenerator {
     public void replaceBiomeBlocks(int x, int z, ChunkPrimer primer, Biome[] biomesIn) {
         if (!net.minecraftforge.event.ForgeEventFactory.onReplaceBiomeBlocks(this, x, z, primer, this.world)) return;
         double d0 = 0.03125D;
-        this.depthBuffer = this.surfaceNoise.getRegion(this.depthBuffer, (double) (x * 16), (double) (z * 16), 16, 16, 0.0625D, 0.0625D, 1.0D);
+        this.depthBuffer = this.surfaceNoise.getRegion(this.depthBuffer, (double) (x * 16), (double) (z * 16), 16, 16,
+                0.0625D, 0.0625D, 1.0D);
 
         // Loop through each x row.
         for (int iX = 0; iX < 16; ++iX) {
@@ -192,7 +193,8 @@ public class DummyChunkGenerator implements IChunkGenerator {
                 Biome biome = biomesIn[iZ + iX * 16];
 
                 // Use the biome to replace blocks at this x, z coord (full y column).
-                biome.genTerrainBlocks(this.world, this.rand, primer, x * 16 + iX, z * 16 + iZ, this.depthBuffer[iZ + iX * 16]);
+                biome.genTerrainBlocks(this.world, this.rand, primer, x * 16 + iX, z * 16 + iZ,
+                        this.depthBuffer[iZ + iX * 16]);
             }
         }
     }
@@ -204,7 +206,8 @@ public class DummyChunkGenerator implements IChunkGenerator {
         this.rand.setSeed((long) x * 341873128712L + (long) z * 132897987541L);
         ChunkPrimer chunkprimer = new ChunkPrimer();
         this.generateTerrain(x, z, chunkprimer);
-        this.biomesForGeneration = this.world.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16, 16);
+        this.biomesForGeneration = this.world.getBiomeProvider().getBiomes(this.biomesForGeneration, x * 16, z * 16, 16,
+                16);
         this.replaceBiomeBlocks(x, z, chunkprimer, this.biomesForGeneration);
 
         Chunk chunk = new Chunk(this.world, chunkprimer, x, z);
@@ -219,12 +222,17 @@ public class DummyChunkGenerator implements IChunkGenerator {
     }
 
     private void generateHeightmap(int p_185978_1_, int p_185978_2_, int p_185978_3_) {
-        this.depthRegion = this.depthNoise.generateNoiseOctaves(this.depthRegion, p_185978_1_, p_185978_3_, 5, 5, (double) this.depthNoiseScaleX, (double) this.depthNoiseScaleZ, (double) this.depthNoiseScaleExponent);
+        this.depthRegion = this.depthNoise.generateNoiseOctaves(this.depthRegion, p_185978_1_, p_185978_3_, 5, 5,
+                (double) this.depthNoiseScaleX, (double) this.depthNoiseScaleZ, (double) this.depthNoiseScaleExponent);
         float f = this.coordScale;
         float f1 = this.heightScale;
-        this.mainNoiseRegion = this.mainPerlinNoise.generateNoiseOctaves(this.mainNoiseRegion, p_185978_1_, p_185978_2_, p_185978_3_, 5, 33, 5, (double) (f / this.mainNoiseScaleX), (double) (f1 / this.mainNoiseScaleY), (double) (f / this.mainNoiseScaleZ));
-        this.minLimitRegion = this.minLimitPerlinNoise.generateNoiseOctaves(this.minLimitRegion, p_185978_1_, p_185978_2_, p_185978_3_, 5, 33, 5, (double) f, (double) f1, (double) f);
-        this.maxLimitRegion = this.maxLimitPerlinNoise.generateNoiseOctaves(this.maxLimitRegion, p_185978_1_, p_185978_2_, p_185978_3_, 5, 33, 5, (double) f, (double) f1, (double) f);
+        this.mainNoiseRegion = this.mainPerlinNoise.generateNoiseOctaves(this.mainNoiseRegion, p_185978_1_, p_185978_2_,
+                p_185978_3_, 5, 33, 5, (double) (f / this.mainNoiseScaleX), (double) (f1 / this.mainNoiseScaleY),
+                (double) (f / this.mainNoiseScaleZ));
+        this.minLimitRegion = this.minLimitPerlinNoise.generateNoiseOctaves(this.minLimitRegion, p_185978_1_,
+                p_185978_2_, p_185978_3_, 5, 33, 5, (double) f, (double) f1, (double) f);
+        this.maxLimitRegion = this.maxLimitPerlinNoise.generateNoiseOctaves(this.maxLimitRegion, p_185978_1_,
+                p_185978_2_, p_185978_3_, 5, 33, 5, (double) f, (double) f1, (double) f);
         int i = 0;
         int j = 0;
 
@@ -327,7 +335,6 @@ public class DummyChunkGenerator implements IChunkGenerator {
         Biome biome = this.world.getBiome(blockpos.add(16, 0, 16));
 
         biome.decorate(this.world, this.rand, blockpos);
-
     }
 
     /**
@@ -347,7 +354,8 @@ public class DummyChunkGenerator implements IChunkGenerator {
     }
 
     @Nullable
-    public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position, boolean findUnexplored) {
+    public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos position,
+                                           boolean findUnexplored) {
         return null;
     }
 
@@ -356,8 +364,5 @@ public class DummyChunkGenerator implements IChunkGenerator {
      * placing any blocks. When called for the first time before any chunk is generated - also initializes the internal
      * state needed by getPossibleCreatures.
      */
-    public void recreateStructures(Chunk chunkIn, int x, int z) {
-
-    }
-
+    public void recreateStructures(Chunk chunkIn, int x, int z) {}
 }

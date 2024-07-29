@@ -1,13 +1,13 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world;
 
+import java.util.List;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.gen.IChunkGenerator;
-
-import java.util.List;
 
 public class DummyWorldType extends WorldType {
 

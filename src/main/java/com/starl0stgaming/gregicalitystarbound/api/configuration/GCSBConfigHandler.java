@@ -1,13 +1,13 @@
 package com.starl0stgaming.gregicalitystarbound.api.configuration;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import net.minecraftforge.fml.common.Loader;
-
 import java.io.File;
 
-public class GCSBConfigHandler {
+import net.minecraftforge.fml.common.Loader;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+public class GCSBConfigHandler {
 
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
@@ -19,12 +19,8 @@ public class GCSBConfigHandler {
     public void init() {
         GCSBConfigFolder.mkdirs();
 
-
         solarSystemConfigFolder.mkdirs();
-
-
     }
-
 
     public File getGCSBConfigFolder() {
         return GCSBConfigFolder;
@@ -33,5 +29,4 @@ public class GCSBConfigHandler {
     public File getSolarSystemConfigFolder() {
         return solarSystemConfigFolder;
     }
-
 }

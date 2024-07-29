@@ -1,7 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world;
 
-import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.layer.DummyGenLayer;
-import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.layer.DummyGenLayerBiomes;
+import java.util.List;
+
 import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -14,7 +14,8 @@ import net.minecraft.world.gen.layer.GenLayerVoronoiZoom;
 import net.minecraft.world.gen.layer.GenLayerZoom;
 import net.minecraft.world.gen.layer.IntCache;
 
-import java.util.List;
+import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.layer.DummyGenLayer;
+import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.layer.DummyGenLayerBiomes;
 
 public class DummyBiomeProvider extends BiomeProvider {
 
@@ -48,7 +49,7 @@ public class DummyBiomeProvider extends BiomeProvider {
         biomeToUse = biomes;
         biomeIndex = biomeIndexLayer;
 
-        return new GenLayer[]{
+        return new GenLayer[] {
                 biomes,
                 biomeIndexLayer
         };

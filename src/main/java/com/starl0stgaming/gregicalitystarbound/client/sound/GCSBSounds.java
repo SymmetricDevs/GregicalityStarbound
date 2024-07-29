@@ -1,9 +1,10 @@
 package com.starl0stgaming.gregicalitystarbound.client.sound;
 
-import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
 
 public class GCSBSounds {
 

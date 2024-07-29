@@ -1,8 +1,8 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network;
 
-import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.storage.WorldSavedData;
@@ -11,8 +11,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
+import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
 
 public class TelemetryNetworkManager extends WorldSavedData implements INBTSerializable<NBTTagCompound> {
 

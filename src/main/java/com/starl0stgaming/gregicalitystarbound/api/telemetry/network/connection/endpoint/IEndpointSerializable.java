@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 // Allows a class to be linked to a telemetry endpoint
 public interface IEndpointSerializable {
+
     NBTTagCompound writeToNBT(NBTTagCompound ntc);
 
     void handleMessage(NBTTagCompound nbt);

@@ -14,13 +14,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import com.starl0stgaming.gregicalitystarbound.common.entity.EntityRegistration;
+
 @Mod.EventBusSubscriber(modid = GregicalityStarbound.MODID)
 public class ClientProxy extends CommonProxy {
-
     public static KeyBinding testBinding = new KeyBinding("key.test.desc", Keyboard.KEY_P, "key.gregicalitystarbound.category");
 
     public void preLoad() {
         super.preLoad();
+        EntityRegistration.registerRenders();
         GCSBSounds.registerSounds();
         ClientRegistry.registerKeyBinding(testBinding);
     }

@@ -1,4 +1,5 @@
-
+# Entities
+entity.Rocket.name=Rocket
 
 # Machines
 gregtech.machine.launch_pad.name=Launch Pad

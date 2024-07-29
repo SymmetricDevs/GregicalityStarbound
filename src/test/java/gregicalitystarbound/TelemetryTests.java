@@ -1,14 +1,17 @@
 package gregicalitystarbound;
+
+import net.minecraft.nbt.NBTTagCompound;
+
+import org.junit.Test;
+
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.AuthKey;
-import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.TelemetryEndpoint;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
-import net.minecraft.nbt.NBTTagCompound;
-import org.junit.Test;
 
 public class TelemetryTests {
+
     @Test
     public void test() {
         TelemetryConnection connection0 = new TelemetryConnection(0);
