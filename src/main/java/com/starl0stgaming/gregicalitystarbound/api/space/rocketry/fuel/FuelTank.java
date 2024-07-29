@@ -2,24 +2,21 @@ package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel;
 
 public class FuelTank {
 
-
     private int maxPropellantCapacity;
     private int maxPressureCapacity;
 
     private int propellant;
     private int pressure;
 
-
     private boolean isFull;
     private boolean isEmpty;
-
 
     public FuelTank(int maxPropellantCapacity, int maxPressureCapacity) {
         this.maxPropellantCapacity = maxPropellantCapacity;
         this.maxPressureCapacity = maxPressureCapacity;
     }
 
-    //TODO: could use the isFull variable to determine if its able to take more fuel in
+    // TODO: could use the isFull variable to determine if its able to take more fuel in
     public int addPropellantToTank(int amountToAdd) {
         if (this.maxPropellantCapacity > (this.propellant + amountToAdd)) {
             this.propellant += amountToAdd;
@@ -39,8 +36,8 @@ public class FuelTank {
         return 0;
     }
 
-
-    //TODO: Maybe do as a part of a FuelTransfer an operation result, and return false if the amount to be removed exceeds the current stored amount
+    // TODO: Maybe do as a part of a FuelTransfer an operation result, and return false if the amount to be removed
+    // exceeds the current stored amount
     public int removePropellantFromTank(int amountToRemove) {
         if (this.getPropellant() < amountToRemove) {
             int amountRemoved = this.getPropellant();

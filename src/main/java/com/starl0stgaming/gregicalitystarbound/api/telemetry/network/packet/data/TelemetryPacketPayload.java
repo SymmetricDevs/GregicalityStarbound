@@ -4,7 +4,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TelemetryPacketPayload {
 
-
     private NBTTagCompound nbtTagCompound;
 
     public TelemetryPacketPayload() {

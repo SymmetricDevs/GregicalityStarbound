@@ -1,11 +1,9 @@
 package com.starl0stgaming.gregicalitystarbound.common.entity;
 
-import com.starl0stgaming.gregicalitystarbound.client.sound.MovingSoundRocket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -18,6 +16,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.starl0stgaming.gregicalitystarbound.client.sound.MovingSoundRocket;
+
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -25,21 +26,27 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityRocket extends EntityLiving implements IAnimatable {
+
     private AnimationFactory factory = new AnimationFactory(this);
 
     protected static final float jerk = 0.0001F;
-    private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(EntityRocket.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.createKey(EntityRocket.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> LAUNCH_TIME = EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> FLIGHT_TIME = EntityDataManager.createKey(EntityRocket.class, DataSerializers.VARINT);
-    private static final DataParameter<Float> START_POS = EntityDataManager.createKey(EntityRocket.class, DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> AGE = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> LAUNCH_TIME = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Integer> FLIGHT_TIME = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.VARINT);
+    private static final DataParameter<Float> START_POS = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.FLOAT);
     private final int countdownTimer = 0;
     @SideOnly(Side.CLIENT)
     private MovingSoundRocket soundRocket;
     private String name;
     private int id;
-
 
     public EntityRocket(World worldIn) {
         super(worldIn);
@@ -60,8 +67,7 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     @Override
     protected void entityInit() {
         super.entityInit();
-        if (!this.world.isRemote) {
-        }
+        if (!this.world.isRemote) {}
 
         this.dataManager.register(LAUNCHED, false);
         this.dataManager.register(COUNTDOWN_STARTED, false);
@@ -85,14 +91,12 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
         compound.setFloat("StartPos", this.getStartPos());
     }
 
-
     public void onLaunch() {
         this.setLaunched(true);
         this.isAirBorne = true;
 
         this.playRocketSound();
     }
-
 
     @Override
     public void onUpdate() {
@@ -106,19 +110,16 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
         super.onUpdate();
 
-
         this.setRotation(0.0F, 90.0F);
 
         if (isLaunched()) {
             float startPos = this.getStartPos();
 
-
             this.prevPosX = this.posX;
             this.prevPosY = this.posY;
             this.prevPosZ = this.posZ;
+
         }
-
-
     }
 
     public void explode() {
@@ -150,7 +151,6 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
         this.dataManager.set(AGE, age);
     }
 
-
     public float getStartPos() {
         return this.dataManager.get(START_POS);
     }
@@ -179,7 +179,6 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
         return factory;
     }
 
-
     @Override
     public boolean getIsInvulnerable() {
         return true;
@@ -194,9 +193,9 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
             return super.processInteract(player, hand);
         }
         if (!this.isBeingRidden()) {
-            if (!this.world.isRemote)
-            {
+            if (!this.world.isRemote) {
                 player.startRiding(this);
+                this.onLaunch();
             }
         }
         return true;
@@ -204,10 +203,10 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
     @Override
     public void updatePassenger(Entity passenger) {
-        if (this.isPassenger(passenger))
-        {
-            Vec3d vec = getLookVec().crossProduct(getVectorForRotation(0, 0));
-            passenger.setPosition(this.posX, this.posY + this.getMountedYOffset() + passenger.getYOffset(), this.posZ);
+        if (this.isPassenger(passenger)) {
+            Vec3d passengerVec = getLookVec().rotatePitch(-90F);
+            passenger.setPositionAndRotation(this.posX, this.posY + this.getMountedYOffset() + passenger.getYOffset(),
+                    this.posZ, (float) Math.asin(passengerVec.y), (float) Math.atan2(passengerVec.x, passengerVec.z));
         }
     }
 }

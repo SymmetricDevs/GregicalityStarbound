@@ -8,7 +8,6 @@ public class WorldGenDetails {
     public String stone;
     public String bedrock;
 
-
     public int getAverageGroundLevel() {
         return averageGroundLevel;
     }

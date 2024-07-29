@@ -1,10 +1,5 @@
 package com.starl0stgaming.gregicalitystarbound.api.configuration.space;
 
-import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
-import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBConfigHandler;
-import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
-import com.starl0stgaming.gregicalitystarbound.api.space.solarsystem.SolarSystem;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -15,14 +10,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SpaceConfigHandler {
+import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
+import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBConfigHandler;
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
+import com.starl0stgaming.gregicalitystarbound.api.space.solarsystem.SolarSystem;
 
+public class SpaceConfigHandler {
 
     public File getPlanetDirInSolarSystem(File solarSystemFolder) {
         try {
             Stream<Path> solarSystemFiles = Files.walk(solarSystemFolder.toPath());
 
-            Path planetDirPath = solarSystemFiles.filter(Files::isDirectory).filter(entry -> entry.getFileName().toString().equals("planets")).findFirst().orElse(null);
+            Path planetDirPath = solarSystemFiles.filter(Files::isDirectory)
+                    .filter(entry -> entry.getFileName().toString().equals("planets")).findFirst().orElse(null);
             if (planetDirPath == null) return null;
 
             return planetDirPath.toFile();
@@ -33,7 +33,7 @@ public class SpaceConfigHandler {
 
     public SolarSystem createSolarSystemFromFolder(File solarSystemFolder) {
         try {
-            //Solar System
+            // Solar System
             List<Path> solarSystemFiles = Files.list(solarSystemFolder.toPath())
                     .filter(Files::isRegularFile)
                     .collect(Collectors.toList());
@@ -46,7 +46,7 @@ public class SpaceConfigHandler {
             if (solarSystem == null) return null;
             solarSystem.load();
 
-            //Planet Loading
+            // Planet Loading
             File planetDir = this.getPlanetDirInSolarSystem(solarSystemFolder);
 
             List<Planet> planetList = this.getPlanetListFromFolder(planetDir);
@@ -64,7 +64,7 @@ public class SpaceConfigHandler {
     }
 
     /*
-    Returns a list of the folders of all the solar systems
+     * Returns a list of the folders of all the solar systems
      */
     public List<File> getSolarSystemsFolder() {
         List<File> solarSystemFolderList = new ArrayList<>();

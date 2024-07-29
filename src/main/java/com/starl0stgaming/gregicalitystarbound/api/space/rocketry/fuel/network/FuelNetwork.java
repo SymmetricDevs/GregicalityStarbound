@@ -1,10 +1,10 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.network;
 
-import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
-import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.FuelTank;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
+import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.fuel.FuelTank;
 
 public class FuelNetwork {
 
@@ -19,16 +19,9 @@ public class FuelNetwork {
         this.fuelTankList = new ArrayList<>();
     }
 
+    public void init() {}
 
-    public void init() {
-
-    }
-
-
-    public void update() {
-
-    }
-
+    public void update() {}
 
     public void addFuelToNetwork(int totalAmountToAdd) {
         int amountToAdd = totalAmountToAdd;
@@ -57,7 +50,8 @@ public class FuelNetwork {
                     break;
                 }
             } else {
-                GCSBLog.LOGGER.info("[FuelNetwork] Attempted to remove fuel from fuel tank, but tank is empty or operation has been completed");
+                GCSBLog.LOGGER.info(
+                        "[FuelNetwork] Attempted to remove fuel from fuel tank, but tank is empty or operation has been completed");
             }
         }
     }

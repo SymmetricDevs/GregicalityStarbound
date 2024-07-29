@@ -5,6 +5,7 @@ import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.IntCache;
 
 public class DummyGenLayerBiomes extends GenLayer {
+
     protected Biome[] allowedBiomes;
 
     public DummyGenLayerBiomes(Biome[] biomes, long seed, GenLayer genlayer) {

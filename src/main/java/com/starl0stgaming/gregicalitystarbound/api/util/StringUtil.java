@@ -1,10 +1,11 @@
 package com.starl0stgaming.gregicalitystarbound.api.util;
 
-import gregtech.api.GTValues;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+import gregtech.api.GTValues;
 
 public class StringUtil {
 
@@ -24,8 +25,7 @@ public class StringUtil {
         if (parts.length > 2) {
             try {
                 meta = Integer.parseInt(parts[2]);
-            } catch (NumberFormatException ignored) {
-            }
+            } catch (NumberFormatException ignored) {}
         }
         IBlockState state = block.getDefaultState();
         if (meta != 0) {
@@ -33,6 +33,5 @@ public class StringUtil {
         }
 
         return state;
-
     }
 }

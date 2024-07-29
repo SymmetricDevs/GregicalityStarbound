@@ -1,11 +1,12 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.solarsystem;
 
-import com.starl0stgaming.gregicalitystarbound.api.space.Sun;
-import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
-
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import com.starl0stgaming.gregicalitystarbound.api.space.Sun;
+import com.starl0stgaming.gregicalitystarbound.api.space.planets.Planet;
 
 public class SolarSystem {
 
@@ -17,7 +18,6 @@ public class SolarSystem {
     private boolean isLoaded = false;
 
     private List<Planet> planetList;
-
 
     public SolarSystem(String name, int id, Sun sun) {
         this.name = name;
@@ -76,6 +76,7 @@ public class SolarSystem {
 
     @Override
     public String toString() {
-        return "Solar System ID: " + this.getId() + " Solar System Name: " + this.getName() + " Solar System Sun Name: " + this.getSun().getName();
+        return "Solar System ID: " + this.getId() + " Solar System Name: " + this.getName() +
+                " Solar System Sun Name: " + this.getSun().getName();
     }
 }

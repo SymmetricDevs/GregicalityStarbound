@@ -1,7 +1,23 @@
 package com.starl0stgaming.gregicalitystarbound.common.metatileentities.multi.launchpad;
 
+import static gregtech.api.util.RelativeDirection.*;
+
+import javax.annotation.Nonnull;
+
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import com.starl0stgaming.gregicalitystarbound.api.recipes.GCSBRecipeMaps;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint.IEndpointSerializable;
+
 import gregtech.api.capability.GregtechDataCodes;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.gui.ModularUI;
@@ -21,20 +37,6 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.blocks.StoneVariantBlock;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
-
-import static gregtech.api.util.RelativeDirection.*;
 
 public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController implements IEndpointSerializable {
 
@@ -45,7 +47,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     // Probably needs a fluid inventory for a water deluge system
     protected FluidTankList inputFluidInventory;
     private int cbAxLen = MIN_LENGTH; // controller-back axis length
-    private int sAxLen = 5; //side-side axis length
+    private int sAxLen = 5; // side-side axis length
 
     public MetaTileEntityLaunchPad(ResourceLocation mteId) {
         super(mteId, GCSBRecipeMaps.LAUNCH_PAD_LOADING_RECIPES);
@@ -82,7 +84,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
         cbAxLen = Math.max(cbAxLen, MIN_LENGTH);
         sAxLen = Math.max(sAxLen, MIN_LENGTH);
 
-        //T stands for template
+        // T stands for template
         StringBuilder frontTopT = new StringBuilder(new String(new char[sAxLen]).replace("\0", " "));
         frontTopT.setCharAt(sAxLen / 2, 'S');
         StringBuilder frontT = new StringBuilder(new String(new char[sAxLen]).replace("\0", "E"));
@@ -130,14 +132,15 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
             }
         }
 
-
         return FactoryBlockPattern.start(RIGHT, FRONT, UP).aisle(bottomAisle)
                 .aisle(secondAisle)
                 .aisle(otherAisle)
                 .aisle(otherAisle)
                 .aisle(otherAisle)
                 .where('C', selfPredicate())
-                .where('X', states(MetaBlocks.STONE_BLOCKS.get(StoneVariantBlock.StoneVariant.SMOOTH).getState(StoneVariantBlock.StoneType.CONCRETE_LIGHT)))
+                .where('X',
+                        states(MetaBlocks.STONE_BLOCKS.get(StoneVariantBlock.StoneVariant.SMOOTH)
+                                .getState(StoneVariantBlock.StoneType.CONCRETE_LIGHT)))
                 .where('S', states(MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel)))
                 .where('E', states(getCasingState()).or(autoAbilities()))
                 .where(' ', air())
@@ -257,8 +260,10 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.TITANIUM_STABLE);
     }
 
-    public boolean isBlockEdge(@Nonnull World world, @Nonnull BlockPos.MutableBlockPos pos, @Nonnull EnumFacing direction) {
-        return world.getBlockState(pos.move(direction)) == getCasingState() || world.getTileEntity(pos) instanceof MetaTileEntityHolder;
+    public boolean isBlockEdge(@Nonnull World world, @Nonnull BlockPos.MutableBlockPos pos,
+                               @Nonnull EnumFacing direction) {
+        return world.getBlockState(pos.move(direction)) == getCasingState() ||
+                world.getTileEntity(pos) instanceof MetaTileEntityHolder;
     }
 
     @Override
@@ -272,7 +277,5 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
         super.invalidateStructure();
     }
 
-    public void handleMessage(NBTTagCompound ntc) {
-
-    }
+    public void handleMessage(NBTTagCompound ntc) {}
 }

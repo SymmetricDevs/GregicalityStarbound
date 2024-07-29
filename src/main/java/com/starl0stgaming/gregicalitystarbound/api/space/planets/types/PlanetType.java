@@ -11,9 +11,7 @@ public class PlanetType {
 
     public Atmosphere atmosphere;
 
-    public PlanetType() {
-
-    }
+    public PlanetType() {}
 
     public boolean isHasAtmosphere() {
         return hasAtmosphere;

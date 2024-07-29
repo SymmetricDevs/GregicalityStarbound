@@ -6,45 +6,39 @@ import com.starl0stgaming.gregicalitystarbound.api.space.rocketry.payload.Payloa
 
 public class Rocket {
 
-    //TODO: unite with RocketEntity class
+    // TODO: unite with RocketEntity class
 
-    //fuel
+    // fuel
     private FuelNetwork fuelNetwork;
 
     private FuelTank loxTank1;
     private FuelTank fuelTank1;
 
-    //engines
+    // engines
 
+    // structure
 
-    //structure
-
-
-    //logic
+    // logic
     private int id;
     private String name;
 
     private PayloadInfo payloadInfo;
 
-    //api
-
+    // api
 
     public Rocket(int id, String name) {
         this.fuelNetwork = new FuelNetwork(0);
 
-        this.loxTank1 = new FuelTank(1000000, 100000); //pressure is WIP
+        this.loxTank1 = new FuelTank(1000000, 100000); // pressure is WIP
         this.fuelTank1 = new FuelTank(800000, 100000);
 
         this.id = id;
         this.name = name;
-
     }
 
     public void init() {
         this.fuelNetwork.addFuelTank(this.loxTank1);
         this.fuelNetwork.addFuelTank(this.fuelTank1);
-
-
     }
 
     public FuelNetwork getFuelNetwork() {

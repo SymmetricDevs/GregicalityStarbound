@@ -2,16 +2,12 @@ package com.starl0stgaming.gregicalitystarbound.api.space.rocketry.orbit;
 
 public class Trajectory {
 
-
     private double requiredDeltaV;
     private Orbit destinationOrbit;
 
-
     public Trajectory(Orbit destinationOrbit) {
         this.destinationOrbit = destinationOrbit;
-
     }
-
 
     public double getRequiredDeltaV() {
         return requiredDeltaV;

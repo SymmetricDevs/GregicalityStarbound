@@ -1,9 +1,10 @@
 package com.starl0stgaming.gregicalitystarbound.client.sound;
 
-import com.starl0stgaming.gregicalitystarbound.common.entity.EntityRocket;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
+
+import com.starl0stgaming.gregicalitystarbound.common.entity.EntityRocket;
 
 public class MovingSoundRocket extends MovingSound {
 

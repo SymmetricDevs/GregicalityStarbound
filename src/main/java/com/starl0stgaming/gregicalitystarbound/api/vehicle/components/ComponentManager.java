@@ -25,6 +25,4 @@ public class ComponentManager {
     public VehicleComponent getComponentById(String identifier) {
         return componentList.get(identifier);
     }
-
-
 }

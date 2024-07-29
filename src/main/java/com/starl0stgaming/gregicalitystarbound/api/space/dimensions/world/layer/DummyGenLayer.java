@@ -31,5 +31,4 @@ public class DummyGenLayer extends GenLayer {
         }
         return dest;
     }
-
 }

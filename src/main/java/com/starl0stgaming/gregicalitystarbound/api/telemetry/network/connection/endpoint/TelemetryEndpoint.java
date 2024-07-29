@@ -1,16 +1,17 @@
 package com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.endpoint;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
+import net.minecraft.nbt.NBTTagCompound;
+
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.encryption.AuthKey;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.TelemetryNetworkManager;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.connection.TelemetryConnection;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.TelemetryPacket;
 import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data.TelemetryPacketPayload;
-import net.minecraft.nbt.NBTTagCompound;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
 
 public class TelemetryEndpoint {
 
@@ -44,7 +45,7 @@ public class TelemetryEndpoint {
         this.connection = null;
         this.id = id;
         this.dataBuffer = new ArrayList<>();
-        //TODO: LOOK AT THIS SHIT BC IT DOESNT FIT, HOW DO I EVEN GET THE DISCRIMINATOR HUH
+        // TODO: LOOK AT THIS SHIT BC IT DOESNT FIT, HOW DO I EVEN GET THE DISCRIMINATOR HUH
         this.enableDiscriminator = false;
         this.enableEncryption = false;
 
@@ -60,10 +61,9 @@ public class TelemetryEndpoint {
     }
 
     public void update() {
-        //reads packet queues and processes in packets and sends out packets
+        // reads packet queues and processes in packets and sends out packets
 
-
-        //read in packet queue
+        // read in packet queue
         if (!this.inPacketQueue.isEmpty()) {
 
             for (int i = 0; i < this.inPacketQueue.toArray().length; i++) {
@@ -76,7 +76,7 @@ public class TelemetryEndpoint {
             }
         }
 
-        //read out packet queue and send packets to specified destination in packet info or whole network
+        // read out packet queue and send packets to specified destination in packet info or whole network
         if (!this.outPacketQueue.isEmpty()) {
             for (int i = 0; i < this.outPacketQueue.toArray().length; i++) {
                 this.connection.sendPacketToDestination(this.outPacketQueue.poll());
@@ -98,7 +98,8 @@ public class TelemetryEndpoint {
 
     public void sendPacket(TelemetryPacket packet) {
         if (this.connection == null) {
-            GCSBLog.LOGGER.error("[ERROR] Telemetry Endpoint with id " + this.getId() + " cant send packet because it has no bound network!");
+            GCSBLog.LOGGER.error("[ERROR] Telemetry Endpoint with id " + this.getId() +
+                    " cant send packet because it has no bound network!");
             return;
         }
         this.outPacketQueue.add(packet);

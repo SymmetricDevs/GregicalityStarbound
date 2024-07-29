@@ -5,5 +5,4 @@ public class Atmosphere {
     public int atmosphericPressure;
     public int waterColor;
     public int skyColor;
-
 }

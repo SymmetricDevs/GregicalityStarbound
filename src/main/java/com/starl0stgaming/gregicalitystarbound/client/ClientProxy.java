@@ -5,6 +5,7 @@ import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.entity.EntityRegistration;
 
 public class ClientProxy extends CommonProxy {
+
     public void preLoad() {
         super.preLoad();
         EntityRegistration.registerRenders();

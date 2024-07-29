@@ -1,13 +1,15 @@
 package com.starl0stgaming.gregicalitystarbound.api.space.planets.worldgen;
 
-import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyBiome;
-import com.starl0stgaming.gregicalitystarbound.api.util.StringUtil;
-import com.starl0stgaming.gregicalitystarbound.common.space.dimension.ModDimension;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.BiomeProperties;
 
+import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyBiome;
+import com.starl0stgaming.gregicalitystarbound.api.util.StringUtil;
+import com.starl0stgaming.gregicalitystarbound.common.space.dimension.ModDimension;
+
 public class PlanetBiome {
+
     // Both of these strings get turned into blocks
     private String filler;
     private String top;
@@ -110,7 +112,8 @@ public class PlanetBiome {
         properties.setTemperature(this.temperature);
         properties.setRainfall(this.rainFall);
 
-        this.biome = new DummyBiome(properties, StringUtil.getBlockfromString(filler), StringUtil.getBlockfromString(top), this.skyColor);
+        this.biome = new DummyBiome(properties, StringUtil.getBlockfromString(filler),
+                StringUtil.getBlockfromString(top), this.skyColor);
         ModDimension.BIOMES.add(biome.setRegistryName(new ResourceLocation("gcsb", name)));
     }
 }

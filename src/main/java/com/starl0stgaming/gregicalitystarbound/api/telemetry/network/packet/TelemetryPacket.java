@@ -6,7 +6,7 @@ import com.starl0stgaming.gregicalitystarbound.api.telemetry.network.packet.data
 public class TelemetryPacket {
 
     private int priority;
-    //gets cleared after each send operation is completed, if value equals 0 then it will be sent to whole connection;
+    // gets cleared after each send operation is completed, if value equals 0 then it will be sent to whole connection;
     private int destinationID;
     private TelemetryPacketPayload packetPayload;
 

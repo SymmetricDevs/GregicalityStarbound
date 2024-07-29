@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class VehicleManager {
 
-    //Config annotation or smth
+    // Config annotation or smth
     private int maxVehicleAmount = 512;
 
     private HashMap<Integer, Vehicle> vehicleStorage;
@@ -12,12 +12,10 @@ public class VehicleManager {
     public VehicleManager() {
         this.vehicleStorage = new HashMap<>();
         this.loadVehicles();
-
-
     }
 
     private void loadVehicles() {
-        //TODO: load vehicles in world storage
+        // TODO: load vehicles in world storage
     }
 
     public void addVehicleToStorage(int id, Vehicle vehicle) {
@@ -35,5 +33,4 @@ public class VehicleManager {
     public void removeVehicleFromStorage(int id) {
         this.vehicleStorage.remove(id);
     }
-
 }
