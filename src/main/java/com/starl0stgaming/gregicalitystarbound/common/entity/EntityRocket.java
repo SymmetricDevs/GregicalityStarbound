@@ -42,11 +42,16 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
             DataSerializers.VARINT);
     private static final DataParameter<Float> START_POS = EntityDataManager.createKey(EntityRocket.class,
             DataSerializers.FLOAT);
+
     private final int countdownTimer = 0;
     @SideOnly(Side.CLIENT)
     private MovingSoundRocket soundRocket;
     private String name;
     private int id;
+
+    private double realMotionX;
+    private double realMotionY;
+    private double realMotionZ;
 
     public EntityRocket(World worldIn) {
         super(worldIn);
@@ -54,7 +59,7 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
     public EntityRocket(World worldIn, double x, double y, double z) {
         super(worldIn);
-        this.setLocationAndAngles(x, y, z, this.rotationYaw, 180.0F);
+        this.setLocationAndAngles(x, y, z, this.rotationYaw, -90F);
         rideCooldown = -1;
         ignoreFrustumCheck = true;
         this.setEntityBoundingBox(new AxisAlignedBB(x - 1, y + 0.1, z - 1, x + 1, y + 40, z + 1));
@@ -110,16 +115,22 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
         super.onUpdate();
 
-        this.setRotation(0.0F, 90.0F);
+        this.setRotation(0.0F, -90.0F);
 
         if (isLaunched()) {
             float startPos = this.getStartPos();
 
-            this.prevPosX = this.posX;
-            this.prevPosY = this.posY;
-            this.prevPosZ = this.posZ;
-
+            this.realMotionY += 0.001D;
+            velocityChanged = true;
         }
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        motionX = realMotionX;
+        motionY = realMotionY;
+        motionZ = realMotionZ;
     }
 
     public void explode() {
@@ -204,9 +215,25 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     @Override
     public void updatePassenger(Entity passenger) {
         if (this.isPassenger(passenger)) {
-            Vec3d passengerVec = getLookVec().rotatePitch(-90F);
-            passenger.setPositionAndRotation(this.posX, this.posY + this.getMountedYOffset() + passenger.getYOffset(),
-                    this.posZ, (float) Math.asin(passengerVec.y), (float) Math.atan2(passengerVec.x, passengerVec.z));
+            passenger.setPosition(this.posX + getLookVec().x * this.getMountedYOffset(),
+                    this.posY + getLookVec().y * (this.getMountedYOffset() + passenger.getYOffset()),
+                    this.posZ + getLookVec().z * this.getMountedYOffset());
         }
+    }
+
+    @Override
+    public double getMountedYOffset() {
+        return 0.25;
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return true;
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound.setTag("RealMotion", this.newDoubleNBTList(this.realMotionX, this.realMotionY, this.realMotionZ));
+        return super.writeToNBT(compound);
     }
 }

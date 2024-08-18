@@ -344,9 +344,10 @@ public class DummyChunkGenerator implements IChunkGenerator {
         return false;
     }
 
-    // TODO: 16/04/2018 Mobs
     public List<Biome.SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos) {
-        return null;
+        Biome biome = this.world.getBiome(pos);
+
+        return biome.getSpawnableList(creatureType);
     }
 
     public boolean isInsideStructure(World worldIn, String structureName, BlockPos pos) {

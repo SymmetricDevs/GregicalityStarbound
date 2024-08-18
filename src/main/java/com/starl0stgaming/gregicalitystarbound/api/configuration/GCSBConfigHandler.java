@@ -12,18 +12,17 @@ public class GCSBConfigHandler {
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();
-    private boolean loadDefaultPlanets = true;
-    private File GCSBConfigFolder = new File(Loader.instance().getConfigDir(), "gregicalitystarbound");
-    private File solarSystemConfigFolder = new File(GCSBConfigFolder, "solarsystems");
+    private File gcsbConfigFolder = new File(Loader.instance().getConfigDir(), "gregicalitystarbound");
+    private File solarSystemConfigFolder = new File(gcsbConfigFolder, "solarsystems");
 
     public void init() {
-        GCSBConfigFolder.mkdirs();
+        gcsbConfigFolder.mkdirs();
 
         solarSystemConfigFolder.mkdirs();
     }
 
-    public File getGCSBConfigFolder() {
-        return GCSBConfigFolder;
+    public File getGcsbConfigFolder() {
+        return gcsbConfigFolder;
     }
 
     public File getSolarSystemConfigFolder() {

@@ -1,6 +1,8 @@
 package com.starl0stgaming.gregicalitystarbound.common.space;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
+import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBForgeConfig;
+import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.space.SpaceWorldProvider;
 
 public class SpaceController {
 
@@ -12,8 +14,10 @@ public class SpaceController {
         /*
          * LOADING LOGIC
          * 
-         * First planets and suns are loaded, then solar systems and galaxies
+         * First space, planets and suns are loaded, then solar systems and galaxies
          */
+
+        SpaceWorldProvider.createSpace(GCSBForgeConfig.spaceDimensionID);
 
         CELESTIAL_BODY_MANAGER.init();
 

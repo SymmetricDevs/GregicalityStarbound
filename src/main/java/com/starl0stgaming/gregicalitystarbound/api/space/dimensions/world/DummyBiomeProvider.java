@@ -19,8 +19,8 @@ import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.layer.
 
 public class DummyBiomeProvider extends BiomeProvider {
 
-    GenLayer biomeToUse;
-    GenLayer biomeIndex;
+    private GenLayer biomeToUse;
+    private GenLayer biomeIndex;
     private List<Biome> biomesToSpawnIn;
     private BiomeCache cache;
 
@@ -62,7 +62,7 @@ public class DummyBiomeProvider extends BiomeProvider {
 
     @Override
     public Biome getBiome(BlockPos pos) {
-        return this.getBiome(pos, (Biome) null);
+        return this.getBiome(pos, null);
     }
 
     @Override

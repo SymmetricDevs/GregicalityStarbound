@@ -3,6 +3,7 @@ package com.starl0stgaming.gregicalitystarbound.common.space.dimension;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.space.SpaceWorldProvider;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
@@ -13,6 +14,7 @@ import com.starl0stgaming.gregicalitystarbound.api.space.dimensions.world.DummyW
 public class ModDimension {
 
     public static DimensionType planetType;
+    public static DimensionType spaceType;
 
     public static List<Biome> BIOMES = new ArrayList<>();
     public static List<WorldType> WORLD_TYPES = new ArrayList<>();
@@ -29,5 +31,8 @@ public class ModDimension {
 
         GCSBLog.LOGGER.info("Registering planet dimension type at id " + id);
         planetType = DimensionType.register("gcsb_planet", "_gscb", id, DummyWorldProvider.class, false);
+        id++;
+        spaceType = DimensionType.register("gcsb_space", "_gscb", id, SpaceWorldProvider.class, false);
+
     }
 }

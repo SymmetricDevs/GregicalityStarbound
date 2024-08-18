@@ -48,7 +48,6 @@ public class DummyWorldProvider extends WorldProvider {
         return 50;
     }
 
-    // TODO
     // make sure to add planet name to this
     @Override
     public String getSaveFolder() {
