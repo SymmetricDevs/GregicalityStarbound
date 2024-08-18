@@ -17,4 +17,9 @@ public class SpaceWorldType extends WorldType {
     public IChunkGenerator getChunkGenerator(World world, String generatorOptions) {
         return new SpaceChunkGenerator(world, SpaceWorldProvider.biome);
     }
+
+    @Override
+    public double getHorizon(World world) {
+        return 0;
+    }
 }
