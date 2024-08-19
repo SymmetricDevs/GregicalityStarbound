@@ -10,6 +10,7 @@ public class MovingSoundRocket extends MovingSound {
 
     private final EntityRocket entityRocket;
     private float distance = 0.0F;
+    private boolean fading;
 
     public MovingSoundRocket(EntityRocket entityRocket) {
         super(GCSBSounds.ROCKET_LAUNCH, SoundCategory.NEUTRAL);
@@ -21,6 +22,9 @@ public class MovingSoundRocket extends MovingSound {
 
     public void startPlaying() {
         this.volume = 8F;
+    }
+    public void startFading() {
+        this.fading = true;
     }
 
     public void stopPlaying() {
@@ -37,6 +41,13 @@ public class MovingSoundRocket extends MovingSound {
             this.zPosF = (float) this.entityRocket.posZ;
 
             this.distance = MathHelper.clamp(this.distance + 0.0025F, 0.0F, 10F);
+        }
+
+        if (this.fading) {
+            this.volume = MathHelper.clamp(this.volume - 0.01F, 0.0F, 1.0F);
+            if (this.volume == 0.0F) {
+                this.donePlaying = true;
+            }
         }
     }
 }

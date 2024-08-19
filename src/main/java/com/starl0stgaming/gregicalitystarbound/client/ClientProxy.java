@@ -1,11 +1,9 @@
 package com.starl0stgaming.gregicalitystarbound.client;
 
 import com.starl0stgaming.gregicalitystarbound.GregicalityStarbound;
-import com.starl0stgaming.gregicalitystarbound.api.space.timeline.TimelineTask;
 import com.starl0stgaming.gregicalitystarbound.client.sound.GCSBSounds;
 import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.entity.EntityRocket;
-import com.starl0stgaming.gregicalitystarbound.test.TimelineTest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
@@ -36,8 +34,6 @@ public class ClientProxy extends CommonProxy {
     public static void onEvent(InputEvent.KeyInputEvent event) {
         if(testBinding.isPressed()) {
             System.out.println("key press");
-            TimelineTest test = new TimelineTest();
-            test.run();
         }
 
         final Minecraft minecraft = FMLClientHandler.instance().getClient();
@@ -52,7 +48,7 @@ public class ClientProxy extends CommonProxy {
             EntityRocket rocket = (EntityRocket) player.getRidingEntity();
             if (Minecraft.getMinecraft().inGameHasFocus && player.equals(Minecraft.getMinecraft().player)) {
                 if (!rocket.isLaunched() && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-                    rocket.setLaunched(true);
+                    rocket.onLaunch();
                 }
             }
         }

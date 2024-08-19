@@ -1,18 +1,28 @@
 package com.starl0stgaming.gregicalitystarbound.common.entity;
 
+import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
+import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBForgeConfig;
+import com.starl0stgaming.gregicalitystarbound.api.space.timeline.Timeline;
+import com.starl0stgaming.gregicalitystarbound.client.particle.SusyParticleFlame;
+import com.starl0stgaming.gregicalitystarbound.client.particle.SusyParticleSmoke;
+import com.starl0stgaming.gregicalitystarbound.common.entity.timeline.ChangeMotionEvent;
+import com.starl0stgaming.gregicalitystarbound.common.entity.timeline.SwapDimensionEvent;
+import gregtech.api.GTValues;
+import mezz.jei.network.PacketHandler;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,18 +40,15 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
 
     protected static final float jerk = 0.0001F;
-    private static final DataParameter<Boolean> LAUNCHED = EntityDataManager.createKey(EntityRocket.class,
-            DataSerializers.BOOLEAN);
-    private static final DataParameter<Boolean> COUNTDOWN_STARTED = EntityDataManager.createKey(EntityRocket.class,
-            DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> AGE = EntityDataManager.createKey(EntityRocket.class,
-            DataSerializers.VARINT);
-    private static final DataParameter<Integer> LAUNCH_TIME = EntityDataManager.createKey(EntityRocket.class,
             DataSerializers.VARINT);
     private static final DataParameter<Integer> FLIGHT_TIME = EntityDataManager.createKey(EntityRocket.class,
             DataSerializers.VARINT);
     private static final DataParameter<Float> START_POS = EntityDataManager.createKey(EntityRocket.class,
             DataSerializers.FLOAT);
+    private static final DataParameter<Integer> TARGET_DIMENSION = EntityDataManager.createKey(EntityRocket.class,
+            DataSerializers.VARINT);
+
 
     private final int countdownTimer = 0;
     @SideOnly(Side.CLIENT)
@@ -49,9 +56,13 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     private String name;
     private int id;
 
+    private Timeline<EntityRocket> timeline;
+
     private double realMotionX;
-    private double realMotionY;
+    public double realMotionY;
     private double realMotionZ;
+
+    public double accelerationY;
 
     public EntityRocket(World worldIn) {
         super(worldIn);
@@ -72,35 +83,63 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     @Override
     protected void entityInit() {
         super.entityInit();
-        if (!this.world.isRemote) {}
+        if (!this.world.isRemote) {
+        }
 
-        this.dataManager.register(LAUNCHED, false);
-        this.dataManager.register(COUNTDOWN_STARTED, false);
+        this.dataManager.register(FLIGHT_TIME, -1);
         this.dataManager.register(START_POS, 0.F);
         this.dataManager.register(AGE, 0);
+        this.dataManager.register(TARGET_DIMENSION, 29);
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
-        this.setLaunched(compound.getBoolean("Launched"));
-        this.setCountdownStarted(compound.getBoolean("CountdownStarted"));
         this.setAge(compound.getInteger("Age"));
         this.setStartPos(compound.getFloat("StartPos"));
+        if (compound.hasKey("FlightTime")) {
+            this.setFlightTime(compound.getInteger("FlightTime"));
+        } else {
+            this.setFlightTime(-1);
+        }
+        if (compound.hasKey("RealMotion")) {
+            NBTTagList nbttaglist = compound.getTagList("RealMotion", 6);
+            this.realMotionX = nbttaglist.getDoubleAt(0);
+            this.realMotionY = nbttaglist.getDoubleAt(1);
+            this.realMotionZ = nbttaglist.getDoubleAt(2);
+        }
+        if (compound.hasKey("AccelerationY")) {
+            this.accelerationY = compound.getDouble("AccelerationY");
+        }
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
-        compound.setBoolean("Launched", this.isLaunched());
-        compound.setBoolean("CountdownStarted", this.isCountdownStarted());
         compound.setInteger("Age", this.getAge());
+        compound.setInteger("FlightTime", this.getFlightTime());
         compound.setFloat("StartPos", this.getStartPos());
+        compound.setTag("RealMotion", this.newDoubleNBTList(this.realMotionX, this.realMotionY, this.realMotionZ));
+        compound.setDouble("AccelerationY", accelerationY);
     }
 
     public void onLaunch() {
-        this.setLaunched(true);
+        if (this.isLaunched()) return;
+        prepareLaunch();
+        this.setFlightTime(0);
+        if (world.isRemote) {
+            PacketHandler.sendToServer(new PacketEntity(this));
+        }
         this.isAirBorne = true;
-
         this.playRocketSound();
+    }
+
+    protected void prepareLaunch() {
+        timeline = new Timeline<>();
+        timeline.registerEvent(100, new ChangeMotionEvent(0, 0.001F));
+        timeline.registerEvent(399, new ChangeMotionEvent(0, 0));
+        timeline.registerEvent(400, new SwapDimensionEvent(GCSBForgeConfig.spaceDimensionID, false));
+        timeline.registerEvent(699, new ChangeMotionEvent(-0.5F, 0.001F));
+        timeline.registerEvent(700, new SwapDimensionEvent(29, true));
+        timeline.registerEvent(1200, new ChangeMotionEvent(Double.NaN, 0.F));
     }
 
     @Override
@@ -118,12 +157,114 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
         this.setRotation(0.0F, -90.0F);
 
         if (isLaunched()) {
-            float startPos = this.getStartPos();
+            if (world.isRemote) {
+                if (soundRocket == null) {
+                    playRocketSound();
+                }
+                if (this.realMotionY != 0) {
+                    spawnFlightParticles(this.realMotionY >= 0);
+                }
+            }
+            if (timeline == null) {
+                prepareLaunch();
+            }
+            setFlightTime(getFlightTime() + 1);
 
-            this.realMotionY += 0.001D;
+            timeline.run(this, getFlightTime());
+            this.realMotionY += this.accelerationY;
             velocityChanged = true;
         }
+        if (!isLaunched()) {
+            if (this.world.isRemote && soundRocket != null) {
+                soundRocket.startFading();
+            }
+        }
     }
+
+    @SideOnly(Side.CLIENT)
+    protected void spawnFlightParticles(boolean goingUp) {
+        if (this.isDead) {
+            return;
+        }
+
+        double offset = goingUp ? 0.2D : 0.5D;
+        SusyParticleFlame flame1 = new SusyParticleFlame(
+                this.world,
+                this.posX + 0.8D,
+                this.posY + 0.9D + offset,
+                this.posZ + 0.2D,
+                1.5 * (GTValues.RNG.nextFloat() + 0.2) * 0.08,
+                -1.5,
+                1.5 * (GTValues.RNG.nextFloat() - 0.5) * 0.08);
+        SusyParticleFlame flame2 = new SusyParticleFlame(
+                this.world,
+                this.posX + 0.8D,
+                this.posY + 0.9D + offset,
+                this.posZ - 0.2D,
+                1.5 * (GTValues.RNG.nextFloat() + 0.2) * 0.08,
+                -1.5,
+                1.5 * (GTValues.RNG.nextFloat() - 0.5) * 0.08);
+        SusyParticleFlame flame3 = new SusyParticleFlame(
+                this.world,
+                this.posX - 0.8D,
+                this.posY + 0.9D + offset,
+                this.posZ + 0.2D,
+                1.5 * (GTValues.RNG.nextFloat() - 1.2) * 0.08,
+                -1.5,
+                1.5 * (GTValues.RNG.nextFloat() - 0.5) * 0.08);
+        SusyParticleFlame flame4 = new SusyParticleFlame(
+                this.world,
+                this.posX - 0.8D,
+                this.posY + 0.9D + offset,
+                this.posZ - 0.2D,
+                1.5 * (GTValues.RNG.nextFloat() - 1.2) * 0.08,
+                -1.5,
+                1.5 * (GTValues.RNG.nextFloat() - 0.5) * 0.08);
+
+        SusyParticleSmoke smoke1 = new SusyParticleSmoke(
+                this.world,
+                this.posX + 0.8D,
+                this.posY + 0.9D + offset,
+                this.posZ + 0.2D,
+                1.5 * (GTValues.RNG.nextFloat() + 0.2) * 0.16,
+                -1.5,
+                1.5 * (GTValues.RNG.nextFloat() - 0.5) * 0.16);
+        SusyParticleSmoke smoke2 = new SusyParticleSmoke(
+                this.world,
+                this.posX + 0.8D,
+                this.posY + 0.9D + offset,
+                this.posZ - 0.2D,
+                1.5 * (GTValues.RNG.nextFloat() + 0.2) * 0.16,
+                -1.5,
+                1.5 * (GTValues.RNG.nextFloat() - 0.5) * 0.16);
+        SusyParticleSmoke smoke3 = new SusyParticleSmoke(
+                this.world,
+                this.posX - 0.8D,
+                this.posY + 0.9D + offset,
+                this.posZ + 0.2D,
+                1.5 * (GTValues.RNG.nextFloat() - 1.2) * 0.16,
+                -1.5,
+                1.5 * (GTValues.RNG.nextFloat() - 0.5) * 0.16);
+        SusyParticleSmoke smoke4 = new SusyParticleSmoke(
+                this.world,
+                this.posX - 0.8D,
+                this.posY + 0.9D + offset,
+                this.posZ - 0.2D,
+                1.5 * (GTValues.RNG.nextFloat() - 1.2) * 0.16,
+                -1.5,
+                1.5 * (GTValues.RNG.nextFloat() - 0.5) * 0.16);
+
+        Minecraft.getMinecraft().effectRenderer.addEffect(smoke1);
+        Minecraft.getMinecraft().effectRenderer.addEffect(smoke2);
+        Minecraft.getMinecraft().effectRenderer.addEffect(smoke3);
+        Minecraft.getMinecraft().effectRenderer.addEffect(smoke4);
+
+        Minecraft.getMinecraft().effectRenderer.addEffect(flame1);
+        Minecraft.getMinecraft().effectRenderer.addEffect(flame2);
+        Minecraft.getMinecraft().effectRenderer.addEffect(flame3);
+        Minecraft.getMinecraft().effectRenderer.addEffect(flame4);
+    }
+
 
     @Override
     public void onLivingUpdate() {
@@ -139,19 +280,15 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     }
 
     public boolean isLaunched() {
-        return this.dataManager.get(LAUNCHED);
+        return this.dataManager.get(FLIGHT_TIME) >= 0;
     }
 
     public void setLaunched(boolean launched) {
-        this.dataManager.set(LAUNCHED, launched);
-    }
-
-    public boolean isCountdownStarted() {
-        return this.dataManager.get(COUNTDOWN_STARTED);
-    }
-
-    public void setCountdownStarted(boolean countdownStarted) {
-        this.dataManager.set(COUNTDOWN_STARTED, countdownStarted);
+        if (launched) {
+            this.dataManager.set(FLIGHT_TIME, 0);
+        } else {
+            this.dataManager.set(FLIGHT_TIME, -1);
+        }
     }
 
     public int getAge() {
@@ -168,6 +305,14 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
     public void setStartPos(Float startPos) {
         this.dataManager.set(START_POS, startPos);
+    }
+
+    public int getFlightTime() {
+        return this.dataManager.get(FLIGHT_TIME);
+    }
+
+    public void setFlightTime(int flightTime) {
+        this.dataManager.set(FLIGHT_TIME, flightTime);
     }
 
     @SideOnly(Side.CLIENT)
@@ -206,7 +351,6 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
         if (!this.isBeingRidden()) {
             if (!this.world.isRemote) {
                 player.startRiding(this);
-                this.onLaunch();
             }
         }
         return true;
@@ -234,6 +378,21 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setTag("RealMotion", this.newDoubleNBTList(this.realMotionX, this.realMotionY, this.realMotionZ));
+        compound.setTag("Acceleration", this.newDoubleNBTList(0, this.accelerationY, 0));
+
         return super.writeToNBT(compound);
+    }
+
+    @Override
+    public void fall(float distance, float damageMultiplier) {
+
+    }
+
+    @Override
+    protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
+        super.updateFallState(y, onGroundIn, state, pos);
+        if (this.realMotionY < 0.0D) {
+            this.setLaunched(false);
+        }
     }
 }
