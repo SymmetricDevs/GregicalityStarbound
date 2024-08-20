@@ -45,6 +45,8 @@ public class GregicalityStarbound {
 
         EntityRegistry.registerModEntity(new ResourceLocation(GregicalityStarbound.MODID, "rocket"), EntityRocket.class,
                 "Rocket", 1, GregicalityStarbound.instance, 64, 3, true);
+
+
     }
 
     @Mod.EventHandler

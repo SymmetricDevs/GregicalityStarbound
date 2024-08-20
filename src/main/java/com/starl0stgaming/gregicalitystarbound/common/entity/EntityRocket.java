@@ -1,14 +1,18 @@
 package com.starl0stgaming.gregicalitystarbound.common.entity;
 
-import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.api.configuration.GCSBForgeConfig;
 import com.starl0stgaming.gregicalitystarbound.api.space.timeline.Timeline;
 import com.starl0stgaming.gregicalitystarbound.client.particle.SusyParticleFlame;
 import com.starl0stgaming.gregicalitystarbound.client.particle.SusyParticleSmoke;
+import com.starl0stgaming.gregicalitystarbound.common.CommonProxy;
 import com.starl0stgaming.gregicalitystarbound.common.entity.timeline.ChangeMotionEvent;
+import com.starl0stgaming.gregicalitystarbound.common.entity.timeline.ParticlesEvent;
+import com.starl0stgaming.gregicalitystarbound.common.entity.timeline.PlaySoundEvent;
 import com.starl0stgaming.gregicalitystarbound.common.entity.timeline.SwapDimensionEvent;
+import com.starl0stgaming.gregicalitystarbound.common.network.IReceivingEntity;
+import com.starl0stgaming.gregicalitystarbound.common.network.PacketEntity;
 import gregtech.api.GTValues;
-import mezz.jei.network.PacketHandler;
+import gregtech.api.GregTechAPI;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -35,7 +39,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntityRocket extends EntityLiving implements IAnimatable {
+public class EntityRocket extends EntityLiving implements IAnimatable, IReceivingEntity {
 
     private AnimationFactory factory = new AnimationFactory(this);
 
@@ -53,6 +57,7 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     private final int countdownTimer = 0;
     @SideOnly(Side.CLIENT)
     private MovingSoundRocket soundRocket;
+    public boolean particles;
     private String name;
     private int id;
 
@@ -96,10 +101,12 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     public void readEntityFromNBT(NBTTagCompound compound) {
         this.setAge(compound.getInteger("Age"));
         this.setStartPos(compound.getFloat("StartPos"));
-        if (compound.hasKey("FlightTime")) {
-            this.setFlightTime(compound.getInteger("FlightTime"));
-        } else {
-            this.setFlightTime(-1);
+        if (!CommonProxy.teleportingPlayers.containsKey(this) && getFlightTime() <= 0) { // Since this fortunately should immediately inactive after a launch, this will never run if it's still actually launching.
+            if (compound.hasKey("FlightTime")) {
+                this.setFlightTime(compound.getInteger("FlightTime"));
+            } else {
+                this.setFlightTime(-1);
+            }
         }
         if (compound.hasKey("RealMotion")) {
             NBTTagList nbttaglist = compound.getTagList("RealMotion", 6);
@@ -126,20 +133,25 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
         prepareLaunch();
         this.setFlightTime(0);
         if (world.isRemote) {
-            PacketHandler.sendToServer(new PacketEntity(this));
+            GregTechAPI.networkHandler.sendToServer(new PacketEntity(this, 0));
         }
         this.isAirBorne = true;
-        this.playRocketSound();
     }
 
     protected void prepareLaunch() {
         timeline = new Timeline<>();
-        timeline.registerEvent(100, new ChangeMotionEvent(0, 0.001F));
+        timeline.registerEvent(1, new PlaySoundEvent());
+        timeline.registerEvent(1, new ParticlesEvent(true));
+        timeline.registerEvent(100, new ChangeMotionEvent(0, 0.005F));
         timeline.registerEvent(399, new ChangeMotionEvent(0, 0));
+        timeline.registerEvent(399, new ParticlesEvent(false));
         timeline.registerEvent(400, new SwapDimensionEvent(GCSBForgeConfig.spaceDimensionID, false));
-        timeline.registerEvent(699, new ChangeMotionEvent(-0.5F, 0.001F));
+        timeline.registerEvent(699, new ChangeMotionEvent(-2.2F, 0.005F));
         timeline.registerEvent(700, new SwapDimensionEvent(29, true));
-        timeline.registerEvent(1200, new ChangeMotionEvent(Double.NaN, 0.F));
+        timeline.registerEvent(800, new PlaySoundEvent());
+        timeline.registerEvent(800, new ParticlesEvent(true));
+        timeline.registerEvent(1100, new ChangeMotionEvent(Double.NaN, 0));
+
     }
 
     @Override
@@ -158,10 +170,7 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
         if (isLaunched()) {
             if (world.isRemote) {
-                if (soundRocket == null) {
-                    playRocketSound();
-                }
-                if (this.realMotionY != 0) {
+                if (particles) {
                     spawnFlightParticles(this.realMotionY >= 0);
                 }
             }
@@ -172,7 +181,9 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
 
             timeline.run(this, getFlightTime());
             this.realMotionY += this.accelerationY;
-            velocityChanged = true;
+            if (this.accelerationY != 0) {
+                velocityChanged = true;
+            }
         }
         if (!isLaunched()) {
             if (this.world.isRemote && soundRocket != null) {
@@ -379,6 +390,7 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setTag("RealMotion", this.newDoubleNBTList(this.realMotionX, this.realMotionY, this.realMotionZ));
         compound.setTag("Acceleration", this.newDoubleNBTList(0, this.accelerationY, 0));
+        compound.setInteger("FlightTime", this.getFlightTime());
 
         return super.writeToNBT(compound);
     }
@@ -391,8 +403,17 @@ public class EntityRocket extends EntityLiving implements IAnimatable {
     @Override
     protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
         super.updateFallState(y, onGroundIn, state, pos);
-        if (this.realMotionY < 0.0D) {
+        if (this.realMotionY < 0.0D && onGroundIn) {
             this.setLaunched(false);
+            this.realMotionY = 0.0D;
+            this.accelerationY = 0.0D;
+        }
+    }
+
+    @Override
+    public void receivePacket(int id) {
+        if (id == 0) {
+            this.onLaunch();
         }
     }
 }

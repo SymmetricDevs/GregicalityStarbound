@@ -21,7 +21,5 @@ public class ChangeMotionEvent implements TimelineTask<EntityRocket> {
         if (!Double.isNaN(newAccelerationY)) {
             handle.accelerationY = newAccelerationY;
         }
-        GCSBLog.LOGGER.info("Changed Motion: " + handle.realMotionY + " Acceleration: " + handle.accelerationY);
-
     }
 }

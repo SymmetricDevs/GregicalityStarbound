@@ -26,6 +26,9 @@ public class SwapDimensionEvent implements TimelineTask<EntityRocket> {
 
     @Override
     public void execute(EntityRocket handle) {
+        if (handle.world.isRemote) {
+            return;
+        }
         double targetY = goingDown ? 512 : 128;
         GCSBTeleporter teleporter = new GCSBTeleporter(TeleportHandler.getWorldByDimensionID(dimID),
                 handle.posX, targetY, handle.posZ);
@@ -34,7 +37,7 @@ public class SwapDimensionEvent implements TimelineTask<EntityRocket> {
         EntityRocket newRocket = teleport(handle, dimID, teleporter, handle.posX, targetY, handle.posZ);
         for (Entity entity : formerPassengers) {
             if (entity instanceof EntityPlayer player) {
-                CommonProxy.teleportingPlayers.put(player, newRocket);
+                CommonProxy.teleportingPlayers.put(newRocket, player);
             }
         }
     }

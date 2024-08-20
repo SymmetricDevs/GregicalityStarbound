@@ -1,6 +1,7 @@
 package com.starl0stgaming.gregicalitystarbound.common;
 
 import com.starl0stgaming.gregicalitystarbound.common.entity.EntityRocket;
+import com.starl0stgaming.gregicalitystarbound.common.network.NetworkUtil;
 import gregtech.api.util.GTTeleporter;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +34,7 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = GregicalityStarbound.MODID)
 public class CommonProxy {
-    public static Map<EntityPlayer, EntityRocket> teleportingPlayers = new Object2ObjectArrayMap<>();
+    public static Map<EntityRocket, EntityPlayer> teleportingPlayers = new Object2ObjectArrayMap<>();
 
 
     @SubscribeEvent
@@ -64,6 +65,7 @@ public class CommonProxy {
 
     public void preLoad() {
         ModDimension.init();
+        NetworkUtil.registerPackets();
     }
 
     public void load() {}
@@ -88,10 +90,10 @@ public class CommonProxy {
     public static void onTickEnd(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             if (!teleportingPlayers.isEmpty()) {
-                List<EntityPlayer> toRemove = new ArrayList<>();
-                for (Map.Entry<EntityPlayer, EntityRocket> pair : teleportingPlayers.entrySet()) {
-                    EntityRocket rocket = pair.getValue();
-                    EntityPlayer player = pair.getKey();
+                List<EntityRocket> toRemove = new ArrayList<>();
+                for (Map.Entry<EntityRocket, EntityPlayer> pair : teleportingPlayers.entrySet()) {
+                    EntityRocket rocket = pair.getKey();
+                    EntityPlayer player = pair.getValue();
                     if (rocket.dimension != player.dimension && player.getServer() != null) {
                         WorldServer newWorld = player.getServer().getWorld(rocket.dimension);
 
@@ -103,12 +105,12 @@ public class CommonProxy {
                         player.getServer().getPlayerList().transferPlayerToDimension((EntityPlayerMP) player, rocket.dimension,
                                 new GTTeleporter(newWorld, rocket.getPosition().getX(), rocket.getPosition().getY(), rocket.getPosition().getZ()));
                         player.startRiding(rocket);
-                        toRemove.add(player);
+                        toRemove.add(rocket);
                     }
                 }
 
-                for (EntityPlayer player : toRemove) {
-                    teleportingPlayers.remove(player);
+                for (EntityRocket rocket : toRemove) {
+                    teleportingPlayers.remove(rocket);
                 }
             }
         }
