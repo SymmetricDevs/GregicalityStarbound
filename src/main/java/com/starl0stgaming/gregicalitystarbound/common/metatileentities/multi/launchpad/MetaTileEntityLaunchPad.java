@@ -240,6 +240,16 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
 
     }
 
+    // fyi CbAxLen stands for center-back axis length
+    public int getCbAxLen() {
+        return this.cbAxLen;
+    }
+
+    // fyi SAxLen stands for side-side axis length
+    public int getSAxLen() {
+        return this.sAxLen;
+    }
+
     @Override
     protected ModularUI.Builder createUITemplate(EntityPlayer player) {
         return super.createUITemplate(player);
