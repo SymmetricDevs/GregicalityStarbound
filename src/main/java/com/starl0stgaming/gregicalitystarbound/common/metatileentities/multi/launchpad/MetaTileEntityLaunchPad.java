@@ -4,6 +4,9 @@ import static gregtech.api.util.RelativeDirection.*;
 
 import javax.annotation.Nonnull;
 
+import gregtech.api.metatileentity.multiblock.*;
+import gregtech.api.pattern.*;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,13 +27,6 @@ import gregtech.api.gui.ModularUI;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityHolder;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
-import gregtech.api.metatileentity.multiblock.IMultiblockPart;
-import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.pattern.PatternMatchContext;
-import gregtech.api.pattern.TraceabilityPredicate;
 import gregtech.api.unification.material.Materials;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -47,7 +43,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     // Probably needs a fluid inventory for a water deluge system
     protected FluidTankList inputFluidInventory;
     private int cbAxLen = MIN_LENGTH; // controller-back axis length
-    private int sAxLen = 5; // side-side axis length
+    private int sAxLen = MIN_LENGTH; // side-side axis length
 
     public MetaTileEntityLaunchPad(ResourceLocation mteId) {
         super(mteId, GCSBRecipeMaps.LAUNCH_PAD_LOADING_RECIPES);
@@ -78,9 +74,8 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     }
 
     @Nonnull
-    @Override
     protected BlockPattern createStructurePattern() {
-        if (getWorld() != null) updateStructureDimensions();
+        if (getWorld() != null && !getWorld().isRemote) updateStructureDimensions();
         cbAxLen = Math.max(cbAxLen, MIN_LENGTH);
         sAxLen = Math.max(sAxLen, MIN_LENGTH);
 
@@ -170,16 +165,20 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
         int rAxLen = 1;
         int lAxLen = 1;
         int checkPos = 0;
-        for (int i = 1; i < 8; i++) {
-            if (!isBlockEdge(world, lPos, left) && (checkPos & 1) == 0) {
-                lAxLen++;
-            } else {
-                checkPos |= 1;
+        for (int i = 1; i < 8 && checkPos != 3; i++) {
+            if ((checkPos & 1) == 0) {
+                if (!isBlockEdge(world, lPos, left)) {
+                    lAxLen++;
+                } else {
+                    checkPos |= 1;
+                }
             }
-            if (!isBlockEdge(world, rPos, right) && (checkPos & 2) == 0) {
-                rAxLen++;
-            } else {
-                checkPos |= 2;
+            if ((checkPos & 2) == 0) {
+                if (!isBlockEdge(world, rPos, right)) {
+                    rAxLen++;
+                } else {
+                    checkPos |= 2;
+                }
             }
         }
         sAxLen = lAxLen + rAxLen + 1;
@@ -227,6 +226,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
         super.receiveInitialSyncData(buf);
         this.cbAxLen = buf.readInt();
         this.sAxLen = buf.readInt();
+        reinitializeStructurePattern();
     }
 
     @Override
@@ -235,7 +235,9 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
         if (dataId == GregtechDataCodes.UPDATE_STRUCTURE_SIZE) {
             this.cbAxLen = buf.readInt();
             this.sAxLen = buf.readInt();
+            reinitializeStructurePattern();
         }
+
     }
 
     @Override
@@ -263,6 +265,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     public boolean isBlockEdge(@Nonnull World world, @Nonnull BlockPos.MutableBlockPos pos,
                                @Nonnull EnumFacing direction) {
         return world.getBlockState(pos.move(direction)) == getCasingState() ||
+                world.getBlockState(pos).getMaterial() == Material.AIR ||
                 world.getTileEntity(pos) instanceof MetaTileEntityHolder;
     }
 
@@ -275,6 +278,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     @Override
     public void invalidateStructure() {
         super.invalidateStructure();
+        resetTileAbilities();
     }
 
     public void handleMessage(NBTTagCompound ntc) {}
