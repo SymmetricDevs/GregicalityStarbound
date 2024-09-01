@@ -138,7 +138,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
                                 .getState(StoneVariantBlock.StoneType.CONCRETE_LIGHT)))
                 .where('S', states(MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel)))
                 .where('E', states(getCasingState()).or(autoAbilities()))
-                .where(' ', air())
+                .where(' ', any())
                 .build();
     }
 
