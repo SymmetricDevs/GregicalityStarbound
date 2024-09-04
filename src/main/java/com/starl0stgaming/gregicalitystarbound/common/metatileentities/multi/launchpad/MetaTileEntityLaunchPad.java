@@ -4,6 +4,8 @@ import static gregtech.api.util.RelativeDirection.*;
 
 import javax.annotation.Nonnull;
 
+import com.starl0stgaming.gregicalitystarbound.util.BlockStructure;
+import com.starl0stgaming.gregicalitystarbound.util.Pair;
 import gregtech.api.metatileentity.multiblock.*;
 import gregtech.api.pattern.*;
 import net.minecraft.block.material.Material;
@@ -14,6 +16,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,12 +45,14 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     };
     // Probably needs a fluid inventory for a water deluge system
     protected FluidTankList inputFluidInventory;
+    protected BlockStructure placedRocket;
     private int cbAxLen = MIN_LENGTH; // controller-back axis length
     private int sAxLen = MIN_LENGTH; // side-side axis length
 
     public MetaTileEntityLaunchPad(ResourceLocation mteId) {
         super(mteId, GCSBRecipeMaps.LAUNCH_PAD_LOADING_RECIPES);
         resetTileAbilities();
+        placedRocket = null;
     }
 
     @Override
@@ -272,6 +277,22 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.TITANIUM_STABLE);
     }
 
+    public BlockStructure getPlacedRocket() {
+        return this.placedRocket;
+    }
+
+    public void scanForRocket() {
+
+    }
+
+    public Pair<Vec3i, Vec3i> getContainedBounds() {
+        if (this.sAxLen % 2 == 1) {
+            return new Pair<Vec3i, Vec3i>(new Vec3i(getPos()+1), new Vec3i(255));
+        } else {
+            return new Pair<Vec3i, Vec3i>(new Vec3i(1,1,1), new Vec3i(1,1,1)); //TODO: Make this what it's supposed to be
+        }
+    }
+
     public boolean isBlockEdge(@Nonnull World world, @Nonnull BlockPos.MutableBlockPos pos,
                                @Nonnull EnumFacing direction) {
         return world.getBlockState(pos.move(direction)) == getCasingState() ||
@@ -289,6 +310,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     public void invalidateStructure() {
         super.invalidateStructure();
         resetTileAbilities();
+        placedRocket = null;
     }
 
     public void handleMessage(NBTTagCompound ntc) {}
