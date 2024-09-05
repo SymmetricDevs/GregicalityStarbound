@@ -1,5 +1,6 @@
 package com.starl0stgaming.gregicalitystarbound;
 
+import gregtech.api.unification.material.event.PostMaterialEvent;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
@@ -17,7 +18,7 @@ import com.starl0stgaming.gregicalitystarbound.common.entity.EntityRocket;
 import com.starl0stgaming.gregicalitystarbound.common.metatileentities.GCSBMetaTileEntities;
 import com.starl0stgaming.gregicalitystarbound.common.space.SpaceController;
 
-@Mod(name = GregicalityStarbound.NAME, modid = GregicalityStarbound.MODID)
+@Mod(name = GregicalityStarbound.NAME, modid = GregicalityStarbound.MODID, dependencies = "required-after:gregtech@[2.8.9,);")
 public class GregicalityStarbound {
 
     public static final String NAME = "Gregicality Starbound";
@@ -39,18 +40,21 @@ public class GregicalityStarbound {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        GregicalityStarbound.CONFIG_HANDLER.init();
-
         proxy.preLoad();
-
+        GregicalityStarbound.CONFIG_HANDLER.init();
+        GCSBMetaTileEntities.init();
         EntityRegistry.registerModEntity(new ResourceLocation(GregicalityStarbound.MODID, "rocket"), EntityRocket.class,
                 "Rocket", 1, GregicalityStarbound.instance, 64, 3, true);
-
 
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        GCSBMetaTileEntities.init();
+        proxy.load();
+    }
+
+    @Mod.EventHandler
+    public void postMaterial(PostMaterialEvent event) {
+
     }
 }

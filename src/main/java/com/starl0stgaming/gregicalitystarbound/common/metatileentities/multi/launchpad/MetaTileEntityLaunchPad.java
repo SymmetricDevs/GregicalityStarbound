@@ -4,8 +4,10 @@ import static gregtech.api.util.RelativeDirection.*;
 
 import javax.annotation.Nonnull;
 
+import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
 import com.starl0stgaming.gregicalitystarbound.util.BlockStructure;
 import com.starl0stgaming.gregicalitystarbound.util.Pair;
+import com.starl0stgaming.gregicalitystarbound.util.SpaceMath;
 import gregtech.api.metatileentity.multiblock.*;
 import gregtech.api.pattern.*;
 import net.minecraft.block.material.Material;
@@ -281,15 +283,35 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
         return this.placedRocket;
     }
 
-    public void scanForRocket() {
+    public void scanForRocket() { // TODO: do something like what bruberu did with the Kitchen, looking for
+        if (getWorld() == null || getWorld().isRemote)
+        {
+            GCSBLog.LOGGER.info("Warning: This code was run on the client side of GCYSB!");
+            return;
+        }
+        Pair<Vec3i,Vec3i> bounds = getContainedBounds();
 
     }
 
+    // Note: This function assumes a lot of things that are currently true (as of 9/4/2024) about the rocket structure that may change.
     public Pair<Vec3i, Vec3i> getContainedBounds() {
+        EnumFacing front = getFrontFacing();
+        EnumFacing left = front.rotateYCCW();
+        EnumFacing back = front.getOpposite();
+        EnumFacing right = front.rotateY();
+        Vec3i uVec = new Vec3i(0,0,1);
+        Vec3i rVec = right.getDirectionVec();
+        Vec3i bVec = back.getDirectionVec();
+        Vec3i lVec = left.getDirectionVec();
+
         if (this.sAxLen % 2 == 1) {
-            return new Pair<Vec3i, Vec3i>(new Vec3i(getPos()+1), new Vec3i(255));
+            Vec3i topVec1 = SpaceMath.addV3I(SpaceMath.multV3I(rVec, sAxLen/2-1), SpaceMath.multV3I(bVec, cbAxLen-1),getPos());
+            Vec3i topVec = new Vec3i(topVec1.getX(), topVec1.getY(), 255);
+            return new Pair<Vec3i, Vec3i>(SpaceMath.addV3I(SpaceMath.multV3I(lVec,sAxLen/2-1), bVec, uVec, getPos()), topVec);
         } else {
-            return new Pair<Vec3i, Vec3i>(new Vec3i(1,1,1), new Vec3i(1,1,1)); //TODO: Make this what it's supposed to be
+            Vec3i topVec1 = SpaceMath.addV3I(SpaceMath.multV3I(rVec, sAxLen/2-2), SpaceMath.multV3I(bVec, cbAxLen-1),getPos());
+            Vec3i topVec = new Vec3i(topVec1.getX(), topVec1.getY(), 255);
+            return new Pair<Vec3i, Vec3i>(SpaceMath.addV3I(SpaceMath.multV3I(lVec,sAxLen/2-1), bVec, uVec, getPos()), topVec);
         }
     }
 
