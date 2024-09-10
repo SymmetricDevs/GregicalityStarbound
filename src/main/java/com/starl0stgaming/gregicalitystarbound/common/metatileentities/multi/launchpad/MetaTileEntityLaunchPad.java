@@ -5,6 +5,7 @@ import static gregtech.api.util.RelativeDirection.*;
 import javax.annotation.Nonnull;
 
 import com.starl0stgaming.gregicalitystarbound.api.GCSBLog;
+import com.starl0stgaming.gregicalitystarbound.common.metatileentities.multi.rocketcore.MetaTileEntityRocket;
 import com.starl0stgaming.gregicalitystarbound.util.BlockStructure;
 import com.starl0stgaming.gregicalitystarbound.util.Pair;
 import com.starl0stgaming.gregicalitystarbound.util.SpaceMath;
@@ -15,10 +16,16 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,6 +45,9 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.blocks.StoneVariantBlock;
+import scala.tools.cmd.Meta;
+
+import java.util.List;
 
 public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController implements IEndpointSerializable {
 
@@ -47,7 +57,7 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     };
     // Probably needs a fluid inventory for a water deluge system
     protected FluidTankList inputFluidInventory;
-    protected BlockStructure placedRocket;
+    protected MetaTileEntityRocket placedRocket;
     private int cbAxLen = MIN_LENGTH; // controller-back axis length
     private int sAxLen = MIN_LENGTH; // side-side axis length
 
@@ -279,39 +289,61 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.TITANIUM_STABLE);
     }
 
-    public BlockStructure getPlacedRocket() {
+    public MetaTileEntityRocket getPlacedRocket() {
         return this.placedRocket;
     }
 
-    public void scanForRocket() { // TODO: do something like what bruberu did with the Kitchen, looking for
+    protected int rocketAnalysisPredicate(BlockPos bp) {
+        TileEntity tileEntity = this.getWorld().getTileEntity(bp);
+        if (!(tileEntity instanceof IGregTechTileEntity))
+            return 0;
+        MetaTileEntity mTE = ((IGregTechTileEntity) tileEntity).getMetaTileEntity();
+        return (mTE instanceof MetaTileEntityRocket) ? 2 : 1;
+    }
+
+    public void scanForRocket() {
         if (getWorld() == null || getWorld().isRemote)
         {
             GCSBLog.LOGGER.info("Warning: This code was run on the client side of GCYSB!");
             return;
         }
-        Pair<Vec3i,Vec3i> bounds = getContainedBounds();
+        AxisAlignedBB axisAlignedBB = getContainedBounds();
+        for (BlockPos bp : BlockPos.getAllInBox((new BlockPos(SpaceMath.getBounds(axisAlignedBB).a())), new BlockPos(SpaceMath.getBounds(axisAlignedBB).b()))) {
+            if (rocketAnalysisPredicate(bp) == 2) {
+                this.placedRocket = (MetaTileEntityRocket) ((IGregTechTileEntity)getWorld().getTileEntity(bp)).getMetaTileEntity();
+            }
+        }
+    }
 
+    @Override
+    protected ModularUI createUI(EntityPlayer entityPlayer) {
+        scanForRocket();
+        return super.createUI(entityPlayer);
+    }
+
+    public void setPlacedRocket(MetaTileEntityRocket mte) {
+        placedRocket = mte;
     }
 
     // Note: This function assumes a lot of things that are currently true (as of 9/4/2024) about the rocket structure that may change.
-    public Pair<Vec3i, Vec3i> getContainedBounds() {
+    public AxisAlignedBB getContainedBounds() {
         EnumFacing front = getFrontFacing();
         EnumFacing left = front.rotateYCCW();
         EnumFacing back = front.getOpposite();
         EnumFacing right = front.rotateY();
-        Vec3i uVec = new Vec3i(0,0,1);
+        Vec3i uVec = new Vec3i(0,1,0);
         Vec3i rVec = right.getDirectionVec();
         Vec3i bVec = back.getDirectionVec();
         Vec3i lVec = left.getDirectionVec();
 
         if (this.sAxLen % 2 == 1) {
-            Vec3i topVec1 = SpaceMath.addV3I(SpaceMath.multV3I(rVec, sAxLen/2-1), SpaceMath.multV3I(bVec, cbAxLen-1),getPos());
-            Vec3i topVec = new Vec3i(topVec1.getX(), topVec1.getY(), 255);
-            return new Pair<Vec3i, Vec3i>(SpaceMath.addV3I(SpaceMath.multV3I(lVec,sAxLen/2-1), bVec, uVec, getPos()), topVec);
+            Vec3i topVec1 = SpaceMath.addV3I(SpaceMath.multV3I(rVec, sAxLen/2-1), SpaceMath.multV3I(bVec, cbAxLen-2),getPos());
+            Vec3i topVec = new Vec3i(topVec1.getX(), 255, topVec1.getZ());
+            return new AxisAlignedBB(new BlockPos(SpaceMath.addV3I(SpaceMath.multV3I(lVec,sAxLen/2-1), bVec, uVec, getPos())), new BlockPos(topVec));
         } else {
-            Vec3i topVec1 = SpaceMath.addV3I(SpaceMath.multV3I(rVec, sAxLen/2-2), SpaceMath.multV3I(bVec, cbAxLen-1),getPos());
-            Vec3i topVec = new Vec3i(topVec1.getX(), topVec1.getY(), 255);
-            return new Pair<Vec3i, Vec3i>(SpaceMath.addV3I(SpaceMath.multV3I(lVec,sAxLen/2-1), bVec, uVec, getPos()), topVec);
+            Vec3i topVec1 = SpaceMath.addV3I(SpaceMath.multV3I(rVec, sAxLen/2-1), SpaceMath.multV3I(bVec, cbAxLen-2),getPos());
+            Vec3i topVec = new Vec3i(topVec1.getX(), 255, topVec1.getZ());
+            return new AxisAlignedBB(new BlockPos(SpaceMath.addV3I(SpaceMath.multV3I(lVec,sAxLen/2-1), bVec, uVec, getPos())), new BlockPos(topVec));
         }
     }
 
@@ -332,7 +364,25 @@ public class MetaTileEntityLaunchPad extends RecipeMapMultiblockController imple
     public void invalidateStructure() {
         super.invalidateStructure();
         resetTileAbilities();
-        placedRocket = null;
+        if (placedRocket != null) {
+            placedRocket.setLinkedPad(null);
+            placedRocket = null;
+        }
+    }
+
+    @Override
+    protected void addDisplayText(List<ITextComponent> textList) {
+        MultiblockDisplayText.builder(textList, isStructureFormed())
+                .addCustom((list) -> {
+                    ITextComponent comp = null;
+                    if (placedRocket != null) {
+                        comp = new TextComponentTranslation("gregtech.machine.launch_pad.rocket_present");
+                        list.add(comp.setStyle(new Style().setColor(TextFormatting.GREEN)));
+                    } else {
+                        comp = new TextComponentTranslation("gregtech.machine.launch_pad.rocket_not_present");
+                        list.add(comp.setStyle(new Style().setColor(TextFormatting.RED)));
+                    }
+                });
     }
 
     public void handleMessage(NBTTagCompound ntc) {}

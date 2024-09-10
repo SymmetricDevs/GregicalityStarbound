@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
 import java.rmi.NoSuchObjectException;

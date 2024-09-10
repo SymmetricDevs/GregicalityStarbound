@@ -22,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import scala.tools.cmd.Meta;
 
 import javax.annotation.Nonnull;
 
@@ -30,6 +31,8 @@ import static gregtech.api.util.RelativeDirection.*;
 public class MetaTileEntityRocket extends MultiblockWithDisplayBase {
 
     ICubeRenderer overlayRenderer;
+//    MetaTileEntityLaunchPad linkedPad = null;
+
     public MetaTileEntityRocket(ResourceLocation mteID) {
         super(mteID);
         this.overlayRenderer = GCSBTextures.ROCKET_BASE_OVERLAY;
@@ -75,5 +78,19 @@ public class MetaTileEntityRocket extends MultiblockWithDisplayBase {
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity iGregTechTileEntity) {
         return new MetaTileEntityRocket(this.metaTileEntityId);
+    }
+
+    public void setLinkedPad(MetaTileEntityLaunchPad mte) {
+        //this.linkedPad = mte;
+    }
+
+
+    @Override
+    public void invalidateStructure() {
+        super.invalidateStructure();
+        /*if (linkedPad != null) {
+            linkedPad.setPlacedRocket(null);
+            linkedPad = null;
+        }*/
     }
 }
