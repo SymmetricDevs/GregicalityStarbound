@@ -42,13 +42,20 @@ dependencies {
     implementation rfg.deobf('curse.maven:codechicken-lib-1-8-242818:2779848')
 
     // GTCEU 2.7.3-beta
-    implementation rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:4701483")
+    implementation rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:5519022")
 
     // TOP 1.4.28
     implementation rfg.deobf('curse.maven:top-245211:2667280')
 
-    //GeckoLib
+    // GeckoLib
     implementation rfg.deobf('curse.maven:geckolib-388172:4020277')
+
+    // LibVulpes: Fixed
+    implementation rfg.deobf("maven.modrinth:SJyZNpuU:Py62JMrM")
+
+    // Advanced Rocketry: Reworked
+    implementation rfg.deobf("maven.modrinth:hcD3XROK:emQU5BoF")
+
 
     //implementation "curse.maven:enderio-64578:3328811"
     //implementation "curse.maven:endercore-231868:2972849"

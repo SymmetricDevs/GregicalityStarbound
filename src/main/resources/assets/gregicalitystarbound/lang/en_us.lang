@@ -3,3 +3,6 @@ entity.Rocket.name=Rocket
 
 # Machines
 gregtech.machine.launch_pad.name=Launch Pad
+gregtech.machine.launch_pad.rocket_present=Rocket is placed
+gregtech.machine.launch_pad.rocket_not_present=Rocket is not placed
+gregtech.machine.rocket_core.name=Rocket Command Supercomputer
